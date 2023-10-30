@@ -27,13 +27,13 @@ stages:
         - script: |
             npm install -g @angular/cli
             npm install
-            ng build --prod -op $(Build.ArtifactStagingDirectory)
+            ng build --output-path=/$(Build.ArtifactStagingDirectory)
           displayName: 'npm install and build'
 
         - task: PublishBuildArtifacts@1
           displayName: "Publishing UI"
-          condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'develop'))
+          condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'develop'))
           inputs:
-            PathtoPublish: 'drop'
+            PathtoPublish: $(Build.ArtifactStagingDirectory)
             publishLocation: Container
             ArtifactName: 'UI'
