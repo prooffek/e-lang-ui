@@ -1,0 +1,8 @@
+<div class="tab" [ngClass]="{ 'active-tab': isActive, 'inactive-tab': !isActive }" (click)="click()">
+  <app-icon
+    *ngIf="imgFilePrefix"
+    [file]="this.imgFilePrefix + '-' + (this.isActive ? 'black' : 'white') + '.' + this.imgExtension"
+    [height]="imgSize"
+  ></app-icon>
+  <p class="title" [ngClass]="{ 'active-font': isActive, 'inactive-font': !isActive }">{{ label | titlecase }}</p>
+</div>

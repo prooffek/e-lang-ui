@@ -1,0 +1,7 @@
+<ul class="breadcrumb">
+  <li (click)="navigateHome()"><app-icon class="crumb" file="home-white.svg" height="36px"></app-icon></li>
+  <li *ngFor="let target of navigationTargets">
+    <a>{{ target }}</a>
+  </li>
+  <li><div class="crumb"></div></li>
+</ul>
