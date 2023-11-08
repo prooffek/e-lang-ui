@@ -33,6 +33,7 @@
 
 .active-tab {
   background-color: var(--active-tab-background);
+  pointer-events: none;
 }
 
 .inactive-tab {

@@ -1,0 +1,20 @@
+.actions-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  gap: 15px;
+
+  .btn-label {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 30px;
+
+    p {
+      margin: 0;
+      font-size: 0.7em;
+      color: black;
+    }
+  }
+}

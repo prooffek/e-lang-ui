@@ -1,0 +1,20 @@
+<div action-cards class="actions-container">
+  <app-button *ngIf="hasParent && parentCollectionName" (click)="navigateBack()">
+    <div class="btn-label">
+      <app-icon [file]="goBackIcon" height="30px"></app-icon>
+      <p>Back to {{ parentCollectionName | titlecase }}</p>
+    </div>
+  </app-button>
+  <app-button>
+    <div class="btn-label" (click)="addCollection()">
+      <app-icon [file]="addIcon" height="30px"></app-icon>
+      <p>Add Collection</p>
+    </div>
+  </app-button>
+  <app-button *ngIf="hasParent" (click)="addFlashcard()">
+    <div class="btn-label">
+      <app-icon [file]="addIcon" height="30px"></app-icon>
+      <p>Add Flashcard</p>
+    </div>
+  </app-button>
+</div>

@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TabNames } from './tab/topbar-constants';
 import { NavigationService } from '../../services/router/navigation.service';
-import { Observable } from 'rxjs';
+import { RouteParamService } from '../../services/router/route-param.service';
 
 @Component({
   selector: 'app-topbar',
@@ -9,11 +9,12 @@ import { Observable } from 'rxjs';
   styleUrls: ['./topbar.component.scss'],
 })
 export class TopbarComponent {
+  private readonly _navigationService = inject(NavigationService);
+  private readonly _routParamService = inject(RouteParamService);
+
   protected readonly TabNames = TabNames;
 
-  selectedTab$: Observable<string> = this._navigationService.getActiveTab();
-
-  constructor(private _navigationService: NavigationService) {}
+  activeTab = this._routParamService.getActiveTab();
 
   tabClick(path: string) {
     this._navigationService.navigateTo(path);

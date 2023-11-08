@@ -1,0 +1,127 @@
+{
+  "x-generator": "NSwag v13.20.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v13.0.0.0))",
+  "swagger": "2.0",
+  "info": {
+    "title": "E-Lang WebApi",
+    "version": "1.0.0"
+  },
+  "produces": [
+    "text/plain",
+    "application/json",
+    "text/json"
+  ],
+  "paths": {
+    "/api/Collection/collection-cards": {
+      "get": {
+        "tags": [
+          "Collection"
+        ],
+        "operationId": "Collection_GetCollectionCards",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "parentCollectionId",
+            "in": "query",
+            "format": "guid",
+            "x-nullable": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/CollectionCardDto"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Collection/collection": {
+      "get": {
+        "tags": [
+          "Collection"
+        ],
+        "operationId": "Collection_GetCollection",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "collectionId",
+            "in": "query",
+            "format": "guid",
+            "x-nullable": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/CollectionDto"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "CollectionCardDto": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "subcollectionsCount",
+        "flashcardsCount"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "guid"
+        },
+        "title": {
+          "type": "string"
+        },
+        "subcollectionsCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "flashcardsCount": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "CollectionDto": {
+      "type": "object",
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "guid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "parentId": {
+          "type": "string",
+          "format": "guid"
+        },
+        "parentName": {
+          "type": "string"
+        },
+        "subcollections": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CollectionCardDto"
+          }
+        }
+      }
+    }
+  }
+}

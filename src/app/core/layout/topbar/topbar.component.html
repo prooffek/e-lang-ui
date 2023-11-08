@@ -1,22 +1,22 @@
-<nav class="topbar-container" *ngIf="{ selectedTab: selectedTab$ | async } as data">
+<nav class="topbar-container" *ngIf="{ activeTab: activeTab()} as data">
   <div class="upper-bar">
     <div class="breadcrums-container">
       <app-breadcrumb></app-breadcrumb>
     </div>
     <div class="user-container">
-      <app-icon file="account-white.svg" height="50px"></app-icon>
+      <app-icon file="account-white" height="50px" width="50px"></app-icon>
     </div>
   </div>
   <div class="lower-bar">
     <app-tab
       [label]="TabNames.Collections"
-      [isActive]="data.selectedTab === TabNames.Collections"
+      [isActive]="data.activeTab === TabNames.Collections"
       imgFilePrefix="collections"
       (onClick)="tabClick($event)"
     ></app-tab>
     <app-tab
       [label]="TabNames.Flashcards"
-      [isActive]="data.selectedTab === TabNames.Flashcards"
+      [isActive]="data.activeTab === TabNames.Flashcards"
       imgFilePrefix="cards"
       imgSize="28px"
       (onClick)="tabClick($event)"
