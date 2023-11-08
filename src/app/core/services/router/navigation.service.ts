@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
-import { filter, map, Observable } from 'rxjs';
+import { inject, Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { TabNames } from '../../layout/topbar/tab/topbar-constants';
+import { CollectionParams } from '../../constants/route-param-names';
 
 export interface Route {
   FirstChild: any;
@@ -12,17 +12,7 @@ export interface Route {
   providedIn: 'root',
 })
 export class NavigationService {
-  constructor(private _route: Router) {}
-
-  getActiveTab(): Observable<string> {
-    return this._route.events.pipe(
-      filter((event: any) => event instanceof NavigationEnd),
-      map((route: Route) => {
-        route = this.getRoute(route);
-        return this.getTabName(route);
-      }),
-    );
-  }
+  private _route = inject(Router);
 
   navigateTo(path: string) {
     if (!path.startsWith('/')) {
@@ -44,18 +34,7 @@ export class NavigationService {
     this.navigateTo(TabNames.Flashcards);
   }
 
-  private getRoute(route: Route) {
-    while (route.FirstChild) {
-      route = route.FirstChild;
-    }
-    return route;
-  }
-
-  private getTabName(route: Route) {
-    const tabNames: string[] = Object.values(TabNames);
-
-    const activeTab: string = route.url.split('/').filter((x: string) => x)[0];
-
-    return activeTab && tabNames.includes(activeTab) ? activeTab : TabNames.Collections;
+  navigateToSelectedCollectionView(collectionId: string | undefined) {
+    this._route.navigate([TabNames.Collections], { queryParams: { [CollectionParams.id]: collectionId } });
   }
 }

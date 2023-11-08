@@ -1,0 +1,14 @@
+.card-info {
+  text-align: center;
+  color: var(--light-font-color);
+
+  .count {
+    font-size: 1.2em;
+    text-decoration: none;
+    line-height: 140%;
+  }
+
+  .label {
+    font-weight: bolder;
+  }
+}

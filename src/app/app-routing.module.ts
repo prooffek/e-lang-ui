@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AppComponent } from './app.component';
-import { TabNames } from './core/layout/topbar/tab/topbar-constants';
+import { NotFoundComponent } from './features/not-found/not-found.component';
 
 const routes: Routes = [
-  { path: '', component: AppComponent },
-  { path: TabNames.Collections, component: AppComponent },
-  { path: TabNames.Flashcards, component: AppComponent },
-  { path: '**', component: AppComponent },
+  {
+    path: '',
+    loadChildren: () => import('./features/features.module').then((m) => m.FeaturesModule),
+  },
+  { path: '**', component: NotFoundComponent },
 ];
 
 @NgModule({

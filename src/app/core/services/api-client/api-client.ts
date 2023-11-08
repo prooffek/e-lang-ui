@@ -8,5 +8,292 @@
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
 
+import { mergeMap as _observableMergeMap, catchError as _observableCatch } from 'rxjs/operators';
+import { Observable, throwError as _observableThrow, of as _observableOf } from 'rxjs';
+import { Injectable, Inject, Optional, InjectionToken } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase, HttpContext } from '@angular/common/http';
 
+export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
+export interface ICollectionClient {
+    getCollectionCards(parentCollectionId: string | null | undefined): Observable<CollectionCardDto[]>;
+    getCollection(collectionId: string | null | undefined): Observable<CollectionDto>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class CollectionClient implements ICollectionClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    getCollectionCards(parentCollectionId: string | null | undefined, httpContext?: HttpContext): Observable<CollectionCardDto[]> {
+        let url_ = this.baseUrl + "/api/Collection/collection-cards?";
+        if (parentCollectionId !== undefined && parentCollectionId !== null)
+            url_ += "parentCollectionId=" + encodeURIComponent("" + parentCollectionId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            context: httpContext,
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetCollectionCards(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetCollectionCards(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<CollectionCardDto[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<CollectionCardDto[]>;
+        }));
+    }
+
+    protected processGetCollectionCards(response: HttpResponseBase): Observable<CollectionCardDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(CollectionCardDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CollectionCardDto[]>(null as any);
+    }
+
+    getCollection(collectionId: string | null | undefined, httpContext?: HttpContext): Observable<CollectionDto> {
+        let url_ = this.baseUrl + "/api/Collection/collection?";
+        if (collectionId !== undefined && collectionId !== null)
+            url_ += "collectionId=" + encodeURIComponent("" + collectionId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            context: httpContext,
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetCollection(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetCollection(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<CollectionDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<CollectionDto>;
+        }));
+    }
+
+    protected processGetCollection(response: HttpResponseBase): Observable<CollectionDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CollectionDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CollectionDto>(null as any);
+    }
+}
+
+export class CollectionCardDto implements ICollectionCardDto {
+    id!: string;
+    title!: string;
+    subcollectionsCount!: number;
+    flashcardsCount!: number;
+
+    constructor(data?: ICollectionCardDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.title = _data["title"];
+            this.subcollectionsCount = _data["subcollectionsCount"];
+            this.flashcardsCount = _data["flashcardsCount"];
+        }
+    }
+
+    static fromJS(data: any): CollectionCardDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CollectionCardDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["title"] = this.title;
+        data["subcollectionsCount"] = this.subcollectionsCount;
+        data["flashcardsCount"] = this.flashcardsCount;
+        return data;
+    }
+}
+
+export interface ICollectionCardDto {
+    id: string;
+    title: string;
+    subcollectionsCount: number;
+    flashcardsCount: number;
+}
+
+export class CollectionDto implements ICollectionDto {
+    id!: string;
+    name!: string;
+    parentId?: string | undefined;
+    parentName?: string | undefined;
+    subcollections?: CollectionCardDto[] | undefined;
+
+    constructor(data?: ICollectionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.parentId = _data["parentId"];
+            this.parentName = _data["parentName"];
+            if (Array.isArray(_data["subcollections"])) {
+                this.subcollections = [] as any;
+                for (let item of _data["subcollections"])
+                    this.subcollections!.push(CollectionCardDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CollectionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CollectionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["parentId"] = this.parentId;
+        data["parentName"] = this.parentName;
+        if (Array.isArray(this.subcollections)) {
+            data["subcollections"] = [];
+            for (let item of this.subcollections)
+                data["subcollections"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface ICollectionDto {
+    id: string;
+    name: string;
+    parentId?: string | undefined;
+    parentName?: string | undefined;
+    subcollections?: CollectionCardDto[] | undefined;
+}
+
+export class SwaggerException extends Error {
+    override message: string;
+    status: number;
+    response: string;
+    headers: { [key: string]: any; };
+    result: any;
+
+    constructor(message: string, status: number, response: string, headers: { [key: string]: any; }, result: any) {
+        super();
+
+        this.message = message;
+        this.status = status;
+        this.response = response;
+        this.headers = headers;
+        this.result = result;
+    }
+
+    protected isSwaggerException = true;
+
+    static isSwaggerException(obj: any): obj is SwaggerException {
+        return obj.isSwaggerException === true;
+    }
+}
+
+function throwException(message: string, status: number, response: string, headers: { [key: string]: any; }, result?: any): Observable<any> {
+    if (result !== null && result !== undefined)
+        return _observableThrow(result);
+    else
+        return _observableThrow(new SwaggerException(message, status, response, headers, null));
+}
+
+function blobToText(blob: any): Observable<string> {
+    return new Observable<string>((observer: any) => {
+        if (!blob) {
+            observer.next("");
+            observer.complete();
+        } else {
+            let reader = new FileReader();
+            reader.onload = event => {
+                observer.next((event.target as any).result);
+                observer.complete();
+            };
+            reader.readAsText(blob);
+        }
+    });
+}

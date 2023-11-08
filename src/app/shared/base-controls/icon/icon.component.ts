@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
+import { IconService } from '../../../core/services/icons/icon.service';
 
 @Component({
   selector: 'app-icon',
@@ -6,15 +7,15 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./icon.component.scss'],
 })
 export class IconComponent {
-  private basePath: string = '../../../assets/icons/';
+  private readonly _iconService = inject(IconService);
+  private _file: string = '';
 
-  private _file: string | undefined;
-
-  @Input() set file(value: string | undefined) {
-    this._file = `${this.basePath}${value}`;
+  @Input() set file(value: string) {
+    this._file = value;
+    this._iconService.registerIcon(value);
   }
 
-  public get file(): string | undefined {
+  public get file(): string {
     return this._file;
   }
 
