@@ -10,6 +10,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { HttpClientModule } from '@angular/common/http';
 import { DividerComponent } from './base-controls/divider/divider.component';
+import { InputComponent } from './base-controls/input/input.component';
+import { MatInputModule } from '@angular/material/input';
+import { ReactiveFormsModule } from '@angular/forms';
+import { InputErrorComponent } from './base-controls/input-error/input-error.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { AutocompleteInputComponent } from './base-controls/autocomplete-input/autocomplete-input.component';
+import { FormContainerComponent } from './components/form-container/form-container.component';
+import { IconButtonComponent } from './base-controls/icon-button/icon-button.component';
 
 @NgModule({
   declarations: [
@@ -20,8 +28,32 @@ import { DividerComponent } from './base-controls/divider/divider.component';
     CollectionCardComponent,
     ButtonComponent,
     DividerComponent,
+    InputComponent,
+    InputErrorComponent,
+    AutocompleteInputComponent,
+    FormContainerComponent,
+    IconButtonComponent,
   ],
-  imports: [CommonModule, NgOptimizedImage, MatButtonModule, MatIconModule, HttpClientModule],
-  exports: [IconComponent, CardComponent, CollectionsListComponent, AddCardComponent, ButtonComponent],
+  imports: [
+    CommonModule,
+    NgOptimizedImage,
+    MatButtonModule,
+    MatIconModule,
+    HttpClientModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    MatAutocompleteModule,
+  ],
+  exports: [
+    IconComponent,
+    CardComponent,
+    CollectionsListComponent,
+    AddCardComponent,
+    ButtonComponent,
+    InputComponent,
+    AutocompleteInputComponent,
+    FormContainerComponent,
+    IconButtonComponent,
+  ],
 })
 export class SharedModule {}

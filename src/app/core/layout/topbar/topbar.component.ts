@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { TabNames } from './tab/topbar-constants';
+import { TabName } from '../../enums/topbar-constants';
 import { NavigationService } from '../../services/router/navigation.service';
 import { RouteParamService } from '../../services/router/route-param.service';
 
@@ -12,7 +12,7 @@ export class TopbarComponent {
   private readonly _navigationService = inject(NavigationService);
   private readonly _routParamService = inject(RouteParamService);
 
-  protected readonly TabNames = TabNames;
+  protected readonly tabNames = TabName;
 
   activeTab = this._routParamService.getActiveTab();
 

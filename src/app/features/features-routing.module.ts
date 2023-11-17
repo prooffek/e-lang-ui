@@ -1,18 +1,19 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { TabNames } from '../core/layout/topbar/tab/topbar-constants';
+import { TabName } from '../core/enums/topbar-constants';
 
 const routes: Routes = [
   {
     path: '',
+    redirectTo: `${TabName.collections}/1`,
+    pathMatch: 'full',
+  },
+  {
+    path: TabName.collections,
     loadChildren: () => import('./collections/collections.module').then((m) => m.CollectionsModule),
   },
   {
-    path: TabNames.Collections,
-    loadChildren: () => import('./collections/collections.module').then((m) => m.CollectionsModule),
-  },
-  {
-    path: TabNames.Flashcards,
+    path: TabName.flashcards,
     loadChildren: () => import('./flashcards/flashcards.module').then((m) => m.FlashcardsModule),
   },
 ];

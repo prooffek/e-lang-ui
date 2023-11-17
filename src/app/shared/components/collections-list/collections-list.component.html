@@ -3,18 +3,25 @@
     <ng-content select="[actions]"></ng-content>
   </div>
   <app-divider height="3px" width="100%" margins="0 0 20px"></app-divider>
-  <div class="collection-title" *ngIf="collectionName" >
-    <h1 class="title">Collection: <span class="collection-name">{{collectionName}}</span> </h1>
+  <div class="collection-title" *ngIf="collectionName">
+    <h1 class="title">
+      Collection: <span class="collection-name">{{ collectionName }}</span>
+    </h1>
   </div>
   <ng-container *ngIf="!collectionName">
     <ng-content select="[title]"></ng-content>
   </ng-container>
-  <div class="collections-list">
+  <div
+    class="collections-list"
+    [ngClass]="{ 'full-width': columns === columnEnum.singleColumn, 'half-width': columns === columnEnum.doubleColumn }"
+  >
     <app-collection-card
       *ngFor="let card of collectionCards"
       [collectionCard]="card"
+      [collectionId]="collectionId"
       class="card-item"
       (onClick)="selectCollection($event)"
+      (onRemove)="removeCollection($event)"
     ></app-collection-card>
   </div>
 </div>

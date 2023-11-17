@@ -1,4 +1,15 @@
-<button mat-raised-button color="primary" [class]="'btn btn-' + size">
-  <ng-content></ng-content>
+<button
+  mat-raised-button
+  color="primary"
+  class="btn"
+  [disabled]="isDisabled"
+  [ngClass]="{ disabled: isDisabled }"
+  [ngStyle]="{width: width, height: height}"
+  (click)="click()"
+>
+  <div class="btn-label" *ngIf="label">
+    <app-icon *ngIf="iconFile" [file]="iconFile" height="30px"></app-icon>
+    <p>{{label | titlecase}}</p>
+  </div>
+  <ng-content select="[custom-label]"></ng-content>
 </button>
-

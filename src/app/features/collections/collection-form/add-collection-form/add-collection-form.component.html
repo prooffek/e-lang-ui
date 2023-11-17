@@ -1,0 +1,14 @@
+<div *ngIf="options.length">
+  <app-input
+    label="Collection name"
+    [control]="collectionNameControl"
+    [defaultValue]="defaultValues.name"
+  ></app-input>
+  <app-autocomplete-input
+    label="Parent collection"
+    [defaultValue]="undefined"
+    [control]="parentCollectionControl"
+    [options]="options"
+    [filteredOptions]="filteredOptions"
+  ></app-autocomplete-input>
+</div>

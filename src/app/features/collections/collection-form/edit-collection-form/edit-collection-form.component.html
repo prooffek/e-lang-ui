@@ -1,0 +1,31 @@
+<div *ngIf="collection">
+  <div>
+    <p *ngIf="!isNameEdited">
+      Title: <span class="edit-inactive-text">{{ collection.name | uppercase }}</span>
+      <app-icon-button iconName="edit-white" (onClick)="onNameEditButtonClick()"></app-icon-button>
+    </p>
+    <app-input
+      *ngIf="isNameEdited"
+      label="Collection name"
+      [control]="collectionNameControl"
+      [defaultValue]="defaultValues.name"
+    ></app-input>
+  </div>
+  <div>
+    <p *ngIf="!isParentEdited">
+      In:
+      <span class="edit-inactive-text">{{
+        collection.parentId ? (collection.parentName | uppercase) : '---------'
+        }}</span>
+      <app-icon-button iconName="edit-white" (onClick)="onParentEditButtonClick()"></app-icon-button>
+    </p>
+    <app-autocomplete-input
+      *ngIf="isParentEdited"
+      label="Parent collection"
+      [defaultValue]="undefined"
+      [control]="parentCollectionControl"
+      [options]="options"
+      [filteredOptions]="filteredOptions"
+    ></app-autocomplete-input>
+  </div>
+</div>

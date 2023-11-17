@@ -12,3 +12,25 @@
     font-weight: bolder;
   }
 }
+
+.buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-items: center;
+  gap: 5px;
+
+  .button-label {
+    height: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+
+    p {
+      color: var(--dark-font-color);
+      font-size: 1em;
+      font-weight: bold;
+    }
+  }
+}

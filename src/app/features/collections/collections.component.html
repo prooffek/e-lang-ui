@@ -1,0 +1,44 @@
+<div
+  class="collection-view-container"
+  *ngIf="{ collection: currentCollection() } as data"
+  [ngClass]="{ 'full-width': columns === columnEnum.singleColumn, 'half-width': columns === columnEnum.doubleColumn }"
+>
+  <app-collections-list
+    class="grid-start"
+    *ngIf="hasParam; else mainCollections"
+    [collectionCards]="data.collection?.subcollections ?? []"
+    [collectionName]="data.collection?.name"
+    [columns]="columns"
+    [collectionId]="collectionId"
+    (onCollectionSelect)="selectCollection($event)"
+    (onRemove)="removeCollection($event)"
+  >
+    <app-collections-view-actions
+      actions
+      [hasParent]="hasParam"
+      [parentCollectionName]="data.collection?.parentName"
+      [parentCollectionId]="data.collection?.parentId"
+      (onNavigateBack)="navigateBack($event)"
+      (onAddCollectionClick)="openAddForm()"
+    ></app-collections-view-actions>
+  </app-collections-list>
+  <div>
+    <router-outlet></router-outlet>
+  </div>
+</div>
+
+<ng-template #mainCollections>
+  <app-collections-list
+    class="grid-start"
+    [collectionCards]="mainCollectionCards()"
+    [columns]="columns"
+    (onCollectionSelect)="selectCollection($event)"
+    (onRemove)="removeCollection($event)"
+  >
+    <app-collections-view-actions
+      actions
+      [hasParent]="hasParam"
+      (onAddCollectionClick)="openAddForm()"
+    ></app-collections-view-actions>
+  </app-collections-list>
+</ng-template>

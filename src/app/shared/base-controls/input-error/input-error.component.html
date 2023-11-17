@@ -1,0 +1,21 @@
+<div *ngIf="control && control[showErrorOn]">
+  <mat-error *ngIf="control?.hasError(ValidationError.required)">This field is required.</mat-error>
+  <mat-error *ngIf="control?.hasError(ValidationError.maxlength)">
+    The value cannot be longer than
+    {{ control!.errors![ValidationError.maxlength][ValidationErrorAttribute.requiredLength] }} characters
+  </mat-error>
+  <mat-error *ngIf="control?.hasError(ValidationError.minlength)">
+    The value must be at least
+    {{ control!.errors![ValidationError.minlength][ValidationErrorAttribute.requiredLength] }} characters long.
+  </mat-error>
+  <mat-error *ngIf="control?.hasError(ValidationError.valueInUse)">
+    {{ control!.errors![ValidationError.valueInUse][ValidationErrorAttribute.attribute] | titlecase }} with value
+    {{ control!.errors![ValidationError.valueInUse][ValidationErrorAttribute.value] }} already exists.
+  </mat-error>
+  <mat-error *ngIf="control?.hasError(ValidationError.recordExists)">
+    Record already exists.
+  </mat-error>
+  <mat-error *ngIf="control?.hasError(ValidationError.recordNotFound)">
+    Record not found.
+  </mat-error>
+</div>
