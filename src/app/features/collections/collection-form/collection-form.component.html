@@ -1,0 +1,68 @@
+<app-form-container [form]="form" [title]="title">
+  <app-add-collection-form
+    inputs
+    *ngIf="!isEditForm; else editForm"
+    [collectionNameControl]="form.controls[controlNames.name]"
+    [parentCollectionControl]="form.controls[controlNames.parentCollectionId]"
+    [options]="options()"
+    [filteredOptions]="filteredOptions() ?? options()"
+  >
+  </app-add-collection-form>
+  <div form-actions *ngIf="!isEditForm; else editActions" class="actions-container">
+    <app-button (onClick)="addCollection()" [isDisabled]="!form.dirty || !form.valid">
+      <div custom-label class="btn-label">
+        <app-icon file="save-black" height="25px"></app-icon>
+        <p [ngClass]="{ disabled: !form.dirty || !form.valid }">Save</p>
+      </div>
+    </app-button>
+
+    <app-button (onClick)="closeRightColumn()">
+      <div custom-label class="btn-label">
+        <app-icon file="chevron-right-black" height="25px"></app-icon>
+        <p>Close</p>
+      </div>
+    </app-button>
+  </div>
+</app-form-container>
+
+<ng-template #editForm>
+  <app-edit-collection-form
+    *ngIf="editedCollection"
+    [collection]="editedCollection()"
+    [collectionIdControl]="form.controls[controlNames.id]"
+    [collectionNameControl]="form.controls[controlNames.name]"
+    [parentCollectionControl]="form.controls[controlNames.parentCollectionId]"
+    [options]="options()"
+    [filteredOptions]="filteredOptions() ?? options()"
+    [(isEditModeOn)]="isEditModeOn"
+  ></app-edit-collection-form>
+</ng-template>
+
+<ng-template #editActions>
+  <div class="actions-container">
+    <app-button *ngIf="isEditModeOn" (onClick)="editCollection()" [isDisabled]="!form.dirty || !form.valid">
+      <div custom-label class="btn-label">
+        <app-icon file="save-black" height="25px"></app-icon>
+        <p [ngClass]="{ disabled: !form.dirty || !form.valid }">Save</p>
+      </div>
+    </app-button>
+    <app-button *ngIf="isEditModeOn" (onClick)="cancel()">
+      <div custom-label class="btn-label">
+        <app-icon file="cancel-black" height="25px"></app-icon>
+        <p>Cancel</p>
+      </div>
+    </app-button>
+    <app-button (onClick)="removeCollection()">
+      <div custom-label class="btn-label">
+        <app-icon file="delete-black" height="25px"></app-icon>
+        <p>Remove</p>
+      </div>
+    </app-button>
+    <app-button (onClick)="closeRightColumn()">
+      <div custom-label class="btn-label">
+        <app-icon file="chevron-right-black" height="25px"></app-icon>
+        <p>Close</p>
+      </div>
+    </app-button>
+  </div>
+</ng-template>

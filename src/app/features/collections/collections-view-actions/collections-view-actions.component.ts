@@ -13,6 +13,7 @@ export class CollectionsViewActionsComponent {
 
   @Input() hasParent: boolean = false;
   @Input() parentCollectionId: string | undefined;
+
   @Input() set parentCollectionName(value: string | undefined) {
     if (!value) {
       this._parentCollectionName = 'Main page';
@@ -23,7 +24,7 @@ export class CollectionsViewActionsComponent {
     }
   }
 
-  get parentCollectionName() {
+  public get parentCollectionName() {
     return this._parentCollectionName;
   }
 

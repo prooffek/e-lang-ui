@@ -1,0 +1,9 @@
+<button
+  mat-mini-fab
+  color="primary"
+  [disabled]="isDisabled"
+  [ngClass]="{disabled: isDisabled}"
+  (click)="click()"
+>
+  <app-icon *ngIf="iconName" [file]="iconName" [height]="iconHeight"></app-icon>
+</button>

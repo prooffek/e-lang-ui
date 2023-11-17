@@ -9,14 +9,14 @@
   </div>
   <div class="lower-bar">
     <app-tab
-      [label]="TabNames.Collections"
-      [isActive]="data.activeTab === TabNames.Collections"
+      [label]="tabNames.collections"
+      [isActive]="data.activeTab === tabNames.collections"
       imgFilePrefix="collections"
       (onClick)="tabClick($event)"
     ></app-tab>
     <app-tab
-      [label]="TabNames.Flashcards"
-      [isActive]="data.activeTab === TabNames.Flashcards"
+      [label]="tabNames.flashcards"
+      [isActive]="data.activeTab === tabNames.flashcards"
       imgFilePrefix="cards"
       imgSize="28px"
       (onClick)="tabClick($event)"

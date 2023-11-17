@@ -1,46 +1,25 @@
 .mat-mdc-raised-button {
   background-color: #9e9e9e !important;
-}
-
-img-small {
-  height: 20px !important;
-  width: auto !important;
-}
-
-btn-small {
-  width: 50px;
-  height: 30px;
-}
-
-.btn-small {
   font-size: 1em;
+  width: 100%;
+  padding: 5px !important;
 }
 
-.img-medium {
-  height: 30px !important;
-  width: auto !important;
+.disabled {
+  pointer-events: none;
 }
 
-.btn-medium {
-  width: 150px;
-  height: 40px;
-}
+.btn-label {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 30px;
 
-.btn-medium {
-  font-size: 1.3em;
-}
-
-.img-big {
-  height: 40px !important;
-  width: auto !important;
-}
-
-.btn-big {
-  width: 250px;
-  height: 50px;
-}
-
-.btn-big {
-  font-size: 1.6em;
+  p {
+    margin: 0;
+    font-size: 1em;
+    color: var(--dark-font-color);
+  }
 }
 

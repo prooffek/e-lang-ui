@@ -1,7 +1,9 @@
-<div class="card-container" (click)="clickCard()">
-  <div class="card-info">
+<div class="card-container">
+  <div class="card-info" (click)="clickCard()">
     <h1 *ngIf="cardItem?.title" class="card-title">{{ cardItem!.title | titlecase }}</h1>
     <ng-content select="[card-info]"></ng-content>
   </div>
-  <ng-content select="[actions]"></ng-content>
+  <div class="actions-container">
+    <ng-content select="[actions]"></ng-content>
+  </div>
 </div>

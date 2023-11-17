@@ -1,11 +1,14 @@
 .card-container {
-  border: solid 5px var(--card-border);
+  border: solid 5px var(--border);
   border-radius: 10px;
   width: 100%;
+  min-width: 230px;
   height: 250px;
   padding: 10px;
+  display: grid;
+  grid-template-rows: 1fr 50px;
 
-  .card-info{
+  .card-info {
     display: flex;
     flex-direction: column;
     justify-content: start;
@@ -13,5 +16,13 @@
     .card-title {
       text-align: center;
     }
+  }
+
+  .actions-container {
+    visibility: hidden;
+  }
+
+  &:hover .actions-container {
+    visibility: visible;
   }
 }

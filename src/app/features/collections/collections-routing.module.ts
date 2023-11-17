@@ -1,11 +1,38 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { UserCollectionsViewComponent } from './user-collections-view/user-collections-view.component';
+import { CollectionsComponent } from './collections.component';
+import { RightColumnComponent } from './right-collumn/right-column.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: UserCollectionsViewComponent,
+    redirectTo: '1/main',
+    pathMatch: 'full',
+  },
+  {
+    path: ':columns',
+    redirectTo: ':columns/main',
+    pathMatch: 'full',
+  },
+  {
+    path: ':columns/main',
+    component: CollectionsComponent,
+    children: [
+      {
+        path: 'form/:formType',
+        component: RightColumnComponent,
+      },
+    ],
+  },
+  {
+    path: ':columns/collection/:collectionId',
+    component: CollectionsComponent,
+    children: [
+      {
+        path: 'form/:formType',
+        component: RightColumnComponent,
+      },
+    ],
   },
 ];
 

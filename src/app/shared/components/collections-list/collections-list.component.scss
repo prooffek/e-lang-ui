@@ -1,5 +1,5 @@
 .collection-list-container {
-  margin: 5% 10%;
+  margin: 30px 10%;
   height: 100%;
 
   .actions-container {
@@ -10,8 +10,15 @@
   .collections-list {
     height: 100%;
     display: grid;
+    gap: 30px;
+  }
+
+  .full-width {
     grid-template-columns: repeat(4, minmax(200px, 250px));
-    gap: 10%;
+  }
+
+  .half-width {
+    grid-template-columns: repeat(3, minmax(200px, 250px));
   }
 
   .collection-title {
@@ -33,4 +40,26 @@
   }
 }
 
+@media screen and (max-width: 1230px) {
+  .collection-list-container {
+    .full-width {
+      grid-template-columns: repeat(3, minmax(200px, 250px));
+    }
 
+    .half-width {
+      grid-template-columns: repeat(2, minmax(200px, 250px));
+    }
+  }
+}
+
+@media screen and (max-width: 850px) {
+  .collection-list-container {
+    .full-width {
+      grid-template-columns: repeat(2, minmax(200px, 250px));
+    }
+
+    .half-width {
+      grid-template-columns: repeat(1, minmax(200px, 250px));
+    }
+  }
+}
