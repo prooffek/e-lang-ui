@@ -8,11 +8,18 @@ import {
   Signal,
   SimpleChanges,
 } from '@angular/core';
-import { CollectionStore } from '../../stores/collections-store/store';
 import { CollectionDto } from '../../core/services/api-client/api-client';
 import { NavigationService } from '../../core/services/router/navigation.service';
 import { TabName } from '../../core/enums/topbar-constants';
 import { Columns } from '../../core/enums/route-constants';
+import { Store } from '@ngrx/store';
+import { State } from 'src/app/store/root-state';
+import {
+  deleteCollection,
+  loadCurrentCollection,
+  loadInitialCollectionCards,
+} from 'src/app/store/collection-store/actions';
+import { selectCurrentCollection, selectInitCollectionCards } from 'src/app/store/collection-store/selectors';
 
 @Component({
   selector: 'app-collections-view',
@@ -22,19 +29,19 @@ import { Columns } from '../../core/enums/route-constants';
 })
 export class CollectionsComponent implements OnInit, OnChanges {
   private readonly _navigationService = inject(NavigationService);
-  private readonly _collectionStore = inject(CollectionStore);
+  private readonly _store = inject(Store<State>);
 
   protected readonly columnEnum = Columns;
 
   @Input() collectionId: string | undefined;
   @Input() columns: string = this.columnEnum.singleColumn;
 
-  currentCollection: Signal<CollectionDto | undefined> = this._collectionStore.getCurrentCollection;
-  mainCollectionCards = this._collectionStore.getInitCollectionCards();
+  currentCollection: Signal<CollectionDto | undefined> = this._store.selectSignal(selectCurrentCollection);
+  mainCollectionCards = this._store.selectSignal(selectInitCollectionCards);
   hasParam: boolean = false;
 
   ngOnInit(): void {
-    this._collectionStore.loadInitCollectionCards();
+    this._store.dispatch(loadInitialCollectionCards());
   }
 
   selectCollection(collectionId: string) {
@@ -52,11 +59,11 @@ export class CollectionsComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     this.hasParam = !!this.collectionId && this.collectionId !== TabName.collections;
     if (this.collectionId && this.hasParam) {
-      this._collectionStore.loadCurrentCollection(this.collectionId);
+      this._store.dispatch(loadCurrentCollection({ id: this.collectionId }));
     }
   }
 
   removeCollection(collectionId: string) {
-    this._collectionStore.deleteCollection(collectionId);
+    this._store.dispatch(deleteCollection({ id: collectionId }));
   }
 }

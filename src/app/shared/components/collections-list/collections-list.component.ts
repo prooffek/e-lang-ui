@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CollectionCardDto } from '../../../core/services/api-client/api-client';
 import { Columns } from '../../../core/enums/route-constants';
-
 @Component({
   selector: 'app-collections-list',
   templateUrl: './collections-list.component.html',

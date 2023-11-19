@@ -1,7 +1,11 @@
 <div class="column-container">
-  <app-collection-form
-    [formType]="formType"
+  <app-add-collection-form
+    *ngIf="formType === formTypeEnum.add"
+    [collectionId]="collectionId"
+  ></app-add-collection-form>
+  <app-edit-collection-form
+    *ngIf="formType === formTypeEnum.edit"
     [collectionId]="collectionId"
     [editCollectionId]="editCollectionId"
-  ></app-collection-form>
+  ></app-edit-collection-form>
 </div>
