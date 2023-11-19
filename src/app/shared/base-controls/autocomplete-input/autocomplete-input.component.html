@@ -2,7 +2,7 @@
   <app-input-error [control]="control"></app-input-error>
   <mat-form-field>
     <mat-label>{{ label }}</mat-label>
-    <input *ngIf="control" matInput type="text" [formControl]="control" [matAutocomplete]="auto"/>
+    <input *ngIf="control" matInput type="text" [formControl]="control" [matAutocomplete]="auto" />
     <mat-autocomplete #auto="matAutocomplete" [displayWith]="getName.bind(this)">
       <mat-option *ngFor="let option of filteredOptions" [value]="option.id">{{ option.name }}</mat-option>
     </mat-autocomplete>
@@ -11,6 +11,7 @@
       matSuffix
       mat-icon-button
       aria-label="Clear"
+      type="button"
       (click)="clearValue()"
     >
       <mat-icon>close</mat-icon>

@@ -1,10 +1,13 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
-import { DefaultCollectionFormValues } from '../../../../core/enums/form-constants';
-import { FormControl } from '@angular/forms';
-import { AutocompleteOption } from '../../../../shared/base-controls/autocomplete-input/autocomplete.models';
+import { CollectionFormControlNames, DefaultCollectionFormValues } from '../../../../core/enums/form-constants';
 import { FormService } from '../../../../core/services/form/form.service';
-
-const NAME_ATTRIBUTE = 'title';
+import { map } from 'rxjs/operators';
+import { addNewCollection, loadCollectionAutocompleteOptions } from '../../../../store/collection-store/actions';
+import { CreateCollectionDto } from '../../../../core/services/api-client/api-client';
+import { NavigationService } from '../../../../core/services/router/navigation.service';
+import { Store } from '@ngrx/store';
+import { State } from '../../../../store/root-state';
+import { selectCollectionAutocompleteOptions } from '../../../../store/collection-store/selectors';
 
 @Component({
   selector: 'app-add-collection-form',
@@ -13,15 +16,31 @@ const NAME_ATTRIBUTE = 'title';
 })
 export class AddCollectionFormComponent implements OnInit {
   private readonly _formService = inject(FormService);
-  protected readonly defaultValues = DefaultCollectionFormValues;
+  private readonly _navigationService = inject(NavigationService);
+  private readonly _store = inject(Store<State>);
 
-  @Input() collectionNameControl: FormControl | undefined;
-  @Input() parentCollectionControl: FormControl | undefined;
-  @Input() options: AutocompleteOption[] = [];
-  @Input() filteredOptions: AutocompleteOption[] = [];
+  protected readonly defaultValues = DefaultCollectionFormValues;
+  protected readonly controlNames = CollectionFormControlNames;
+
+  @Input() collectionId: string | undefined;
+
+  options = this._store.selectSignal(selectCollectionAutocompleteOptions);
+  form = this._formService.getCollectionAddFormGroup(this.options);
+  filteredOptions$ = this.form
+    .get(this.controlNames.parentCollectionId)
+    ?.valueChanges.pipe(map((value) => this._formService.filterOptions(value, this.options())));
 
   ngOnInit(): void {
-    this.collectionNameControl?.setValue(undefined);
-    this._formService.registerValueInUsOnCollectionControl(this.collectionNameControl, NAME_ATTRIBUTE);
+    this._store.dispatch(loadCollectionAutocompleteOptions());
+  }
+
+  addCollection() {
+    this._store.dispatch(addNewCollection({ collection: this.form?.value as CreateCollectionDto }));
+    this.form?.reset();
+  }
+
+  closeRightColumn() {
+    this._navigationService.navigateToSelectedCollectionView(this.collectionId);
+    this.form?.reset();
   }
 }

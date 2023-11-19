@@ -4,15 +4,15 @@ import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CollectionCardDto } from '../../services/api-client/api-client';
 import { ValidationErrorAttribute, ValidationErrorConstants } from '../../enums/validation-error-constants';
-import { computed, inject, Injectable } from '@angular/core';
-import { FormStore } from '../../../stores/form-store/store';
+import { computed, Injectable, Signal } from '@angular/core';
+import { AutocompleteOption } from 'src/app/shared/base-controls/autocomplete-input/autocomplete.models';
 
 @Injectable({ providedIn: 'root' })
 export class AsyncValidatorsBuilder {
-  private readonly _formStore = inject(FormStore);
-
   createValueInUseValidator(odataService: OdataBase, attribute: string, collectionId?: string): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      if (!control.value) return of(null);
+
       const query = odataService.query();
       query.filter(
         `tolower(${attribute}) eq '${control.value.toLowerCase()}'${collectionId ? ` and id ne ${collectionId}` : ''}`,
@@ -33,11 +33,10 @@ export class AsyncValidatorsBuilder {
     };
   }
 
-  createRecordExistsValidator(odataService: OdataBase, shouldExist: boolean) {
+  createRecordExistsValidator(odataService: OdataBase, shouldExist: boolean, options: Signal<AutocompleteOption[]>) {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       if (!control.value) return of(null);
 
-      const options = this._formStore.getCollectionAutocompleteData;
       const option = computed(() => options().find((o) => o.name.toLowerCase() === control.value.toLowerCase()));
 
       if (!this.isValidGuid(control.value) && option()) {

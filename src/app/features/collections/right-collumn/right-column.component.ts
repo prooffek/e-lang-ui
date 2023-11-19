@@ -7,6 +7,8 @@ import { FormType } from '../../../core/enums/form-constants';
   styleUrls: ['./right-column.component.scss'],
 })
 export class RightColumnComponent {
+  protected readonly formTypeEnum = FormType;
+
   @Input() formType: FormType = FormType.add;
   @Input() collectionId: string = '';
   @Input() editCollectionId: string | undefined = undefined;

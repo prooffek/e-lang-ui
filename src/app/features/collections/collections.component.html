@@ -30,7 +30,7 @@
 <ng-template #mainCollections>
   <app-collections-list
     class="grid-start"
-    [collectionCards]="mainCollectionCards()"
+    [collectionCards]="mainCollectionCards() ?? []"
     [columns]="columns"
     (onCollectionSelect)="selectCollection($event)"
     (onRemove)="removeCollection($event)"
