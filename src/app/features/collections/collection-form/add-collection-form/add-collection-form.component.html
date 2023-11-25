@@ -1,9 +1,10 @@
-<app-form-container [form]="form" title="Add collection">
+<app-form-container [form]="form" title="Add collection" *ngIf="{ change: change$ | async }">
   <div inputs>
     <app-input
       label="Collection name"
       [control]="form.controls[controlNames.name]"
       [defaultValue]="defaultValues.name"
+      showErrorOn="dirty"
     ></app-input>
     <app-autocomplete-input
       label="Parent collection"
@@ -29,5 +30,4 @@
       </div>
     </app-button>
   </div>
-
 </app-form-container>

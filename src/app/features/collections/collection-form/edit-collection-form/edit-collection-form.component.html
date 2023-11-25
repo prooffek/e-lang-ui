@@ -10,6 +10,7 @@
         label="Collection name"
         [control]="form.controls[controlNames.name]"
         [defaultValue]="defaultValues.name"
+        showErrorOn="dirty"
       ></app-input>
     </div>
     <div>
@@ -31,18 +32,18 @@
     </div>
   </div>
 
-  <div form-actions class="actions-container">
+  <div form-actions class="actions-container" *ngIf="{ collection: collection$ | async, change: change$ | async } as data">
     <app-button
       *ngIf="isNameEdited || isParentEdited"
       (onClick)="editCollection()"
-      [isDisabled]="!form.dirty || !form.valid"
+      [isDisabled]="form.pristine || form.invalid"
     >
       <div custom-label class="btn-label">
         <app-icon file="save-black" height="25px"></app-icon>
-        <p [ngClass]="{ disabled: !form.dirty || !form.valid }">Save</p>
+        <p [ngClass]="{ disabled: form.pristine || form.invalid }">Save</p>
       </div>
     </app-button>
-    <app-button *ngIf="isNameEdited || isParentEdited" (onClick)="cancel()">
+    <app-button *ngIf="isNameEdited || isParentEdited" (onClick)="cancel(data.collection)">
       <div custom-label class="btn-label">
         <app-icon file="cancel-black" height="25px"></app-icon>
         <p>Cancel</p>

@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, Input, OnInit } from '@angular/core';
 import { CollectionDto, UpdateCollectionDto } from '../../../../core/services/api-client/api-client';
 import { CollectionFormControlNames, DefaultCollectionFormValues } from '../../../../core/enums/form-constants';
 import { FormService } from '../../../../core/services/form/form.service';
@@ -26,6 +26,8 @@ export class EditCollectionFormComponent implements OnInit {
   private readonly _formService = inject(FormService);
   private readonly _store = inject(Store<State>);
   private readonly _navigationService = inject(NavigationService);
+  private readonly _changeDetection = inject(ChangeDetectorRef);
+
   private _editCollectionId: string | undefined;
 
   protected readonly defaultValues = DefaultCollectionFormValues;
@@ -40,12 +42,17 @@ export class EditCollectionFormComponent implements OnInit {
       this.collection$ = this._store.select(selectCollection(value)).pipe(
         tap((collection) => {
           if (collection) {
-            this.form?.get(this.controlNames.id)?.setValue(collection.id);
-            this.form?.get(this.controlNames.name)?.setValue(collection.name);
-            this.form?.get(this.controlNames.parentCollectionId)?.setValue(collection.parentId ?? null);
+            this.setInitFormValues(collection);
           }
         }),
       );
+
+      this.change$ = this.form.statusChanges.pipe(
+        tap(() => {
+          this._changeDetection.markForCheck();
+        }),
+      );
+
       this.filteredOptions$ = this.form
         ?.get(this.controlNames.parentCollectionId)
         ?.valueChanges.pipe(map((value) => this._formService.filterOptions(value, this.options())));
@@ -54,6 +61,8 @@ export class EditCollectionFormComponent implements OnInit {
 
   options = this._store.selectSignal(selectCollectionAutocompleteOptions);
   collection$: Observable<CollectionDto | undefined> | undefined;
+
+  change$: Observable<any> | undefined = undefined;
 
   isNameEdited: boolean = false;
   isParentEdited: boolean = false;
@@ -83,6 +92,8 @@ export class EditCollectionFormComponent implements OnInit {
     if (!collection.parentCollectionId && collection.parentCollectionId !== undefined)
       collection.parentCollectionId = undefined;
     this._store.dispatch(updateCollection({ collection }));
+    this.form?.markAsUntouched();
+    this.disableInputs();
   }
 
   removeCollection() {
@@ -97,7 +108,19 @@ export class EditCollectionFormComponent implements OnInit {
     this.form?.reset();
   }
 
-  cancel() {
+  cancel(collection: CollectionDto | undefined | null) {
+    this.setInitFormValues(collection);
+    this.disableInputs();
+  }
+
+  setInitFormValues(collection: CollectionDto | undefined | null) {
+    this.form?.get(this.controlNames.id)?.setValue(collection?.id ?? null);
+    this.form?.get(this.controlNames.name)?.setValue(collection?.name ?? null);
+    this.form?.get(this.controlNames.parentCollectionId)?.setValue(collection?.parentId ?? null);
+    this.form?.markAsUntouched();
+  }
+
+  disableInputs() {
     this.isNameEdited = false;
     this.isParentEdited = false;
   }

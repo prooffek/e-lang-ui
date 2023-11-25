@@ -20,14 +20,16 @@ import {
   updateCollectionFailure,
   updateCollectionSuccess,
 } from './actions';
-import { switchMap, take, catchError, mergeMap } from 'rxjs/operators';
+import { switchMap, take, catchError, mergeMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { AutocompleteOption } from 'src/app/shared/base-controls/autocomplete-input/autocomplete.models';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({ providedIn: 'root' })
 export class Effects {
   private readonly _actions$ = inject(Actions);
   private readonly _httpClient = inject(CollectionClient);
+  private readonly _toastrService = inject(ToastrService);
 
   loadInitialCollectionCardsEffect$ = createEffect(() =>
     this._actions$.pipe(
@@ -83,6 +85,17 @@ export class Effects {
     ),
   );
 
+  addNewCollectionSuccessEffect$ = createEffect(
+    () =>
+      this._actions$.pipe(
+        ofType(CollectionActions.addNewCollectionSuccess),
+        tap(({ collection }) => {
+          this._toastrService.success(`Collection '${collection.name}' added successfully`);
+        }),
+      ),
+    { dispatch: false },
+  );
+
   editCollectionEffect$ = createEffect(() =>
     this._actions$.pipe(
       ofType(CollectionActions.updateCollection),
@@ -98,6 +111,17 @@ export class Effects {
     ),
   );
 
+  editCollectionSuccessEffect$ = createEffect(
+    () =>
+      this._actions$.pipe(
+        ofType(CollectionActions.updateCollectionSuccess),
+        tap(({ collection }) => {
+          this._toastrService.success(`Collection '${collection.name}' updated successfully`);
+        }),
+      ),
+    { dispatch: false },
+  );
+
   deleteCollectionEffect$ = createEffect(() =>
     this._actions$.pipe(
       ofType(CollectionActions.deleteCollection),
@@ -108,6 +132,17 @@ export class Effects {
         ),
       ),
     ),
+  );
+
+  deleteCollectionSuccessEffect$ = createEffect(
+    () =>
+      this._actions$.pipe(
+        ofType(CollectionActions.deleteCollectionSuccess),
+        tap((_) => {
+          this._toastrService.success(`Collection removed successfully`);
+        }),
+      ),
+    { dispatch: false },
   );
 
   loadCollectionAutocompleteOptionsEffect$ = createEffect(() =>

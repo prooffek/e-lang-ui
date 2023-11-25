@@ -1,5 +1,5 @@
 <div *ngIf="options.length" class="input-container">
-  <app-input-error [control]="control"></app-input-error>
+  <app-input-error [control]="control" [showErrorOn]="showErrorOn"></app-input-error>
   <mat-form-field>
     <mat-label>{{ label }}</mat-label>
     <input *ngIf="control" matInput type="text" [formControl]="control" [matAutocomplete]="auto" />

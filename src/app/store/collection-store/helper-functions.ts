@@ -47,7 +47,9 @@ export const deleteCollectionFromState = (state: CollectionState, id: string) =>
   delete initCards[id];
 
   if (parentId && initCards[parentId]?.subcollectionsCount) {
-    initCards[parentId].subcollectionsCount -= 1;
+    const parentCollection = { ...initCards[parentId] };
+    parentCollection.subcollectionsCount -= 1;
+    initCards[parentId] = parentCollection as CollectionCardDto;
   }
 
   const subcollections = state.currentCollection?.subcollections?.filter((c) => c.id !== id);
@@ -144,10 +146,16 @@ const updateCurrentCollectionState = (
   const prevIncludingCurrentSubcollection = currentCollection.subcollections.find((c) => c.id === prevParentId);
 
   if (includingCurrentSubcollection) {
-    includingCurrentSubcollection.subcollectionsCount += 1;
+    const collection = { ...includingCurrentSubcollection };
+    collection.subcollectionsCount += 1;
+    const index = currentCollection.subcollections.indexOf(includingCurrentSubcollection);
+    currentCollection.subcollections[index] = collection as CollectionCardDto;
   }
 
   if (prevIncludingCurrentSubcollection?.subcollectionsCount) {
-    prevIncludingCurrentSubcollection.subcollectionsCount -= 1;
+    const collection = { ...prevIncludingCurrentSubcollection };
+    collection.subcollectionsCount -= 1;
+    const index = currentCollection.subcollections.indexOf(prevIncludingCurrentSubcollection);
+    currentCollection.subcollections[index] = collection as CollectionCardDto;
   }
 };

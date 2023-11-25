@@ -31,7 +31,8 @@
             ],
             "styles": [
               "src/styles/styles.scss",
-              "src/styles/colour-palette.scss"
+              "src/styles/colour-palette.scss",
+              "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": []
           },
@@ -101,7 +102,8 @@
             ],
             "styles": [
               "src/styles/styles.scss",
-              "src/styles/colour-palette.scss"
+              "src/styles/colour-palette.scss",
+              "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": []
           }
