@@ -22,7 +22,7 @@ export interface ICollectionClient {
     updateCollection(collectionDto: UpdateCollectionDto): Observable<CollectionDto>;
     deleteCollection(collectionId: string | null | undefined): Observable<FileResponse | null>;
     getCollectionAutocompleteData(): Observable<CollectionAutocompleteDto[]>;
-    getAll(): Observable<FileResponse | null>;
+    getAll(): Observable<CollectionCardDto[]>;
 }
 
 @Injectable({
@@ -364,7 +364,7 @@ export class CollectionClient implements ICollectionClient {
         return _observableOf<CollectionAutocompleteDto[]>(null as any);
     }
 
-    getAll(httpContext?: HttpContext): Observable<FileResponse | null> {
+    getAll(httpContext?: HttpContext): Observable<CollectionCardDto[]> {
         let url_ = this.baseUrl + "/api/Collection";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -373,7 +373,7 @@ export class CollectionClient implements ICollectionClient {
             responseType: "blob",
             context: httpContext,
             headers: new HttpHeaders({
-                "Accept": "application/octet-stream"
+                "Accept": "application/json"
             })
         };
 
@@ -384,37 +384,114 @@ export class CollectionClient implements ICollectionClient {
                 try {
                     return this.processGetAll(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<FileResponse | null>;
+                    return _observableThrow(e) as any as Observable<CollectionCardDto[]>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<FileResponse | null>;
+                return _observableThrow(response_) as any as Observable<CollectionCardDto[]>;
         }));
     }
 
-    protected processGetAll(response: HttpResponseBase): Observable<FileResponse | null> {
+    protected processGetAll(response: HttpResponseBase): Observable<CollectionCardDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
             (response as any).error instanceof Blob ? (response as any).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
-            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
-            if (fileName) {
-                fileName = decodeURIComponent(fileName);
-            } else {
-                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(CollectionCardDto.fromJS(item));
             }
-            return _observableOf({ fileName: fileName, data: responseBlob as any, status: status, headers: _headers });
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<FileResponse | null>(null as any);
+        return _observableOf<CollectionCardDto[]>(null as any);
+    }
+}
+
+export interface IFlashcardClient {
+    getAll(): Observable<FlashcardDto[]>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class FlashcardClient implements IFlashcardClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    getAll(httpContext?: HttpContext): Observable<FlashcardDto[]> {
+        let url_ = this.baseUrl + "/api/Flashcard";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            context: httpContext,
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<FlashcardDto[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<FlashcardDto[]>;
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<FlashcardDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(FlashcardDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<FlashcardDto[]>(null as any);
     }
 }
 
@@ -648,6 +725,120 @@ export class CollectionAutocompleteDto implements ICollectionAutocompleteDto {
 export interface ICollectionAutocompleteDto {
     id: string;
     name: string;
+}
+
+export class FlashcardDto implements IFlashcardDto {
+    id!: string;
+    collectionName!: string;
+    wordOrPhrase!: string;
+    meanings!: MeaningDto[];
+    createdOn!: Date;
+    lastSeenOn!: Date;
+    status!: FlashcardStatus;
+
+    constructor(data?: IFlashcardDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.meanings = [];
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.collectionName = _data["collectionName"];
+            this.wordOrPhrase = _data["wordOrPhrase"];
+            if (Array.isArray(_data["meanings"])) {
+                this.meanings = [] as any;
+                for (let item of _data["meanings"])
+                    this.meanings!.push(MeaningDto.fromJS(item));
+            }
+            this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
+            this.lastSeenOn = _data["lastSeenOn"] ? new Date(_data["lastSeenOn"].toString()) : <any>undefined;
+            this.status = _data["status"];
+        }
+    }
+
+    static fromJS(data: any): FlashcardDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new FlashcardDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["collectionName"] = this.collectionName;
+        data["wordOrPhrase"] = this.wordOrPhrase;
+        if (Array.isArray(this.meanings)) {
+            data["meanings"] = [];
+            for (let item of this.meanings)
+                data["meanings"].push(item.toJSON());
+        }
+        data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
+        data["lastSeenOn"] = this.lastSeenOn ? this.lastSeenOn.toISOString() : <any>undefined;
+        data["status"] = this.status;
+        return data;
+    }
+}
+
+export interface IFlashcardDto {
+    id: string;
+    collectionName: string;
+    wordOrPhrase: string;
+    meanings: MeaningDto[];
+    createdOn: Date;
+    lastSeenOn: Date;
+    status: FlashcardStatus;
+}
+
+export class MeaningDto implements IMeaningDto {
+    value!: string;
+
+    constructor(data?: IMeaningDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.value = _data["value"];
+        }
+    }
+
+    static fromJS(data: any): MeaningDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new MeaningDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["value"] = this.value;
+        return data;
+    }
+}
+
+export interface IMeaningDto {
+    value: string;
+}
+
+export enum FlashcardStatus {
+    Active = 0,
+    Seen = 1,
+    Learnt = 2,
+    Inactive = 3,
 }
 
 export interface FileResponse {

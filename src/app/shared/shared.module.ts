@@ -18,6 +18,9 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AutocompleteInputComponent } from './base-controls/autocomplete-input/autocomplete-input.component';
 import { FormContainerComponent } from './components/form-container/form-container.component';
 import { IconButtonComponent } from './base-controls/icon-button/icon-button.component';
+import { TableComponent } from './components/table/table.component';
+import { AgGridModule } from 'ag-grid-angular';
+import { TableButtonComponent } from './components/table/table-button/table-button.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +36,8 @@ import { IconButtonComponent } from './base-controls/icon-button/icon-button.com
     AutocompleteInputComponent,
     FormContainerComponent,
     IconButtonComponent,
+    TableComponent,
+    TableButtonComponent,
   ],
   imports: [
     CommonModule,
@@ -43,6 +48,7 @@ import { IconButtonComponent } from './base-controls/icon-button/icon-button.com
     MatInputModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
+    AgGridModule
   ],
   exports: [
     IconComponent,
@@ -54,6 +60,8 @@ import { IconButtonComponent } from './base-controls/icon-button/icon-button.com
     AutocompleteInputComponent,
     FormContainerComponent,
     IconButtonComponent,
+    TableComponent,
+    TableButtonComponent
   ],
 })
 export class SharedModule {}

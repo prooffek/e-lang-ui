@@ -1,0 +1,15 @@
+<div *ngIf="data" class="btns-container">
+    <app-button
+    *ngFor="let button of data?.buttons"
+    (onClick)="button.onClick(data.data.id)"
+    [isDisabled]="!!button.isDisabled"
+    [width]="button.width ?? '50px'"
+    [height]="button.height ?? 'auto'"
+  >
+    <div custom-label class="btn-label">
+      <app-icon *ngIf="button.iconFile" [file]="button.iconFile" height="21px" width="15px"></app-icon>
+      <p>{{ button.label }}</p>
+    </div>
+  </app-button>
+</div>
+

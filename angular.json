@@ -32,6 +32,8 @@
             "styles": [
               "src/styles/styles.scss",
               "src/styles/colour-palette.scss",
+              "ag-grid-community/styles/ag-grid.css",
+              "ag-grid-community/styles/ag-theme-quartz.css"
               "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": []
@@ -42,7 +44,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumError": "3mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -103,6 +105,8 @@
             "styles": [
               "src/styles/styles.scss",
               "src/styles/colour-palette.scss",
+              "ag-grid-community/styles/ag-grid.css",
+              "ag-grid-community/styles/ag-theme-quartz.css"
               "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": []

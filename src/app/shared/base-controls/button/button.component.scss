@@ -1,12 +1,15 @@
 .mat-mdc-raised-button {
-  background-color: #9e9e9e !important;
+  background-color: var(--btn-active-background) !important;
   font-size: 1em;
+  font-weight: bold;
   width: 100%;
   padding: 5px !important;
 }
 
 .disabled {
   pointer-events: none;
+  background-color: var(--btn-disabled-background) !important;
+  color: var(--btn-disabled-color);
 }
 
 .btn-label {

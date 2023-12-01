@@ -4,9 +4,10 @@ import { CommonModule } from '@angular/common';
 import { FlashcardsRoutingModule } from './flashcards-routing.module';
 import { FlashcardListComponent } from './flashcard-list/flashcard-list.component';
 import { SharedModule } from '../../shared/shared.module';
+import { AgGridModule } from 'ag-grid-angular';
 
 @NgModule({
   declarations: [FlashcardListComponent],
-  imports: [CommonModule, FlashcardsRoutingModule, SharedModule],
+  imports: [CommonModule, FlashcardsRoutingModule, SharedModule, AgGridModule],
 })
 export class FlashcardsModule {}

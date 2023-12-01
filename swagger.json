@@ -295,12 +295,71 @@
           "Collection"
         ],
         "operationId": "Collection_GetAll",
+        "produces": [
+          "application/json;odata.metadata=minimal;odata.streaming=true",
+          "application/json;odata.metadata=minimal;odata.streaming=false",
+          "application/json;odata.metadata=minimal",
+          "application/json;odata.metadata=full;odata.streaming=true",
+          "application/json;odata.metadata=full;odata.streaming=false",
+          "application/json;odata.metadata=full",
+          "application/json;odata.metadata=none;odata.streaming=true",
+          "application/json;odata.metadata=none;odata.streaming=false",
+          "application/json;odata.metadata=none",
+          "application/json;odata.streaming=true",
+          "application/json;odata.streaming=false",
+          "application/json",
+          "application/xml",
+          "text/plain",
+          "application/octet-stream",
+          "text/json"
+        ],
         "responses": {
           "200": {
-            "x-nullable": true,
+            "x-nullable": false,
             "description": "",
             "schema": {
-              "type": "file"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/CollectionCardDto"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Flashcard": {
+      "get": {
+        "tags": [
+          "Flashcard"
+        ],
+        "operationId": "Flashcard_GetAll",
+        "produces": [
+          "application/json;odata.metadata=minimal;odata.streaming=true",
+          "application/json;odata.metadata=minimal;odata.streaming=false",
+          "application/json;odata.metadata=minimal",
+          "application/json;odata.metadata=full;odata.streaming=true",
+          "application/json;odata.metadata=full;odata.streaming=false",
+          "application/json;odata.metadata=full",
+          "application/json;odata.metadata=none;odata.streaming=true",
+          "application/json;odata.metadata=none;odata.streaming=false",
+          "application/json;odata.metadata=none",
+          "application/json;odata.streaming=true",
+          "application/json;odata.streaming=false",
+          "application/json",
+          "application/xml",
+          "text/plain",
+          "application/octet-stream",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/FlashcardDto"
+              }
             }
           }
         }
@@ -413,6 +472,74 @@
           "type": "string"
         }
       }
+    },
+    "FlashcardDto": {
+      "type": "object",
+      "required": [
+        "id",
+        "collectionName",
+        "wordOrPhrase",
+        "meanings",
+        "createdOn",
+        "lastSeenOn",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "guid"
+        },
+        "collectionName": {
+          "type": "string"
+        },
+        "wordOrPhrase": {
+          "type": "string"
+        },
+        "meanings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MeaningDto"
+          }
+        },
+        "createdOn": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastSeenOn": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "$ref": "#/definitions/FlashcardStatus"
+        }
+      }
+    },
+    "MeaningDto": {
+      "type": "object",
+      "required": [
+        "value"
+      ],
+      "properties": {
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "FlashcardStatus": {
+      "type": "integer",
+      "description": "",
+      "x-enumNames": [
+        "Active",
+        "Seen",
+        "Learnt",
+        "Inactive"
+      ],
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ]
     }
   }
 }
