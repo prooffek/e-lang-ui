@@ -1,8 +1,8 @@
-.edit-inactive-text {
-  display: inline-block;
-  margin: 0 15px;
-  font-size: 1.3em;
-  font-weight: bold;
+.form-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .actions-container {

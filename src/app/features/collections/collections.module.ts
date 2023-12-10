@@ -6,17 +6,10 @@ import { CollectionsComponent } from './collections.component';
 import { CollectionsViewActionsComponent } from './collections-view-actions/collections-view-actions.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RightColumnComponent } from './right-collumn/right-column.component';
-import { AddCollectionFormComponent } from './collection-form/add-collection-form/add-collection-form.component';
-import { EditCollectionFormComponent } from './collection-form/edit-collection-form/edit-collection-form.component';
+import { AppFormsModule } from '../forms/app-forms.module';
 
 @NgModule({
-  declarations: [
-    CollectionsComponent,
-    CollectionsViewActionsComponent,
-    RightColumnComponent,
-    AddCollectionFormComponent,
-    EditCollectionFormComponent,
-  ],
-  imports: [CommonModule, CollectionsRoutingModule, SharedModule, ReactiveFormsModule],
+  declarations: [CollectionsComponent, CollectionsViewActionsComponent, RightColumnComponent],
+  imports: [CommonModule, CollectionsRoutingModule, SharedModule, ReactiveFormsModule, AppFormsModule],
 })
 export class CollectionsModule {}

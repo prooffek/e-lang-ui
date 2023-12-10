@@ -1,0 +1,31 @@
+<app-dialog title="Word/Phrase duplicated">
+  <div content>
+    <p class="content">
+      Flashcard with the word/phrase '{{ data.wordOrPhrase }}' already exists. Do you want to link the existing one to
+      the collection or to duplicate it?
+    </p>
+    <ul>
+      <li>
+        <span class="action-col"></span>
+        <span class="collection-col collection">Collection</span>
+        <span class="meanings-col meanings">Meanings</span>
+      </li>
+      <li *ngFor="let flashcard of flashcards" class="list-row">
+        <app-button
+          class="action-col"
+          label="Link"
+          height="25px"
+          width="40px"
+          (onClick)="useExisting(flashcard.flashcardBaseId)"
+        ></app-button>
+        <span class="collection-col collection-name">{{ flashcard.collectionName }}</span>
+        <span class="meanings-col" [title]="flashcard.meanings">
+          {{ flashcard.meanings.length >= 50 ? flashcard.meanings.slice(0, 50) + '...' : flashcard.meanings }}
+        </span>
+      </li>
+    </ul>
+  </div>
+  <div actions class="actions-container">
+    <app-button label="Duplicate" (onClick)="close()"></app-button>
+  </div>
+</app-dialog>

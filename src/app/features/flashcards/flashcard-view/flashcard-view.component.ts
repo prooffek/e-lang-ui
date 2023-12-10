@@ -1,11 +1,8 @@
-import { Component, inject } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Component, Input } from '@angular/core';
 import { ColDef } from 'ag-grid-community';
-import { ButtonModel } from 'src/app/shared/base-controls/button/button,model';
+import { ButtonModel } from 'src/app/shared/base-controls/button/button.model';
 import { TableButtonComponent } from 'src/app/shared/components/table/table-button/table-button.component';
-import { loadFlashcards } from 'src/app/store/flashcard-store/flashcard-store/actions';
-import { selectAllFlashcardModels } from 'src/app/store/flashcard-store/flashcard-store/selectors';
-import { State } from 'src/app/store/root-state';
+import { FlashcardViewModel } from './flashcard-view.model';
 
 export enum FlashcardColumnNames {
   collectionName = 'collectionName',
@@ -26,12 +23,12 @@ export enum Headers {
 }
 
 @Component({
-  selector: 'app-flashcard-list',
-  templateUrl: './flashcard-list.component.html',
-  styleUrls: ['./flashcard-list.component.scss'],
+  selector: 'app-flashcard-view',
+  templateUrl: './flashcard-view.component.html',
+  styleUrls: ['./flashcard-view.component.scss'],
 })
-export class FlashcardListComponent {
-  private readonly _store = inject(Store<State>);
+export class FlashcardViewComponent {
+  @Input() flashcards: FlashcardViewModel[] = [];
 
   buttons: ButtonModel[] = [
     {
@@ -50,7 +47,6 @@ export class FlashcardListComponent {
     },
   ];
 
-  flashcards = this._store.selectSignal(selectAllFlashcardModels);
   colDef: ColDef[] = [
     {
       field: '',
@@ -62,17 +58,13 @@ export class FlashcardListComponent {
       resizable: false,
       width: 200,
     },
-    { field: FlashcardColumnNames.wordOrPhrase, headerName: Headers.wordOrPhrase, flex: 1 },
-    { field: FlashcardColumnNames.meanings, headerName: Headers.meanings, flex: 2 },
+    { field: FlashcardColumnNames.wordOrPhrase, headerName: Headers.wordOrPhrase, flex: 1, minWidth: 250 },
+    { field: FlashcardColumnNames.meanings, headerName: Headers.meanings, flex: 2, minWidth: 250 },
     { field: FlashcardColumnNames.collectionName, headerName: Headers.collection, width: 150 },
     { field: FlashcardColumnNames.createdOn, headerName: Headers.createdOn, resizable: false, width: 150 },
     { field: FlashcardColumnNames.lastSeenOn, resizable: false, headerName: Headers.lastSeenOn, width: 150 },
     { field: FlashcardColumnNames.status, headerName: Headers.status, resizable: false, width: 100 },
   ];
-
-  constructor() {
-    this._store.dispatch(loadFlashcards());
-  }
 
   editFlashcard(id: string) {
     console.log({ edit: id });

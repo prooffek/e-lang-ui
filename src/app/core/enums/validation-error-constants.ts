@@ -5,6 +5,7 @@ export enum ValidationErrorConstants {
   valueInUse = 'valueInUse',
   recordNotFound = 'recordNotFound',
   recordExists = 'recordExists',
+  duplicatedMeanings = 'duplicatedMeanings',
 }
 
 export enum ValidationErrorAttribute {

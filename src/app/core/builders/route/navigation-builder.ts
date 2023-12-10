@@ -58,13 +58,23 @@ export class NavigationBuilder {
     return this;
   }
 
-  setAddForm() {
-    this.setForm(FormType.add);
+  setAddCollectionForm() {
+    this.setForm(FormType.addCollection);
     return this;
   }
 
-  setEditForm(collectionId: string) {
-    this.setForm(FormType.edit, { [NavigationParams.editCollectionId]: collectionId });
+  setCollectionEditForm(collectionId: string) {
+    this.setForm(FormType.editCollection, { [NavigationParams.editCollectionId]: collectionId });
+    return this;
+  }
+
+  setAddFlashcardForm() {
+    this.setForm(FormType.addFlashcard);
+    return this;
+  }
+
+  setFlashcardEditForm(collectionId: string) {
+    this.setForm(FormType.editFlashcard, { [NavigationParams.editCollectionId]: collectionId });
     return this;
   }
 

@@ -422,6 +422,7 @@ export class CollectionClient implements ICollectionClient {
 }
 
 export interface IFlashcardClient {
+    addOrUpdateFlashcard(flashcard: AddOrUpdateFlashcardDto): Observable<FlashcardDto>;
     getAll(): Observable<FlashcardDto[]>;
 }
 
@@ -436,6 +437,59 @@ export class FlashcardClient implements IFlashcardClient {
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    addOrUpdateFlashcard(flashcard: AddOrUpdateFlashcardDto, httpContext?: HttpContext): Observable<FlashcardDto> {
+        let url_ = this.baseUrl + "/api/Flashcard/add-or-update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(flashcard);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            context: httpContext,
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAddOrUpdateFlashcard(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAddOrUpdateFlashcard(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<FlashcardDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<FlashcardDto>;
+        }));
+    }
+
+    protected processAddOrUpdateFlashcard(response: HttpResponseBase): Observable<FlashcardDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = FlashcardDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<FlashcardDto>(null as any);
     }
 
     getAll(httpContext?: HttpContext): Observable<FlashcardDto[]> {
@@ -733,8 +787,9 @@ export class FlashcardDto implements IFlashcardDto {
     wordOrPhrase!: string;
     meanings!: MeaningDto[];
     createdOn!: Date;
-    lastSeenOn!: Date;
+    lastSeenOn?: Date | undefined;
     status!: FlashcardStatus;
+    flashcardBaseId!: string;
 
     constructor(data?: IFlashcardDto) {
         if (data) {
@@ -761,6 +816,7 @@ export class FlashcardDto implements IFlashcardDto {
             this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
             this.lastSeenOn = _data["lastSeenOn"] ? new Date(_data["lastSeenOn"].toString()) : <any>undefined;
             this.status = _data["status"];
+            this.flashcardBaseId = _data["flashcardBaseId"];
         }
     }
 
@@ -784,6 +840,7 @@ export class FlashcardDto implements IFlashcardDto {
         data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
         data["lastSeenOn"] = this.lastSeenOn ? this.lastSeenOn.toISOString() : <any>undefined;
         data["status"] = this.status;
+        data["flashcardBaseId"] = this.flashcardBaseId;
         return data;
     }
 }
@@ -794,11 +851,13 @@ export interface IFlashcardDto {
     wordOrPhrase: string;
     meanings: MeaningDto[];
     createdOn: Date;
-    lastSeenOn: Date;
+    lastSeenOn?: Date | undefined;
     status: FlashcardStatus;
+    flashcardBaseId: string;
 }
 
 export class MeaningDto implements IMeaningDto {
+    id!: string;
     value!: string;
 
     constructor(data?: IMeaningDto) {
@@ -812,6 +871,7 @@ export class MeaningDto implements IMeaningDto {
 
     init(_data?: any) {
         if (_data) {
+            this.id = _data["id"];
             this.value = _data["value"];
         }
     }
@@ -825,12 +885,14 @@ export class MeaningDto implements IMeaningDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
         data["value"] = this.value;
         return data;
     }
 }
 
 export interface IMeaningDto {
+    id: string;
     value: string;
 }
 
@@ -839,6 +901,109 @@ export enum FlashcardStatus {
     Seen = 1,
     Learnt = 2,
     Inactive = 3,
+}
+
+export class AddOrUpdateFlashcardDto implements IAddOrUpdateFlashcardDto {
+    flashcardId?: string | undefined;
+    collectionId!: string;
+    flashcardBaseId?: string | undefined;
+    wordOrPhrase!: string;
+    meanings!: AddOrUpdateMeaningDto[];
+
+    constructor(data?: IAddOrUpdateFlashcardDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.meanings = [];
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.flashcardId = _data["flashcardId"];
+            this.collectionId = _data["collectionId"];
+            this.flashcardBaseId = _data["flashcardBaseId"];
+            this.wordOrPhrase = _data["wordOrPhrase"];
+            if (Array.isArray(_data["meanings"])) {
+                this.meanings = [] as any;
+                for (let item of _data["meanings"])
+                    this.meanings!.push(AddOrUpdateMeaningDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): AddOrUpdateFlashcardDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddOrUpdateFlashcardDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["flashcardId"] = this.flashcardId;
+        data["collectionId"] = this.collectionId;
+        data["flashcardBaseId"] = this.flashcardBaseId;
+        data["wordOrPhrase"] = this.wordOrPhrase;
+        if (Array.isArray(this.meanings)) {
+            data["meanings"] = [];
+            for (let item of this.meanings)
+                data["meanings"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IAddOrUpdateFlashcardDto {
+    flashcardId?: string | undefined;
+    collectionId: string;
+    flashcardBaseId?: string | undefined;
+    wordOrPhrase: string;
+    meanings: AddOrUpdateMeaningDto[];
+}
+
+export class AddOrUpdateMeaningDto implements IAddOrUpdateMeaningDto {
+    id?: string | undefined;
+    value!: string;
+
+    constructor(data?: IAddOrUpdateMeaningDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.value = _data["value"];
+        }
+    }
+
+    static fromJS(data: any): AddOrUpdateMeaningDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddOrUpdateMeaningDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["value"] = this.value;
+        return data;
+    }
+}
+
+export interface IAddOrUpdateMeaningDto {
+    id?: string | undefined;
+    value: string;
 }
 
 export interface FileResponse {

@@ -52,8 +52,12 @@ export class CollectionsComponent implements OnInit, OnChanges {
     this._navigationService.navigateToSelectedCollectionView(collectionId);
   }
 
-  openAddForm() {
+  openAddCollectionForm() {
     this._navigationService.navigateToCollectionAddForm(this.collectionId);
+  }
+
+  openAddFlashcardForm() {
+    this._navigationService.navigateToFlashcardAddForm(this.collectionId);
   }
 
   ngOnChanges(changes: SimpleChanges): void {

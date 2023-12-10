@@ -1,5 +1,5 @@
 export enum NavigationParams {
-  collectionId = 'collection-id',
+  collectionId = 'collectionId',
   editCollectionId = 'editCollectionId',
   form = 'form',
 }

@@ -1,4 +1,4 @@
-<div *ngIf="control && control[showErrorOn]">
+<div *ngIf="control && (control.dirty || control.touched)">
   <mat-error *ngIf="control?.hasError(ValidationError.required)">This field is required.</mat-error>
   <mat-error *ngIf="control?.hasError(ValidationError.maxlength)">
     The value cannot be longer than
@@ -12,10 +12,6 @@
     {{ control!.errors![ValidationError.valueInUse][ValidationErrorAttribute.attribute] | titlecase }} with value
     {{ control!.errors![ValidationError.valueInUse][ValidationErrorAttribute.value] }} already exists.
   </mat-error>
-  <mat-error *ngIf="control?.hasError(ValidationError.recordExists)">
-    Record already exists.
-  </mat-error>
-  <mat-error *ngIf="control?.hasError(ValidationError.recordNotFound)">
-    Record not found.
-  </mat-error>
+  <mat-error *ngIf="control?.hasError(ValidationError.recordExists)"> Record already exists. </mat-error>
+  <mat-error *ngIf="control?.hasError(ValidationError.recordNotFound)"> Record not found. </mat-error>
 </div>

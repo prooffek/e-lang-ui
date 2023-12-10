@@ -1,0 +1,12 @@
+.dialog-container {
+  background-color: var(--dialog-background-color);
+  border: 3px solid var(--dialog-border);
+  border-radius: 5px;
+
+  .title {
+    color: var(--dialog-color);
+    font-size: 1.7em;
+    font-weight: bold;
+    text-align: center;
+  }
+}

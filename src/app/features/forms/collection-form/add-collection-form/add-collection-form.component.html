@@ -1,0 +1,34 @@
+<div class="form-container">
+  <app-form-container [form]="form" title="Add collection" *ngIf="{ change: change$ | async }">
+    <div inputs>
+      <app-input
+        label="Collection name"
+        [control]="form.controls[controlNames.name]"
+        [defaultValue]="defaultValues.name"
+      ></app-input>
+      <app-autocomplete-input
+        label="Parent collection"
+        [defaultValue]="undefined"
+        [control]="form.controls[controlNames.parentCollectionId]"
+        [options]="options()"
+        [filteredOptions]="(filteredOptions$ | async) ?? options()"
+      ></app-autocomplete-input>
+    </div>
+
+    <div form-actions class="actions-container">
+      <app-button (onClick)="addCollection()" [isDisabled]="!form.dirty || !form.valid">
+        <div custom-label class="btn-label">
+          <app-icon file="save-black" height="25px"></app-icon>
+          <p [ngClass]="{ disabled: !form.dirty || !form.valid }">Save</p>
+        </div>
+      </app-button>
+
+      <app-button (onClick)="closeRightColumn()">
+        <div custom-label class="btn-label">
+          <app-icon file="chevron-right-black" height="25px"></app-icon>
+          <p>Close</p>
+        </div>
+      </app-button>
+    </div>
+  </app-form-container>
+</div>

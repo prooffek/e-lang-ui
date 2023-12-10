@@ -4,7 +4,7 @@
   [ngClass]="{ 'full-width': columns === columnEnum.singleColumn, 'half-width': columns === columnEnum.doubleColumn }"
 >
   <app-collections-list
-    class="grid-start"
+    class="collections-list"
     *ngIf="hasParam; else mainCollections"
     [collectionCards]="data.collection?.subcollections ?? []"
     [collectionName]="data.collection?.name"
@@ -19,10 +19,11 @@
       [parentCollectionName]="data.collection?.parentName"
       [parentCollectionId]="data.collection?.parentId"
       (onNavigateBack)="navigateBack($event)"
-      (onAddCollectionClick)="openAddForm()"
+      (onAddCollectionClick)="openAddCollectionForm()"
+      (onAddFlashcardClick)="openAddFlashcardForm()"
     ></app-collections-view-actions>
   </app-collections-list>
-  <div>
+  <div class="right-col">
     <router-outlet></router-outlet>
   </div>
 </div>
@@ -38,7 +39,8 @@
     <app-collections-view-actions
       actions
       [hasParent]="hasParam"
-      (onAddCollectionClick)="openAddForm()"
+      (onAddCollectionClick)="openAddCollectionForm()"
+      (onAddFlashcardClick)="openAddFlashcardForm()"
     ></app-collections-view-actions>
   </app-collections-list>
 </ng-template>

@@ -1,0 +1,6 @@
+<div
+  class="flashcards-container"
+  [ngClass]="{ 'full-width': columns === columnEnum.singleColumn, 'half-width': columns === columnEnum.doubleColumn }"
+>
+  <app-flashcard-view [flashcards]="flashcards()"></app-flashcard-view>
+</div>

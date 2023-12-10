@@ -1,11 +1,21 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { FlashcardListComponent } from './flashcard-list/flashcard-list.component';
+import { FlashcardsComponent } from './flashcards.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: FlashcardListComponent,
+    redirectTo: '1/main',
+    pathMatch: 'full',
+  },
+  {
+    path: ':columns',
+    redirectTo: ':columns/main',
+    pathMatch: 'full',
+  },
+  {
+    path: ':columns/main',
+    component: FlashcardsComponent,
   },
 ];
 

@@ -8,7 +8,7 @@ import { computed, Injectable, Signal } from '@angular/core';
 import { AutocompleteOption } from 'src/app/shared/base-controls/autocomplete-input/autocomplete.models';
 
 @Injectable({ providedIn: 'root' })
-export class AsyncValidatorsBuilder {
+export class AsyncValidatorsCreator {
   createValueInUseValidator(odataService: OdataBase, attribute: string, collectionId?: string): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       if (!control.value) return of(null);

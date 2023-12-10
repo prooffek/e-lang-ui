@@ -1,7 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { AutocompleteOption } from './autocomplete.models';
 import { FormControl } from '@angular/forms';
-import { ShowErrorOn } from '../input-error/input-error.component';
 
 @Component({
   selector: 'app-autocomplete-input',
@@ -16,7 +15,6 @@ export class AutocompleteInputComponent implements OnChanges {
   @Input() showClearButton = true;
   @Input() defaultValue: any = undefined;
   @Input() changeEmptyToDefault = true;
-  @Input() showErrorOn: ShowErrorOn = 'touched';
 
   getName(id: string) {
     return this.options?.find((x) => x.id === id)?.name ?? this.defaultValue;

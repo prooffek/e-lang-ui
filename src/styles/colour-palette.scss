@@ -4,7 +4,7 @@
   --inactive-tab-background: color-mix(in srgb, #fff, #0b1d28 80%);
   --active-tab-background: color-mix(in srgb, #fff, #0b1d28 40%);
 
-  --breadcrumb-background: color-mix(in srgb, #fff, #0b1d28 80%);;
+  --breadcrumb-background: color-mix(in srgb, #fff, #0b1d28 80%);
   --breadcrumb-divider: #9e9e9e;
 
   --main-body-border: #d9d9d9;
@@ -17,4 +17,9 @@
   --btn-active-background: color-mix(in srgb, #fff, #0b1d28 40%);
   --btn-disabled-color: rgba(0, 0, 0, 0.60);
   --btn-disabled-background: color-mix(in srgb, #fff, #0b1d28 80%);
+
+  --dialog-background-color: color-mix(in srgb, #fff, #0b1d28 80%);
+  --dialog-border: #d9d9d9;
+  --dialog-color: #fff;
+  --dialog-warning: #ffff00;
 }

@@ -2,6 +2,7 @@ import { createReducer, on } from '@ngrx/store';
 import { initialCollectionState } from './state';
 import {
   addCollectionAutocompleteOption,
+  addFlashcardToCollection,
   addNewCollectionFailure,
   addNewCollectionSuccess,
   deleteCollectionFailure,
@@ -18,7 +19,7 @@ import {
   updateCollectionFailure,
   updateCollectionSuccess,
 } from './actions';
-import { CollectionCardDto } from 'src/app/core/services/api-client/api-client';
+import { CollectionCardDto, CollectionDto } from 'src/app/core/services/api-client/api-client';
 import { deleteCollectionFromState, updateCollectionStateOnAddOrEdit } from './helper-functions';
 import { AutocompleteOption } from 'src/app/shared/base-controls/autocomplete-input/autocomplete.models';
 
@@ -99,5 +100,21 @@ export const Reducer = createReducer(
       ...state,
       collectionAutocompleteOptions,
     };
+  }),
+  on(addFlashcardToCollection, (state, { flashcard }) => {
+    const currentCollection = { ...state.currentCollection } as CollectionDto;
+    const subcollectionCards = currentCollection?.subcollections?.length ? [...currentCollection.subcollections] : [];
+
+    currentCollection.subcollections = subcollectionCards?.map((card) => {
+      if (card.title === flashcard.collectionName) {
+        const temp = { ...card };
+        temp.flashcardsCount += 1;
+        return temp as CollectionCardDto;
+      }
+
+      return { ...card } as CollectionCardDto;
+    });
+
+    return { ...state, currentCollection: currentCollection };
   }),
 );

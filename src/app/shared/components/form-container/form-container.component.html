@@ -2,6 +2,8 @@
 <div *ngIf="form" class="form-container">
   <form [formGroup]="form">
     <ng-content select="[inputs]"></ng-content>
-    <ng-content select="[form-actions]"></ng-content>
   </form>
+</div>
+<div class="actions-container">
+  <ng-content select="[form-actions]"></ng-content>
 </div>

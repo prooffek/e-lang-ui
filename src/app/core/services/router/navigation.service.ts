@@ -46,7 +46,7 @@ export class NavigationService {
       .setCollectionTab()
       .setDoubleColumnView()
       .setCollectionView(viewCollectionId)
-      .setAddForm()
+      .setAddCollectionForm()
       .build();
 
     this._route.navigate(urlData.commands, { queryParams: urlData.queryParams });
@@ -57,7 +57,18 @@ export class NavigationService {
       .setCollectionTab()
       .setDoubleColumnView()
       .setCollectionView(viewCollectionId)
-      .setEditForm(formCollectionId)
+      .setCollectionEditForm(formCollectionId)
+      .build();
+
+    this._route.navigate(urlData.commands, { queryParams: urlData.queryParams });
+  }
+
+  navigateToFlashcardAddForm(viewCollectionId?: string) {
+    const urlData = this._navBuilder
+      .setCollectionTab()
+      .setDoubleColumnView()
+      .setCollectionView(viewCollectionId)
+      .setAddFlashcardForm()
       .build();
 
     this._route.navigate(urlData.commands, { queryParams: urlData.queryParams });

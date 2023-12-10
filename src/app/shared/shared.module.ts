@@ -21,6 +21,8 @@ import { IconButtonComponent } from './base-controls/icon-button/icon-button.com
 import { TableComponent } from './components/table/table.component';
 import { AgGridModule } from 'ag-grid-angular';
 import { TableButtonComponent } from './components/table/table-button/table-button.component';
+import { DialogComponent } from './base-controls/dialog/dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -38,6 +40,7 @@ import { TableButtonComponent } from './components/table/table-button/table-butt
     IconButtonComponent,
     TableComponent,
     TableButtonComponent,
+    DialogComponent,
   ],
   imports: [
     CommonModule,
@@ -48,7 +51,8 @@ import { TableButtonComponent } from './components/table/table-button/table-butt
     MatInputModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
-    AgGridModule
+    AgGridModule,
+    MatDialogModule,
   ],
   exports: [
     IconComponent,
@@ -61,7 +65,8 @@ import { TableButtonComponent } from './components/table/table-button/table-butt
     FormContainerComponent,
     IconButtonComponent,
     TableComponent,
-    TableButtonComponent
+    TableButtonComponent,
+    DialogComponent,
   ],
 })
 export class SharedModule {}

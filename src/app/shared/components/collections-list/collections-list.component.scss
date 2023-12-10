@@ -1,6 +1,7 @@
 .collection-list-container {
-  margin: 30px 10%;
-  height: 100%;
+  padding: 30px 10%;
+  height: calc(100vh - 120px);
+  overflow-y: scroll;
 
   .actions-container {
     width: 100%;
@@ -8,7 +9,6 @@
   }
 
   .collections-list {
-    height: 100%;
     display: grid;
     gap: 30px;
   }
@@ -38,6 +38,10 @@
       }
     }
   }
+}
+
+.collection-list-container::-webkit-scrollbar {
+  display: none;
 }
 
 @media screen and (max-width: 1230px) {

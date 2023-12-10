@@ -1,0 +1,49 @@
+.form-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.meaning-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 5px;
+
+  .meaning-input {
+    flex: 1;
+  }
+}
+
+.remove-meaning-btn {
+  margin-bottom: 20px;
+}
+
+.add-meaning-btn-container {
+  padding: 0 10%;
+}
+
+.actions-container {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(150px, 1fr));
+  gap: 5px;
+
+  .btn-label {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+    p {
+      color: var(--dark-font-color);
+    }
+
+    .disabled {
+      color: var(--btn-disabled-color);
+    }
+  }
+}

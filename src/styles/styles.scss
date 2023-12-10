@@ -52,3 +52,16 @@ body {
 body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+.full-width,
+.half-width {
+  display: grid;
+}
+
+.full-width {
+  grid-template-columns: 1fr;
+}
+
+.half-width {
+  grid-template-columns: 70% 1fr;
+}

@@ -1,0 +1,18 @@
+<app-dialog title="Base flashcard has been modified">
+  <div content class="content-container">
+    <p>Values in the form do not match the linked flashcard. Do you want to update the flashcard?</p>
+    <p class="warning">
+      WARNING! <br />
+      Update will affect flashcards in the following collections:
+    </p>
+    <ul>
+      <li class="warning" *ngFor="let flashcard of data">{{ flashcard.collectionName }}</li>
+    </ul>
+  </div>
+  <div actions class="actions-container">
+    <app-button label="Update existing" (onClick)="close(actions.updateExisting)"></app-button>
+    <app-button label="Use existing" (onClick)="close(actions.useExisting)"></app-button>
+    <app-button label="Detach existing" (onClick)="close(actions.duplicate)"></app-button>
+    <app-button label="Cancel" (onClick)="close(actions.cancel)"></app-button>
+  </div>
+</app-dialog>

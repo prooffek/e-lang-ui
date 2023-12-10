@@ -1,6 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ShowErrorOn } from '../input-error/input-error.component';
 
 @Component({
   selector: 'app-input',
@@ -12,9 +11,14 @@ export class InputComponent {
   @Input() control: FormControl | undefined;
   @Input() showClearButton = true;
   @Input() defaultValue: any = undefined;
-  @Input() showErrorOn: ShowErrorOn = 'touched';
+
+  @Output() onBlur = new EventEmitter();
 
   clearValue() {
     this.control?.setValue(this.defaultValue);
+  }
+
+  blur() {
+    this.onBlur.emit();
   }
 }

@@ -1,0 +1,16 @@
+.content-container {
+   color: var(--dialog-color);
+
+  .warning {
+    color: var(--dialog-warning);
+  }
+}
+
+.actions-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+}

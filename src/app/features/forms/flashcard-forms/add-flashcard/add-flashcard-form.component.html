@@ -1,0 +1,66 @@
+<div class="form-container">
+  <app-form-container [form]="form" title="Add flashcard">
+    <div inputs>
+      <app-input
+        label="Word/Phrase"
+        [control]="form.controls[controlNames.wordOrPhrase]"
+        [defaultValue]="defaultValues"
+        (onBlur)="handleDuplicates()"
+      ></app-input>
+      <app-autocomplete-input
+        label="Parent collection"
+        [defaultValue]="undefined"
+        [control]="form.controls[controlNames.collectionId]"
+        [options]="options()"
+        [filteredOptions]="(filteredOptions$ | async) ?? options()"
+      ></app-autocomplete-input>
+
+      <mat-error *ngIf="form.controls[controlNames.meanings]?.hasError(ValidationError.duplicatedMeanings)">
+        Duplicated meanings: {{ form.controls[controlNames.meanings]!.errors![ValidationError.duplicatedMeanings] }}.
+      </mat-error>
+
+      <div class="meaning-container" *ngFor="let control of getMeaningControls; let i = index">
+        <app-input
+          class="meaning-input"
+          label="Meaning {{ i + 1 }}"
+          [control]="control"
+          [defaultValue]="defaultValues"
+        ></app-input>
+        <app-button
+          class="remove-meaning-btn"
+          *ngIf="getMeaningControls.length > 1"
+          width="25px"
+          height="56px"
+          (onClick)="removeMeaning(i)"
+          [isDisabled]="getMeaningControls.length === 2 && i === 0 && !!getMeaningControls.at(1)?.invalid"
+          ><app-icon file="delete-black" height="35px" custom-label></app-icon
+        ></app-button>
+      </div>
+      <div class="add-meaning-btn-container">
+        <app-button
+          [isDisabled]="!!form.controls[controlNames.meanings].invalid"
+          (onClick)="addMeaning()"
+          iconFile="add-black"
+          label="Add new meaning"
+          width="100%"
+        ></app-button>
+      </div>
+    </div>
+  </app-form-container>
+
+  <div class="actions-container">
+    <app-button (onClick)="save()" [isDisabled]="isDisabled">
+      <div custom-label class="btn-label">
+        <app-icon file="save-black" height="25px"></app-icon>
+        <p [ngClass]="{ disabled: isDisabled }">Save</p>
+      </div>
+    </app-button>
+
+    <app-button (onClick)="closeRightColumn()">
+      <div custom-label class="btn-label">
+        <app-icon file="chevron-right-black" height="25px"></app-icon>
+        <p>Close</p>
+      </div>
+    </app-button>
+  </div>
+</div>

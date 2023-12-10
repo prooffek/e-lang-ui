@@ -1,11 +1,15 @@
 <div class="column-container">
   <app-add-collection-form
-    *ngIf="formType === formTypeEnum.add"
+    *ngIf="formType === formTypeEnum.addCollection"
     [collectionId]="collectionId"
   ></app-add-collection-form>
   <app-edit-collection-form
-    *ngIf="formType === formTypeEnum.edit"
+    *ngIf="formType === formTypeEnum.editCollection"
     [collectionId]="collectionId"
     [editCollectionId]="editCollectionId"
   ></app-edit-collection-form>
+  <app-add-flashcard-form
+    *ngIf="formType === formTypeEnum.addFlashcard"
+    [collectionId]="collectionId"
+  ></app-add-flashcard-form>
 </div>

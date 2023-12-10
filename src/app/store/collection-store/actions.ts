@@ -3,6 +3,7 @@ import {
   CollectionCardDto,
   CollectionDto,
   CreateCollectionDto,
+  FlashcardDto,
   UpdateCollectionDto,
 } from 'src/app/core/services/api-client/api-client';
 import { AutocompleteOption } from 'src/app/shared/base-controls/autocomplete-input/autocomplete.models';
@@ -31,6 +32,7 @@ export enum CollectionActions {
   loadCollectionAutocompleteOptionsFailure = '[Collection] Load Collection Autocomplete Options - Failure',
   addCollectionAutocompleteOption = '[Collection] Add Collection Autocomplete Option',
   updateCollectionAutocompleteOptions = '[Collection] Update Collection Autocomplete Options',
+  addFlashcardToCollection = '[Collection] Add flashcard',
 }
 
 export const loadInitialCollectionCards = createAction(CollectionActions.loadInitialCollectionCards);
@@ -102,4 +104,9 @@ export const addCollectionAutocompleteOption = createAction(
 export const updateCollectionAutocompleteOptions = createAction(
   CollectionActions.updateCollectionAutocompleteOptions,
   props<{ collection: CollectionDto }>(),
+);
+
+export const addFlashcardToCollection = createAction(
+  CollectionActions.addFlashcardToCollection,
+  props<{ flashcard: FlashcardDto }>(),
 );
