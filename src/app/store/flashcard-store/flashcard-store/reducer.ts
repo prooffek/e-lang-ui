@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { initialFlashcardState } from './state';
-import { loadFlashcardsFailure, loadFlashcardsSuccess } from './actions';
+import { addOrUpdateFlashcardSuccess, loadFlashcardsFailure, loadFlashcardsSuccess } from './actions';
 import { FlashcardDto } from 'src/app/core/services/api-client/api-client';
 
 export const Reducer = createReducer(
@@ -18,4 +18,9 @@ export const Reducer = createReducer(
     ...state,
     error,
   })),
+  on(addOrUpdateFlashcardSuccess, (state, { flashcard }) => {
+    const flashcards = { ...state.flashcards };
+    flashcards[flashcard.id] = flashcard;
+    return { ...state, flashcards };
+  }),
 );

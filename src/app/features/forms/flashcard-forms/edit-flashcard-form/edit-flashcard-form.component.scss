@@ -3,6 +3,27 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  padding: 10px;
+}
+
+.meaning-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 5px;
+
+  .meaning-input {
+    flex: 1;
+  }
+}
+
+.remove-meaning-btn {
+  margin-bottom: 20px;
+}
+
+.add-meaning-btn-container {
+  padding: 0 10%;
 }
 
 .actions-container {

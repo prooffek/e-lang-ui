@@ -10,7 +10,7 @@ import {
 import { CollectionOdataService } from '../odata/collection-odata.service';
 import { AsyncValidatorsCreator } from '../../validators/async/async-validators.creator';
 import { AutocompleteOption } from '../../../shared/base-controls/autocomplete-input/autocomplete.models';
-import { MeaningDto } from '../api-client/api-client';
+import { FlashcardDto, MeaningDto } from '../api-client/api-client';
 import { meaningsValidator } from '../../validators/sync/meaning.validator';
 
 @Injectable({
@@ -89,6 +89,30 @@ export class FormService {
       ],
       [FlashcardFormControlNames.meanings]: this._fb.array(
         [this.getMeaningFormGroup()],
+        [Validators.required, meaningsValidator()],
+      ),
+    });
+  }
+
+  getFlashcardEditFormGroup(flashcard: FlashcardDto, options: Signal<AutocompleteOption[]>) {
+    return this._fb.group({
+      [FlashcardFormControlNames.flashcardId]: [flashcard.id, Validators.required],
+      [FlashcardFormControlNames.wordOrPhrase]: [
+        flashcard.wordOrPhrase,
+        [
+          Validators.required,
+          Validators.minLength(ValidationValues.wordOrPhraseMinLength),
+          Validators.maxLength(ValidationValues.wordOrPhraseMaxLength),
+        ],
+      ],
+      [FlashcardFormControlNames.flashcardBaseId]: flashcard.flashcardBaseId,
+      [FlashcardFormControlNames.collectionId]: [
+        flashcard.collectionId,
+        [Validators.required],
+        [this._asyncValidatorsBuilder.createRecordExistsValidator(this._collectionOdataService, true, options)],
+      ],
+      [FlashcardFormControlNames.meanings]: this._fb.array(
+        flashcard.meanings.map((m) => this.getMeaningFormGroup(m)),
         [Validators.required, meaningsValidator()],
       ),
     });

@@ -1,0 +1,15 @@
+.btn-label {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  p {
+    color: var(--dark-font-color);
+  }
+
+  .disabled {
+    color: var(--btn-disabled-color);
+  }
+}

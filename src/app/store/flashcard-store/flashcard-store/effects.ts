@@ -2,8 +2,8 @@ import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { FlashcardClient, FlashcardDto } from 'src/app/core/services/api-client/api-client';
 import {
-  addFlashcardFailure,
-  addFlashcardSuccess,
+  addOrUpdateFlashcardFailure,
+  addOrUpdateFlashcardSuccess,
   FlashcardActions,
   loadFlashcardsFailure,
   loadFlashcardsSuccess,
@@ -33,14 +33,14 @@ export class Effects {
 
   addFlashcardEffect$ = createEffect(() =>
     this._actions$.pipe(
-      ofType(FlashcardActions.addFlashcard),
+      ofType(FlashcardActions.AddOrUpdateFlashcard),
       switchMap(({ flashcard }) => {
         return this._httpClient.addOrUpdateFlashcard(flashcard).pipe(
           mergeMap((flashcard: FlashcardDto) => [
-            addFlashcardSuccess({ flashcard }),
+            addOrUpdateFlashcardSuccess({ flashcard }),
             addFlashcardToCollection({ flashcard }),
           ]),
-          catchError((error) => of(addFlashcardFailure({ error }))),
+          catchError((error) => of(addOrUpdateFlashcardFailure({ error }))),
         );
       }),
     ),
@@ -49,7 +49,7 @@ export class Effects {
   addFlashcardSuccessEffect$ = createEffect(
     () =>
       this._actions$.pipe(
-        ofType(FlashcardActions.addFlashcardSuccess),
+        ofType(FlashcardActions.AddOrUpdateFlashcardSuccess),
         tap(({ flashcard }) => {
           this._toastrService.success(`Flashcard '${flashcard.wordOrPhrase}' added successfully`);
         }),

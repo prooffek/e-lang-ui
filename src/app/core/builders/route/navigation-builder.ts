@@ -73,8 +73,8 @@ export class NavigationBuilder {
     return this;
   }
 
-  setFlashcardEditForm(collectionId: string) {
-    this.setForm(FormType.editFlashcard, { [NavigationParams.editCollectionId]: collectionId });
+  setFlashcardEditForm(flashcardId: string) {
+    this.setForm(FormType.editFlashcard, { [NavigationParams.editFlashcardId]: flashcardId });
     return this;
   }
 

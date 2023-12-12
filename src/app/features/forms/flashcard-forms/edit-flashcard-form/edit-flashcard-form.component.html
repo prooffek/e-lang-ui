@@ -1,16 +1,16 @@
-<div class="form-container">
-  <app-form-container [form]="form" title="Add flashcard">
+<div *ngIf="(flashcard$ | async) && form" class="form-container">
+  <app-form-container [form]="form" title="Edit flashcard">
     <div inputs>
       <app-word-or-phrase-input
-        [control]="form.controls[controlNames.wordOrPhrase]"
-        [isExistingFlashcardUsed]="isExistingFlashcardUsed"
+        [control]="wordOrPhraseControl"
+        [isExistingFlashcardUsed]="true"
         (markFormAsPristine)="markFormAsPristine()"
         (onDuplicated)="handleDuplicates($event)"
       ></app-word-or-phrase-input>
       <app-autocomplete-input
         label="Parent collection"
         [defaultValue]="undefined"
-        [control]="form.controls[controlNames.collectionId]"
+        [control]="collectionIdControl"
         [options]="options()"
         [filteredOptions]="(filteredOptions$ | async) ?? options()"
       ></app-autocomplete-input>
@@ -20,7 +20,7 @@
   </app-form-container>
 
   <div class="actions-container">
-    <app-save-button [form]="form" [isDisabled]="isDisabled" (onSave)="saveFlashcard($event)"></app-save-button>
+    <app-save-button [form]="form" [isDisabled]="!!isDisabled" (onSave)="saveFlashcard($event)"></app-save-button>
 
     <app-button (onClick)="closeRightColumn()">
       <div custom-label class="btn-label">

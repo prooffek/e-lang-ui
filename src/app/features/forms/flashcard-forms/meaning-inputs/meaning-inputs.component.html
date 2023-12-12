@@ -1,0 +1,31 @@
+<mat-error *ngIf="control && control.hasError(ValidationError.duplicatedMeanings)">
+  Duplicated meanings: {{ control.errors![ValidationError.duplicatedMeanings] }}.
+</mat-error>
+
+<div class="meaning-container" *ngFor="let control of meaningsControls; let i = index">
+  <app-input
+    class="meaning-input"
+    label="Meaning {{ i + 1 }}"
+    [control]="control"
+    [defaultValue]="defaultValue"
+  ></app-input>
+  <app-button
+    class="remove-meaning-btn"
+    *ngIf="meaningsControls.length > 1"
+    width="25px"
+    height="56px"
+    (onClick)="removeMeaning(i)"
+    [isDisabled]="meaningsControls.length === 2 && i === 0 && !!meaningsControls.at(1)?.invalid"
+    ><app-icon file="delete-black" height="35px" custom-label></app-icon
+  ></app-button>
+</div>
+
+<div class="add-meaning-btn-container">
+  <app-button
+    [isDisabled]="!!control?.invalid"
+    (onClick)="addMeaning()"
+    iconFile="add-black"
+    label="Add new meaning"
+    width="100%"
+  ></app-button>
+</div>

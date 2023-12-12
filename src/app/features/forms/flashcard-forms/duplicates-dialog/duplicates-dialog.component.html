@@ -10,7 +10,7 @@
         <span class="collection-col collection">Collection</span>
         <span class="meanings-col meanings">Meanings</span>
       </li>
-      <li *ngFor="let flashcard of flashcards" class="list-row">
+      <li *ngFor="let flashcard of flashcards; trackBy: trackByFn" class="list-row">
         <app-button
           class="action-col"
           label="Link"

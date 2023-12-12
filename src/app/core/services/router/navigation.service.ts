@@ -73,4 +73,10 @@ export class NavigationService {
 
     this._route.navigate(urlData.commands, { queryParams: urlData.queryParams });
   }
+
+  navigateToFlashcardEditForm(flashcardId: string) {
+    const urlData = this._navBuilder.setFlashcardsTab().setDoubleColumnView().setFlashcardEditForm(flashcardId).build();
+
+    this._route.navigate(urlData.commands, { queryParams: urlData.queryParams });
+  }
 }

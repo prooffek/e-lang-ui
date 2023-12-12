@@ -14,6 +14,11 @@ export const selectAllFlashcardModels = createSelector(selectAllFlashcards, (fla
   }),
 );
 
+export const selectFlashcard = (id: string) =>
+  createSelector(selectFlashcards, (state) => {
+    return state.flashcards[id];
+  });
+
 const getMeaningsString = (meanings: MeaningDto[]) => {
   return meanings
     .map((meaning, index) => {

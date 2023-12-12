@@ -783,6 +783,7 @@ export interface ICollectionAutocompleteDto {
 
 export class FlashcardDto implements IFlashcardDto {
     id!: string;
+    collectionId!: string;
     collectionName!: string;
     wordOrPhrase!: string;
     meanings!: MeaningDto[];
@@ -806,6 +807,7 @@ export class FlashcardDto implements IFlashcardDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.collectionId = _data["collectionId"];
             this.collectionName = _data["collectionName"];
             this.wordOrPhrase = _data["wordOrPhrase"];
             if (Array.isArray(_data["meanings"])) {
@@ -830,6 +832,7 @@ export class FlashcardDto implements IFlashcardDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["collectionId"] = this.collectionId;
         data["collectionName"] = this.collectionName;
         data["wordOrPhrase"] = this.wordOrPhrase;
         if (Array.isArray(this.meanings)) {
@@ -847,6 +850,7 @@ export class FlashcardDto implements IFlashcardDto {
 
 export interface IFlashcardDto {
     id: string;
+    collectionId: string;
     collectionName: string;
     wordOrPhrase: string;
     meanings: MeaningDto[];

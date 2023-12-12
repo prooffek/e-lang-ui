@@ -541,6 +541,7 @@
       "type": "object",
       "required": [
         "id",
+        "collectionId",
         "collectionName",
         "wordOrPhrase",
         "meanings",
@@ -550,6 +551,10 @@
       ],
       "properties": {
         "id": {
+          "type": "string",
+          "format": "guid"
+        },
+        "collectionId": {
           "type": "string",
           "format": "guid"
         },

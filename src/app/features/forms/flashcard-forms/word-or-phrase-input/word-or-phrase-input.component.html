@@ -1,0 +1,7 @@
+<app-input
+  *ngIf="control"
+  label="Word/Phrase"
+  [control]="control"
+  [defaultValue]="defaultValue"
+  (onBlur)="handleDuplicates()"
+></app-input>

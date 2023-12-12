@@ -1,0 +1,6 @@
+<app-button (onClick)="save()" [isDisabled]="isDisabled">
+  <div custom-label class="btn-label">
+    <app-icon file="save-black" height="25px"></app-icon>
+    <p [ngClass]="{ disabled: isDisabled }">Save</p>
+  </div>
+</app-button>

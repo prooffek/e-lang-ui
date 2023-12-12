@@ -1,6 +1,7 @@
 export enum NavigationParams {
   collectionId = 'collectionId',
   editCollectionId = 'editCollectionId',
+  editFlashcardId = 'editFlashcardId',
   form = 'form',
 }
 

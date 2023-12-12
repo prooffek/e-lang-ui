@@ -5,9 +5,9 @@ export enum FlashcardActions {
   loadFlashcards = '[Flashcard] Load flashcards',
   loadFlashcardsSuccess = '[Flashcard] Load flashcards - Success',
   loadFlashcardsFailure = '[Flashcard] Load flashcards - Failure',
-  addFlashcard = '[Flashcard] Add flashcard',
-  addFlashcardSuccess = '[Flashcard] Add flashcard - Success',
-  addFlashcardFailure = '[Flashcard] Add flashcard - Failure',
+  AddOrUpdateFlashcard = '[Flashcard] Add or update flashcard',
+  AddOrUpdateFlashcardSuccess = '[Flashcard] Add or update flashcard - Success',
+  AddOrUpdateFlashcardFailure = '[Flashcard] Add or update flashcard - Failure',
 }
 
 export const loadFlashcards = createAction(FlashcardActions.loadFlashcards);
@@ -17,14 +17,17 @@ export const loadFlashcardsSuccess = createAction(
 );
 export const loadFlashcardsFailure = createAction(FlashcardActions.loadFlashcardsFailure, props<{ error: any }>());
 
-export const addFlashcard = createAction(
-  FlashcardActions.addFlashcard,
+export const addOrUpdateFlashcard = createAction(
+  FlashcardActions.AddOrUpdateFlashcard,
   props<{ flashcard: AddOrUpdateFlashcardDto }>(),
 );
 
-export const addFlashcardSuccess = createAction(
-  FlashcardActions.addFlashcardSuccess,
+export const addOrUpdateFlashcardSuccess = createAction(
+  FlashcardActions.AddOrUpdateFlashcardSuccess,
   props<{ flashcard: FlashcardDto }>(),
 );
 
-export const addFlashcardFailure = createAction(FlashcardActions.addFlashcardFailure, props<{ error: any }>());
+export const addOrUpdateFlashcardFailure = createAction(
+  FlashcardActions.AddOrUpdateFlashcardFailure,
+  props<{ error: any }>(),
+);

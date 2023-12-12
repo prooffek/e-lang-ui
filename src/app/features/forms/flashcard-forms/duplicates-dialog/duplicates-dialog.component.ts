@@ -43,4 +43,8 @@ export class DuplicatesDialogComponent {
       })
       .join('; ');
   }
+
+  trackByFn(index: number, item: any) {
+    return item.id;
+  }
 }

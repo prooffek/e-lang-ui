@@ -1,8 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { ColDef } from 'ag-grid-community';
 import { ButtonModel } from 'src/app/shared/base-controls/button/button.model';
 import { TableButtonComponent } from 'src/app/shared/components/table/table-button/table-button.component';
 import { FlashcardViewModel } from './flashcard-view.model';
+import { NavigationService } from '../../../core/services/router/navigation.service';
 
 export enum FlashcardColumnNames {
   collectionName = 'collectionName',
@@ -28,6 +29,8 @@ export enum Headers {
   styleUrls: ['./flashcard-view.component.scss'],
 })
 export class FlashcardViewComponent {
+  private readonly _navigationService = inject(NavigationService);
+
   @Input() flashcards: FlashcardViewModel[] = [];
 
   buttons: ButtonModel[] = [
@@ -67,7 +70,7 @@ export class FlashcardViewComponent {
   ];
 
   editFlashcard(id: string) {
-    console.log({ edit: id });
+    this._navigationService.navigateToFlashcardEditForm(id);
   }
 
   deleteFlashcard(id: string) {

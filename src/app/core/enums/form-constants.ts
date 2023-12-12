@@ -35,6 +35,7 @@ export const DefaultFlashcardFormValues = {
 };
 
 export const FlashcardFormControlNames = {
+  flashcardId: 'flashcardId',
   collectionId: 'collectionId',
   flashcardBaseId: 'flashcardBaseId',
   wordOrPhrase: 'wordOrPhrase',

@@ -2,5 +2,10 @@
   class="flashcards-container"
   [ngClass]="{ 'full-width': columns === columnEnum.singleColumn, 'half-width': columns === columnEnum.doubleColumn }"
 >
-  <app-flashcard-view [flashcards]="flashcards()"></app-flashcard-view>
+  <div>
+    <app-flashcard-view [flashcards]="flashcards()"></app-flashcard-view>
+  </div>
+  <div *ngIf="columns === columnEnum.doubleColumn">
+    <router-outlet></router-outlet>
+  </div>
 </div>

@@ -8,6 +8,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { DuplicatesDialogComponent } from './flashcard-forms/duplicates-dialog/duplicates-dialog.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FlashcardModifiedDialogComponent } from './flashcard-forms/flashcard-modified-dialog/flashcard-modified-dialog.component';
+import { EditFlashcardFormComponent } from './flashcard-forms/edit-flashcard-form/edit-flashcard-form.component';
+import { WordOrPhraseInputComponent } from './flashcard-forms/word-or-phrase-input/word-or-phrase-input.component';
+import { MeaningInputsComponent } from './flashcard-forms/meaning-inputs/meaning-inputs.component';
+import { SaveFlashcardButtonComponent } from './flashcard-forms/save-button/save-flashcard-button.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +20,10 @@ import { FlashcardModifiedDialogComponent } from './flashcard-forms/flashcard-mo
     AddFlashcardFormComponent,
     DuplicatesDialogComponent,
     FlashcardModifiedDialogComponent,
+    EditFlashcardFormComponent,
+    WordOrPhraseInputComponent,
+    MeaningInputsComponent,
+    SaveFlashcardButtonComponent,
   ],
   imports: [CommonModule, SharedModule, ReactiveFormsModule, MatFormFieldModule],
   exports: [AddCollectionFormComponent, EditCollectionFormComponent, AddFlashcardFormComponent],
