@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { ColDef } from 'ag-grid-community';
 import { ButtonModel } from 'src/app/shared/base-controls/button/button.model';
 import { TableButtonComponent } from 'src/app/shared/components/table/table-button/table-button.component';
@@ -33,6 +33,8 @@ export class FlashcardViewComponent {
 
   @Input() flashcards: FlashcardViewModel[] = [];
 
+  @Output() onSelectedChange = new EventEmitter<FlashcardViewModel[]>();
+
   buttons: ButtonModel[] = [
     {
       label: 'Edit',
@@ -40,13 +42,6 @@ export class FlashcardViewComponent {
       width: '70px',
       height: '30px',
       iconFile: 'edit-black',
-    },
-    {
-      label: 'Remove',
-      onClick: (id: string) => this.deleteFlashcard(id),
-      width: '70px',
-      height: '30px',
-      iconFile: 'delete-black',
     },
   ];
 
@@ -59,7 +54,7 @@ export class FlashcardViewComponent {
         shouldRefresh: false,
       },
       resizable: false,
-      width: 200,
+      width: 80,
     },
     { field: FlashcardColumnNames.wordOrPhrase, headerName: Headers.wordOrPhrase, flex: 1, minWidth: 250 },
     { field: FlashcardColumnNames.meanings, headerName: Headers.meanings, flex: 2, minWidth: 250 },
@@ -73,7 +68,7 @@ export class FlashcardViewComponent {
     this._navigationService.navigateToFlashcardEditForm(id);
   }
 
-  deleteFlashcard(id: string) {
-    console.log({ delete: id });
+  select(selectedRows: FlashcardViewModel[]) {
+    this.onSelectedChange.emit(selectedRows);
   }
 }

@@ -67,6 +67,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     TableComponent,
     TableButtonComponent,
     DialogComponent,
+    DividerComponent,
   ],
 })
 export class SharedModule {}

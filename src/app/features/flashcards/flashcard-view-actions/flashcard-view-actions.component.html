@@ -1,0 +1,8 @@
+<div class="actions-container">
+  <app-button
+    [isDisabled]="!selectedFlashcards.length"
+    (onClick)="remove()"
+    iconFile="delete-black"
+    label="Remove"
+  ></app-button>
+</div>

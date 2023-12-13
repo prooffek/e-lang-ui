@@ -8,6 +8,12 @@ export enum FlashcardActions {
   AddOrUpdateFlashcard = '[Flashcard] Add or update flashcard',
   AddOrUpdateFlashcardSuccess = '[Flashcard] Add or update flashcard - Success',
   AddOrUpdateFlashcardFailure = '[Flashcard] Add or update flashcard - Failure',
+  RemoveFlashcard = '[Flashcard] Remove flashcard',
+  RemoveFlashcardSuccess = '[Flashcard] Remove flashcard - Success',
+  RemoveFlashcardFailure = '[Flashcard] Remove flashcard - Failure',
+  RemoveSelectedFlashcards = '[Flashcard] Remove selected flashcards',
+  RemoveSelectedFlashcardsSuccess = '[Flashcard] Remove selected flashcards - Success',
+  RemoveSelectedFlashcardsFailure = '[Flashcard] Remove selected flashcards - Failure',
 }
 
 export const loadFlashcards = createAction(FlashcardActions.loadFlashcards);
@@ -29,5 +35,27 @@ export const addOrUpdateFlashcardSuccess = createAction(
 
 export const addOrUpdateFlashcardFailure = createAction(
   FlashcardActions.AddOrUpdateFlashcardFailure,
+  props<{ error: any }>(),
+);
+
+export const removeFlashcard = createAction(FlashcardActions.RemoveFlashcard, props<{ flashcardId: string }>());
+export const removeFlashcardSuccess = createAction(
+  FlashcardActions.RemoveFlashcardSuccess,
+  props<{ flashcardId: string }>(),
+);
+export const removeFlashcardFailure = createAction(FlashcardActions.RemoveFlashcardFailure, props<{ error: any }>());
+
+export const removeSelectedFlashcards = createAction(
+  FlashcardActions.RemoveSelectedFlashcards,
+  props<{ flashcardIds: string[] }>(),
+);
+
+export const removeSelectedFlashcardsSuccess = createAction(
+  FlashcardActions.RemoveSelectedFlashcardsSuccess,
+  props<{ flashcardIds: string[] }>(),
+);
+
+export const removeSelectedFlashcardsFailure = createAction(
+  FlashcardActions.RemoveSelectedFlashcardsFailure,
   props<{ error: any }>(),
 );

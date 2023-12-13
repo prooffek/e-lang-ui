@@ -3,4 +3,8 @@
   width: 100%;
   min-height: 500px;
   min-width: 700px;
+
+  .view-container {
+    height: calc(100% - 60px);
+  }
 }

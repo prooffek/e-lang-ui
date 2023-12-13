@@ -1,15 +1,28 @@
-import { Component, Input } from '@angular/core';
-import { ColDef } from 'ag-grid-community';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ColDef, GridApi, GridReadyEvent } from 'ag-grid-community';
 
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
-  styleUrls: ['./table.component.scss']
+  styleUrls: ['./table.component.scss'],
 })
 export class TableComponent {
+  private gridApi!: GridApi<any>;
+
   @Input() colDef: ColDef[] | undefined;
   @Input() rowData: any[] | undefined;
+  @Input() rowSelection: 'single' | 'multiple' = 'single';
 
-  themeClass: string =
-    "ag-theme-quartz-dark";
+  @Output() onSelectedChange = new EventEmitter<any[]>();
+
+  themeClass: string = 'ag-theme-quartz-dark';
+
+  selectRows() {
+    const selected = this.gridApi.getSelectedRows();
+    this.onSelectedChange.emit(selected);
+  }
+
+  onGridReady(params: GridReadyEvent<any[]>) {
+    this.gridApi = params.api;
+  }
 }
