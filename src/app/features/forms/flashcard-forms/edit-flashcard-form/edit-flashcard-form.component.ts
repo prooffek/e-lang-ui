@@ -13,7 +13,7 @@ import { selectFlashcard } from '../../../../store/flashcard-store/flashcard-sto
 import { AutocompleteOption } from '../../../../shared/base-controls/autocomplete-input/autocomplete.models';
 import { SubscribedContainer } from '../../../../core/base/subscribed.container';
 import { loadCollectionAutocompleteOptions } from '../../../../store/collection-store/actions';
-import { addOrUpdateFlashcard } from '../../../../store/flashcard-store/flashcard-store/actions';
+import { addOrUpdateFlashcard, removeFlashcard } from '../../../../store/flashcard-store/flashcard-store/actions';
 
 @Component({
   selector: 'app-edit-flashcard-form',
@@ -54,8 +54,6 @@ export class EditFlashcardFormComponent extends SubscribedContainer implements O
 
   filteredOptions$: Observable<AutocompleteOption[]> | undefined;
 
-  change$: Observable<any> | undefined = undefined;
-
   get isDisabled() {
     return this.form?.pristine ? !this.isFlashcardLoaded : this.form?.invalid;
   }
@@ -94,5 +92,10 @@ export class EditFlashcardFormComponent extends SubscribedContainer implements O
   closeRightColumn() {
     this._navigationService.navigateToFlashcards();
     this.form?.reset();
+  }
+
+  remove() {
+    this._store.dispatch(removeFlashcard({ flashcardId: this.form?.get(this.controlNames.flashcardId)?.value }));
+    this.closeRightColumn();
   }
 }

@@ -391,6 +391,101 @@
         }
       }
     },
+    "/api/Flashcard/remove-flashcard": {
+      "delete": {
+        "tags": [
+          "Flashcard"
+        ],
+        "operationId": "Flashcard_DeleteFlashcard",
+        "consumes": [
+          "application/json;odata.metadata=minimal;odata.streaming=true",
+          "application/json;odata.metadata=minimal;odata.streaming=false",
+          "application/json;odata.metadata=minimal",
+          "application/json;odata.metadata=full;odata.streaming=true",
+          "application/json;odata.metadata=full;odata.streaming=false",
+          "application/json;odata.metadata=full",
+          "application/json;odata.metadata=none;odata.streaming=true",
+          "application/json;odata.metadata=none;odata.streaming=false",
+          "application/json;odata.metadata=none",
+          "application/json;odata.streaming=true",
+          "application/json;odata.streaming=false",
+          "application/json",
+          "application/xml",
+          "text/plain",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "name": "flashcardId",
+            "in": "body",
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": true,
+            "description": "",
+            "schema": {
+              "type": "file"
+            }
+          }
+        }
+      }
+    },
+    "/api/Flashcard/remove-flashcards": {
+      "delete": {
+        "tags": [
+          "Flashcard"
+        ],
+        "operationId": "Flashcard_DeleteFlashcards",
+        "consumes": [
+          "application/json;odata.metadata=minimal;odata.streaming=true",
+          "application/json;odata.metadata=minimal;odata.streaming=false",
+          "application/json;odata.metadata=minimal",
+          "application/json;odata.metadata=full;odata.streaming=true",
+          "application/json;odata.metadata=full;odata.streaming=false",
+          "application/json;odata.metadata=full",
+          "application/json;odata.metadata=none;odata.streaming=true",
+          "application/json;odata.metadata=none;odata.streaming=false",
+          "application/json;odata.metadata=none",
+          "application/json;odata.streaming=true",
+          "application/json;odata.streaming=false",
+          "application/json",
+          "application/xml",
+          "text/plain",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "name": "flashcardIds",
+            "in": "body",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "guid"
+              }
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": true,
+            "description": "",
+            "schema": {
+              "type": "file"
+            }
+          }
+        }
+      }
+    },
     "/api/Flashcard": {
       "get": {
         "tags": [

@@ -4,7 +4,7 @@ import { ValidationErrorConstants } from '../../enums/validation-error-constants
 export function meaningsValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const meaningControls = [...control.value];
-    const meanings = meaningControls.map((c) => c.value.trim());
+    const meanings = meaningControls.map((c) => c.value?.toLowerCase().trim());
 
     if (meanings.length && [...new Set(meanings)].length !== meanings.length) {
       return {

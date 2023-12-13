@@ -7,6 +7,10 @@ import {
   FlashcardActions,
   loadFlashcardsFailure,
   loadFlashcardsSuccess,
+  removeFlashcardFailure,
+  removeFlashcardSuccess,
+  removeSelectedFlashcardsFailure,
+  removeSelectedFlashcardsSuccess,
 } from './actions';
 import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -53,6 +57,48 @@ export class Effects {
         tap(({ flashcard }) => {
           this._toastrService.success(`Flashcard '${flashcard.wordOrPhrase}' added successfully`);
         }),
+      ),
+    { dispatch: false },
+  );
+
+  removeFlashcardEffect$ = createEffect(() =>
+    this._actions$.pipe(
+      ofType(FlashcardActions.RemoveFlashcard),
+      switchMap(({ flashcardId }) =>
+        this._httpClient.deleteFlashcard(flashcardId).pipe(
+          mergeMap(() => [removeFlashcardSuccess({ flashcardId })]),
+          catchError(({ error }) => of(removeFlashcardFailure({ error }))),
+        ),
+      ),
+    ),
+  );
+
+  removeFlashcardSuccessEffect$ = createEffect(
+    () =>
+      this._actions$.pipe(
+        ofType(FlashcardActions.RemoveFlashcardSuccess),
+        tap((_) => this._toastrService.success('Flashcard removed successfully.')),
+      ),
+    { dispatch: false },
+  );
+
+  removeSelectedFlashcardsEffect$ = createEffect(() =>
+    this._actions$.pipe(
+      ofType(FlashcardActions.RemoveSelectedFlashcards),
+      switchMap(({ flashcardIds }) =>
+        this._httpClient.deleteFlashcards(flashcardIds).pipe(
+          mergeMap(() => [removeSelectedFlashcardsSuccess({ flashcardIds })]),
+          catchError(({ error }) => of(removeSelectedFlashcardsFailure({ error }))),
+        ),
+      ),
+    ),
+  );
+
+  removeSelectedFlashcardSuccessEffect$ = createEffect(
+    () =>
+      this._actions$.pipe(
+        ofType(FlashcardActions.RemoveSelectedFlashcardsSuccess),
+        tap((_) => this._toastrService.success('Flashcards removed successfully.')),
       ),
     { dispatch: false },
   );

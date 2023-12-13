@@ -1,1 +1,7 @@
-<app-table *ngIf="flashcards" [rowData]="flashcards" [colDef]="colDef"></app-table>
+<app-table
+  *ngIf="flashcards"
+  [rowData]="flashcards"
+  [colDef]="colDef"
+  rowSelection="multiple"
+  (onSelectedChange)="select($event)"
+></app-table>
