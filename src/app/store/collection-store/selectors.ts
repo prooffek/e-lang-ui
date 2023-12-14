@@ -1,5 +1,8 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { CollectionState, collectionStoreName } from './state';
+import { FlashcardDto, FlashcardStatus } from '../../core/services/api-client/api-client';
+import { getMeaningsString } from '../../core/helpers/store/flashcardHelper';
+import { FlashcardViewModel } from '../../features/flashcards/flashcard-view/flashcard-view.model';
 
 export const selectCollections = createFeatureSelector<CollectionState>(collectionStoreName);
 
@@ -18,4 +21,13 @@ export const selectCurrentCollection = createSelector(selectCollections, (state)
 export const selectCollectionAutocompleteOptions = createSelector(
   selectCollections,
   (state) => state.collectionAutocompleteOptions,
+);
+
+export const selectCurrentCollectionFlashcardModels = createSelector(
+  selectCollections,
+  (state) =>
+    state.currentCollection?.flashcards?.map((flashcard: FlashcardDto) => {
+      const meanings = getMeaningsString(flashcard.meanings);
+      return { ...flashcard, meanings, status: FlashcardStatus[flashcard.status] } as FlashcardViewModel;
+    }),
 );

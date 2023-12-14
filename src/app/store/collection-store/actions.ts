@@ -33,6 +33,9 @@ export enum CollectionActions {
   addCollectionAutocompleteOption = '[Collection] Add Collection Autocomplete Option',
   updateCollectionAutocompleteOptions = '[Collection] Update Collection Autocomplete Options',
   addFlashcardToCollection = '[Collection] Add flashcard',
+  updateCurrentCollectionFlashcard = '[Collection] Update Current Collection Flashcard',
+  deleteCurrentCollectionFlashcard = '[Collection] Delete Current Collection Flashcard',
+  deleteCurrentCollectionFlashcards = '[Collection] Delete Current Collection Flashcards',
 }
 
 export const loadInitialCollectionCards = createAction(CollectionActions.loadInitialCollectionCards);
@@ -109,4 +112,17 @@ export const updateCollectionAutocompleteOptions = createAction(
 export const addFlashcardToCollection = createAction(
   CollectionActions.addFlashcardToCollection,
   props<{ flashcard: FlashcardDto }>(),
+);
+
+export const updateCurrentCollectionFlashcard = createAction(
+  CollectionActions.updateCurrentCollectionFlashcard,
+  props<{ flashcard: FlashcardDto }>(),
+);
+export const deleteCurrentCollectionFlashcard = createAction(
+  CollectionActions.deleteCurrentCollectionFlashcard,
+  props<{ flashcardId: string }>(),
+);
+export const deleteCurrentCollectionFlashcards = createAction(
+  CollectionActions.deleteCurrentCollectionFlashcards,
+  props<{ flashcardIds: string[] }>(),
 );

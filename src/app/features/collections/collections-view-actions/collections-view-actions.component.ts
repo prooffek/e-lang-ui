@@ -2,6 +2,8 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 const ADD_ICON = 'add-black';
 const GO_BACK_ICON = 'arrow-left-black';
+const SHOW_SUBCOLLECTIONS = 'collections-black';
+const SHOW_FLASHCARDS = 'cards-black';
 
 @Component({
   selector: 'app-collections-view-actions',
@@ -13,6 +15,9 @@ export class CollectionsViewActionsComponent {
 
   @Input() hasParent: boolean = false;
   @Input() parentCollectionId: string | undefined;
+  @Input() areFlashcardsVisible: boolean = false;
+  @Input() showToggleButtons: boolean = false;
+  @Input() isRowSelected: boolean = false;
 
   @Input() set parentCollectionName(value: string | undefined) {
     if (!value) {
@@ -31,9 +36,13 @@ export class CollectionsViewActionsComponent {
   @Output() onNavigateBack = new EventEmitter<string | undefined>();
   @Output() onAddCollectionClick = new EventEmitter();
   @Output() onAddFlashcardClick = new EventEmitter();
+  @Output() areFlashcardsVisibleChange = new EventEmitter<boolean>();
+  @Output() onRemoveSelectedFlashcard = new EventEmitter();
 
   addIcon = ADD_ICON;
   goBackIcon = GO_BACK_ICON;
+  showSubcollectionsIcon = SHOW_SUBCOLLECTIONS;
+  showFlashcardsIcon = SHOW_FLASHCARDS;
 
   navigateBack() {
     this.onNavigateBack.emit(this.parentCollectionId);
@@ -45,5 +54,17 @@ export class CollectionsViewActionsComponent {
 
   addFlashcard() {
     this.onAddFlashcardClick.emit();
+  }
+
+  showFlashcards() {
+    this.areFlashcardsVisibleChange.emit(true);
+  }
+
+  showSubcollections() {
+    this.areFlashcardsVisibleChange.emit(false);
+  }
+
+  removeFlashcard() {
+    this.onRemoveSelectedFlashcard.emit();
   }
 }

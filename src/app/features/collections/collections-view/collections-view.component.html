@@ -8,10 +8,8 @@
       Collection: <span class="collection-name">{{ collectionName }}</span>
     </h1>
   </div>
-  <ng-container *ngIf="!collectionName">
-    <ng-content select="[title]"></ng-content>
-  </ng-container>
   <div
+    *ngIf="collectionCards.length && !showFlashcards; else flashcardsList"
     class="collections-list"
     [ngClass]="{ 'full-width': columns === columnEnum.singleColumn, 'half-width': columns === columnEnum.doubleColumn }"
   >
@@ -25,3 +23,15 @@
     ></app-collection-card>
   </div>
 </div>
+
+<ng-template #flashcardsList>
+  <div class="flashcards-list">
+    <app-table
+      *ngIf="flashcards"
+      [rowData]="flashcards"
+      [colDef]="colDef"
+      rowSelection="multiple"
+      (onSelectedChange)="selectFlashcards($event)"
+    ></app-table>
+  </div>
+</ng-template>

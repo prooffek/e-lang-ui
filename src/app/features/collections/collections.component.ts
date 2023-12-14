@@ -19,10 +19,16 @@ import {
   loadCurrentCollection,
   loadInitialCollectionCards,
 } from 'src/app/store/collection-store/actions';
-import { selectCurrentCollection, selectInitCollectionCards } from 'src/app/store/collection-store/selectors';
+import {
+  selectCurrentCollection,
+  selectCurrentCollectionFlashcardModels,
+  selectInitCollectionCards,
+} from 'src/app/store/collection-store/selectors';
+import { FlashcardViewModel } from '../flashcards/flashcard-view/flashcard-view.model';
+import { removeSelectedFlashcards } from '../../store/flashcard-store/flashcard-store/actions';
 
 @Component({
-  selector: 'app-collections-view',
+  selector: 'app-collections',
   templateUrl: './collections.component.html',
   styleUrls: ['./collections.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,8 +43,11 @@ export class CollectionsComponent implements OnInit, OnChanges {
   @Input() columns: string = this.columnEnum.singleColumn;
 
   currentCollection: Signal<CollectionDto | undefined> = this._store.selectSignal(selectCurrentCollection);
+  flashcards = this._store.selectSignal(selectCurrentCollectionFlashcardModels);
   mainCollectionCards = this._store.selectSignal(selectInitCollectionCards);
+  selectedFlashcards: FlashcardViewModel[] = [];
   hasParam: boolean = false;
+  areFlashcardsVisible = false;
 
   ngOnInit(): void {
     this._store.dispatch(loadInitialCollectionCards());
@@ -69,5 +78,14 @@ export class CollectionsComponent implements OnInit, OnChanges {
 
   removeCollection(collectionId: string) {
     this._store.dispatch(deleteCollection({ id: collectionId }));
+  }
+
+  selectFlashcards(flashcards: FlashcardViewModel[]) {
+    this.selectedFlashcards = flashcards;
+  }
+
+  removeSelectedFlashcards() {
+    const flashcardIds = this.selectedFlashcards.map((f) => f.id);
+    this._store.dispatch(removeSelectedFlashcards({ flashcardIds }));
   }
 }

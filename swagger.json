@@ -578,57 +578,12 @@
           "items": {
             "$ref": "#/definitions/CollectionCardDto"
           }
-        }
-      }
-    },
-    "CreateCollectionDto": {
-      "type": "object",
-      "required": [
-        "name"
-      ],
-      "properties": {
-        "name": {
-          "type": "string"
         },
-        "parentCollectionId": {
-          "type": "string",
-          "format": "guid"
-        }
-      }
-    },
-    "UpdateCollectionDto": {
-      "type": "object",
-      "required": [
-        "id",
-        "name"
-      ],
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "guid"
-        },
-        "name": {
-          "type": "string"
-        },
-        "parentCollectionId": {
-          "type": "string",
-          "format": "guid"
-        }
-      }
-    },
-    "CollectionAutocompleteDto": {
-      "type": "object",
-      "required": [
-        "id",
-        "name"
-      ],
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "guid"
-        },
-        "name": {
-          "type": "string"
+        "flashcards": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FlashcardDto"
+          }
         }
       }
     },
@@ -713,6 +668,57 @@
         2,
         3
       ]
+    },
+    "CreateCollectionDto": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "parentCollectionId": {
+          "type": "string",
+          "format": "guid"
+        }
+      }
+    },
+    "UpdateCollectionDto": {
+      "type": "object",
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "guid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "parentCollectionId": {
+          "type": "string",
+          "format": "guid"
+        }
+      }
+    },
+    "CollectionAutocompleteDto": {
+      "type": "object",
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "guid"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
     },
     "AddOrUpdateFlashcardDto": {
       "type": "object",

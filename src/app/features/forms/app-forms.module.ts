@@ -26,6 +26,11 @@ import { SaveFlashcardButtonComponent } from './flashcard-forms/save-button/save
     SaveFlashcardButtonComponent,
   ],
   imports: [CommonModule, SharedModule, ReactiveFormsModule, MatFormFieldModule],
-  exports: [AddCollectionFormComponent, EditCollectionFormComponent, AddFlashcardFormComponent],
+  exports: [
+    AddCollectionFormComponent,
+    EditCollectionFormComponent,
+    AddFlashcardFormComponent,
+    EditFlashcardFormComponent,
+  ],
 })
 export class AppFormsModule {}
