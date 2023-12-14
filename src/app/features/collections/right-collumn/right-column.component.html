@@ -12,4 +12,11 @@
     *ngIf="formType === formTypeEnum.addFlashcard"
     [collectionId]="collectionId"
   ></app-add-flashcard-form>
+  <app-edit-flashcard-form
+    *ngIf="formType === formTypeEnum.editFlashcard"
+    [collectionId]="collectionId"
+    [editFlashcardId]="editFlashcardId"
+    [closeUrlData]="closeUrlData"
+  >
+  </app-edit-flashcard-form>
 </div>

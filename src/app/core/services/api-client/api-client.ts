@@ -719,6 +719,7 @@ export class CollectionDto implements ICollectionDto {
     parentId?: string | undefined;
     parentName?: string | undefined;
     subcollections?: CollectionCardDto[] | undefined;
+    flashcards?: FlashcardDto[] | undefined;
 
     constructor(data?: ICollectionDto) {
         if (data) {
@@ -739,6 +740,11 @@ export class CollectionDto implements ICollectionDto {
                 this.subcollections = [] as any;
                 for (let item of _data["subcollections"])
                     this.subcollections!.push(CollectionCardDto.fromJS(item));
+            }
+            if (Array.isArray(_data["flashcards"])) {
+                this.flashcards = [] as any;
+                for (let item of _data["flashcards"])
+                    this.flashcards!.push(FlashcardDto.fromJS(item));
             }
         }
     }
@@ -761,6 +767,11 @@ export class CollectionDto implements ICollectionDto {
             for (let item of this.subcollections)
                 data["subcollections"].push(item.toJSON());
         }
+        if (Array.isArray(this.flashcards)) {
+            data["flashcards"] = [];
+            for (let item of this.flashcards)
+                data["flashcards"].push(item.toJSON());
+        }
         return data;
     }
 }
@@ -771,130 +782,7 @@ export interface ICollectionDto {
     parentId?: string | undefined;
     parentName?: string | undefined;
     subcollections?: CollectionCardDto[] | undefined;
-}
-
-export class CreateCollectionDto implements ICreateCollectionDto {
-    name!: string;
-    parentCollectionId?: string | undefined;
-
-    constructor(data?: ICreateCollectionDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.name = _data["name"];
-            this.parentCollectionId = _data["parentCollectionId"];
-        }
-    }
-
-    static fromJS(data: any): CreateCollectionDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new CreateCollectionDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        data["parentCollectionId"] = this.parentCollectionId;
-        return data;
-    }
-}
-
-export interface ICreateCollectionDto {
-    name: string;
-    parentCollectionId?: string | undefined;
-}
-
-export class UpdateCollectionDto implements IUpdateCollectionDto {
-    id!: string;
-    name!: string;
-    parentCollectionId?: string | undefined;
-
-    constructor(data?: IUpdateCollectionDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.parentCollectionId = _data["parentCollectionId"];
-        }
-    }
-
-    static fromJS(data: any): UpdateCollectionDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new UpdateCollectionDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["parentCollectionId"] = this.parentCollectionId;
-        return data;
-    }
-}
-
-export interface IUpdateCollectionDto {
-    id: string;
-    name: string;
-    parentCollectionId?: string | undefined;
-}
-
-export class CollectionAutocompleteDto implements ICollectionAutocompleteDto {
-    id!: string;
-    name!: string;
-
-    constructor(data?: ICollectionAutocompleteDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-        }
-    }
-
-    static fromJS(data: any): CollectionAutocompleteDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new CollectionAutocompleteDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        return data;
-    }
-}
-
-export interface ICollectionAutocompleteDto {
-    id: string;
-    name: string;
+    flashcards?: FlashcardDto[] | undefined;
 }
 
 export class FlashcardDto implements IFlashcardDto {
@@ -1021,6 +909,130 @@ export enum FlashcardStatus {
     Seen = 1,
     Learnt = 2,
     Inactive = 3,
+}
+
+export class CreateCollectionDto implements ICreateCollectionDto {
+    name!: string;
+    parentCollectionId?: string | undefined;
+
+    constructor(data?: ICreateCollectionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.parentCollectionId = _data["parentCollectionId"];
+        }
+    }
+
+    static fromJS(data: any): CreateCollectionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateCollectionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["parentCollectionId"] = this.parentCollectionId;
+        return data;
+    }
+}
+
+export interface ICreateCollectionDto {
+    name: string;
+    parentCollectionId?: string | undefined;
+}
+
+export class UpdateCollectionDto implements IUpdateCollectionDto {
+    id!: string;
+    name!: string;
+    parentCollectionId?: string | undefined;
+
+    constructor(data?: IUpdateCollectionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.parentCollectionId = _data["parentCollectionId"];
+        }
+    }
+
+    static fromJS(data: any): UpdateCollectionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateCollectionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["parentCollectionId"] = this.parentCollectionId;
+        return data;
+    }
+}
+
+export interface IUpdateCollectionDto {
+    id: string;
+    name: string;
+    parentCollectionId?: string | undefined;
+}
+
+export class CollectionAutocompleteDto implements ICollectionAutocompleteDto {
+    id!: string;
+    name!: string;
+
+    constructor(data?: ICollectionAutocompleteDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): CollectionAutocompleteDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CollectionAutocompleteDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        return data;
+    }
+}
+
+export interface ICollectionAutocompleteDto {
+    id: string;
+    name: string;
 }
 
 export class AddOrUpdateFlashcardDto implements IAddOrUpdateFlashcardDto {

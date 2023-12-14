@@ -30,9 +30,13 @@ export class EditFlashcardFormComponent extends SubscribedContainer implements O
   protected readonly controlNames = FlashcardFormControlNames;
 
   @Input() collectionId: string | undefined;
-  @Input() set editFlashcardId(id: string) {
-    this.flashcard$ = this._store.select(selectFlashcard(id)).pipe(tap((flashcard) => this.initForm(flashcard)));
+  @Input() set editFlashcardId(id: string | undefined) {
+    if (id) {
+      this.flashcard$ = this._store.select(selectFlashcard(id)).pipe(tap((flashcard) => this.initForm(flashcard)));
+    }
   }
+
+  @Input() closeUrlData: { commands: string[]; queryParams: { [key: string]: any } | undefined } | undefined;
 
   flashcard$: Observable<FlashcardDto> | undefined;
 
@@ -90,8 +94,12 @@ export class EditFlashcardFormComponent extends SubscribedContainer implements O
   }
 
   closeRightColumn() {
-    this._navigationService.navigateToFlashcards();
     this.form?.reset();
+    if (this.closeUrlData?.commands) {
+      this._navigationService.navigateTo(this.closeUrlData);
+    } else {
+      this._navigationService.navigateToFlashcards();
+    }
   }
 
   remove() {

@@ -7,6 +7,8 @@ import {
   addNewCollectionSuccess,
   deleteCollectionFailure,
   deleteCollectionSuccess,
+  deleteCurrentCollectionFlashcard,
+  deleteCurrentCollectionFlashcards,
   loadCollectionAutocompleteOptionsFailure,
   loadCollectionAutocompleteOptionsSuccess,
   loadCollectionFailure,
@@ -18,6 +20,7 @@ import {
   updateCollectionAutocompleteOptions,
   updateCollectionFailure,
   updateCollectionSuccess,
+  updateCurrentCollectionFlashcard,
 } from './actions';
 import { CollectionCardDto, CollectionDto } from 'src/app/core/services/api-client/api-client';
 import { deleteCollectionFromState, updateCollectionStateOnAddOrEdit } from './helper-functions';
@@ -116,5 +119,44 @@ export const Reducer = createReducer(
     });
 
     return { ...state, currentCollection: currentCollection };
+  }),
+  on(updateCurrentCollectionFlashcard, (state, { flashcard }) => {
+    const flashcards = state.currentCollection?.flashcards ? [...state.currentCollection.flashcards] : undefined;
+
+    if (!flashcards) return { ...state };
+
+    const index = flashcards.findIndex((f) => f.id === flashcard.id);
+
+    if (index >= 0) {
+      flashcards[index] = flashcard;
+    }
+
+    const currentCollection = { ...state.currentCollection, flashcards } as CollectionDto;
+
+    return { ...state, currentCollection };
+  }),
+  on(deleteCurrentCollectionFlashcard, (state, { flashcardId }) => {
+    const flashcards = state.currentCollection?.flashcards ? [...state.currentCollection.flashcards] : undefined;
+
+    if (!flashcards) return { ...state };
+
+    const currentCollection = {
+      ...state.currentCollection,
+      flashcards: flashcards.filter((f) => f.id !== flashcardId),
+    } as CollectionDto;
+
+    return { ...state, currentCollection };
+  }),
+  on(deleteCurrentCollectionFlashcards, (state, { flashcardIds }) => {
+    const flashcards = state.currentCollection?.flashcards ? [...state.currentCollection.flashcards] : undefined;
+
+    if (!flashcards) return { ...state };
+
+    const currentCollection = {
+      ...state.currentCollection,
+      flashcards: flashcards.filter((f) => !flashcardIds.includes(f.id)),
+    } as CollectionDto;
+
+    return { ...state, currentCollection };
   }),
 );

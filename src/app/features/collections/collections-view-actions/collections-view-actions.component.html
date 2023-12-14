@@ -1,21 +1,34 @@
 <div action-cards class="actions-container">
-  <app-button
-    *ngIf="hasParent && parentCollectionName"
-    (onClick)="navigateBack()"
-    [iconFile]="goBackIcon"
-    [label]="'Back to ' + parentCollectionName"
-  >
-  </app-button>
-  <app-button
-    (onClick)="addCollection()"
-    [iconFile]="addIcon"
-    label="Add Collection"
-  >
-  </app-button>
-  <app-button
-    *ngIf="hasParent"
-    (onClick)="addFlashcard()"
-    [iconFile]="addIcon"
-    label="Add Flashcard"
-  ></app-button>
+  <div class="main-actions">
+    <app-button
+      *ngIf="hasParent && parentCollectionName"
+      (onClick)="navigateBack()"
+      [iconFile]="goBackIcon"
+      [label]="'Back to ' + parentCollectionName"
+    >
+    </app-button>
+    <app-button
+      *ngIf="hasParent && showToggleButtons && !areFlashcardsVisible"
+      (onClick)="showFlashcards()"
+      [iconFile]="showFlashcardsIcon"
+      label="Show Flashcards"
+    ></app-button>
+    <app-button
+      *ngIf="hasParent && showToggleButtons && areFlashcardsVisible"
+      (onClick)="showSubcollections()"
+      [iconFile]="showSubcollectionsIcon"
+      label="Show Subcollections"
+    ></app-button>
+  </div>
+  <div class="form-actions">
+    <app-button (onClick)="addCollection()" [iconFile]="addIcon" label="Add Collection"> </app-button>
+    <app-button *ngIf="hasParent" (onClick)="addFlashcard()" [iconFile]="addIcon" label="Add Flashcard"></app-button>
+    <app-button
+      *ngIf="hasParent && (!showToggleButtons || areFlashcardsVisible)"
+      (onClick)="removeFlashcard()"
+      [iconFile]="addIcon"
+      [isDisabled]="!isRowSelected"
+      label="Remove Flashcard"
+    ></app-button>
+  </div>
 </div>

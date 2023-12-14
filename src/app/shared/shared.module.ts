@@ -2,9 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { IconComponent } from './base-controls/icon/icon.component';
 import { CardComponent } from './components/card/card.component';
-import { CollectionsListComponent } from './components/collections-list/collections-list.component';
 import { AddCardComponent } from './components/add-card/add-card.component';
-import { CollectionCardComponent } from './components/collections-list/collection-card/collection-card.component';
 import { ButtonComponent } from './base-controls/button/button.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -28,9 +26,7 @@ import { MatDialogModule } from '@angular/material/dialog';
   declarations: [
     IconComponent,
     CardComponent,
-    CollectionsListComponent,
     AddCardComponent,
-    CollectionCardComponent,
     ButtonComponent,
     DividerComponent,
     InputComponent,
@@ -57,7 +53,6 @@ import { MatDialogModule } from '@angular/material/dialog';
   exports: [
     IconComponent,
     CardComponent,
-    CollectionsListComponent,
     AddCardComponent,
     ButtonComponent,
     InputComponent,

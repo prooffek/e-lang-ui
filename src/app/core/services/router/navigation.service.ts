@@ -15,7 +15,11 @@ export class NavigationService {
   private _route = inject(Router);
   private _navBuilder = inject(NavigationBuilder);
 
-  navigateTo(path: string) {
+  navigateTo(data: { commands: string[]; queryParams: { [key: string]: any } | undefined }) {
+    this._route.navigate(data.commands, { queryParams: data.queryParams });
+  }
+
+  navigateToPath(path: string) {
     if (!path.startsWith('/')) {
       path = `/${path}`;
     }
@@ -24,15 +28,15 @@ export class NavigationService {
   }
 
   navigateHome() {
-    this.navigateTo('/');
+    this.navigateToPath('/');
   }
 
   navigateToCollections() {
-    this.navigateTo(TabName.collections);
+    this.navigateToPath(TabName.collections);
   }
 
   navigateToFlashcards() {
-    this.navigateTo(TabName.flashcards);
+    this.navigateToPath(TabName.flashcards);
   }
 
   navigateToSelectedCollectionView(collectionId: string | undefined) {
@@ -76,6 +80,17 @@ export class NavigationService {
 
   navigateToFlashcardEditForm(flashcardId: string) {
     const urlData = this._navBuilder.setFlashcardsTab().setDoubleColumnView().setFlashcardEditForm(flashcardId).build();
+
+    this._route.navigate(urlData.commands, { queryParams: urlData.queryParams });
+  }
+
+  navigateToCollectionFlashcardEditForm(flashcardId: string, collectionId?: string) {
+    const urlData = this._navBuilder
+      .setCollectionTab()
+      .setDoubleColumnView()
+      .setCollectionView(collectionId)
+      .setFlashcardEditForm(flashcardId)
+      .build();
 
     this._route.navigate(urlData.commands, { queryParams: urlData.queryParams });
   }

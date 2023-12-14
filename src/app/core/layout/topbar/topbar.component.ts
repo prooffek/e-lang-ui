@@ -17,6 +17,6 @@ export class TopbarComponent {
   activeTab = this._routParamService.getActiveTab();
 
   tabClick(path: string) {
-    this._navigationService.navigateTo(path);
+    this._navigationService.navigateToPath(path);
   }
 }

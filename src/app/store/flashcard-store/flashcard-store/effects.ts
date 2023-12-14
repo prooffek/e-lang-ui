@@ -15,7 +15,12 @@ import {
 import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
-import { addFlashcardToCollection } from '../../collection-store/actions';
+import {
+  addFlashcardToCollection,
+  deleteCurrentCollectionFlashcard,
+  deleteCurrentCollectionFlashcards,
+  updateCurrentCollectionFlashcard,
+} from '../../collection-store/actions';
 
 @Injectable({ providedIn: 'root' })
 export class Effects {
@@ -35,7 +40,7 @@ export class Effects {
     ),
   );
 
-  addFlashcardEffect$ = createEffect(() =>
+  addOrUpdateFlashcardEffect$ = createEffect(() =>
     this._actions$.pipe(
       ofType(FlashcardActions.AddOrUpdateFlashcard),
       switchMap(({ flashcard }) => {
@@ -43,6 +48,7 @@ export class Effects {
           mergeMap((flashcard: FlashcardDto) => [
             addOrUpdateFlashcardSuccess({ flashcard }),
             addFlashcardToCollection({ flashcard }),
+            updateCurrentCollectionFlashcard({ flashcard }),
           ]),
           catchError((error) => of(addOrUpdateFlashcardFailure({ error }))),
         );
@@ -50,7 +56,7 @@ export class Effects {
     ),
   );
 
-  addFlashcardSuccessEffect$ = createEffect(
+  addOrUpdateFlashcardSuccessEffect$ = createEffect(
     () =>
       this._actions$.pipe(
         ofType(FlashcardActions.AddOrUpdateFlashcardSuccess),
@@ -66,7 +72,7 @@ export class Effects {
       ofType(FlashcardActions.RemoveFlashcard),
       switchMap(({ flashcardId }) =>
         this._httpClient.deleteFlashcard(flashcardId).pipe(
-          mergeMap(() => [removeFlashcardSuccess({ flashcardId })]),
+          mergeMap(() => [removeFlashcardSuccess({ flashcardId }), deleteCurrentCollectionFlashcard({ flashcardId })]),
           catchError(({ error }) => of(removeFlashcardFailure({ error }))),
         ),
       ),
@@ -87,7 +93,10 @@ export class Effects {
       ofType(FlashcardActions.RemoveSelectedFlashcards),
       switchMap(({ flashcardIds }) =>
         this._httpClient.deleteFlashcards(flashcardIds).pipe(
-          mergeMap(() => [removeSelectedFlashcardsSuccess({ flashcardIds })]),
+          mergeMap(() => [
+            removeSelectedFlashcardsSuccess({ flashcardIds }),
+            deleteCurrentCollectionFlashcards({ flashcardIds }),
+          ]),
           catchError(({ error }) => of(removeSelectedFlashcardsFailure({ error }))),
         ),
       ),

@@ -1,35 +1,42 @@
 <div
   class="collection-view-container"
-  *ngIf="{ collection: currentCollection() } as data"
+  *ngIf="{ collection: currentCollection(), flashcards: flashcards() } as data"
   [ngClass]="{ 'full-width': columns === columnEnum.singleColumn, 'half-width': columns === columnEnum.doubleColumn }"
 >
-  <app-collections-list
+  <app-collections-view
     class="collections-list"
     *ngIf="hasParam; else mainCollections"
     [collectionCards]="data.collection?.subcollections ?? []"
     [collectionName]="data.collection?.name"
     [columns]="columns"
     [collectionId]="collectionId"
+    [flashcards]="data.flashcards"
+    [showFlashcards]="areFlashcardsVisible"
     (onCollectionSelect)="selectCollection($event)"
     (onRemove)="removeCollection($event)"
+    (onSelectedFlashcardsChange)="selectFlashcards($event)"
   >
     <app-collections-view-actions
       actions
       [hasParent]="hasParam"
       [parentCollectionName]="data.collection?.parentName"
       [parentCollectionId]="data.collection?.parentId"
+      [showToggleButtons]="!!data.collection?.subcollections?.length"
+      [isRowSelected]="!!selectedFlashcards.length"
+      [(areFlashcardsVisible)]="areFlashcardsVisible"
       (onNavigateBack)="navigateBack($event)"
       (onAddCollectionClick)="openAddCollectionForm()"
       (onAddFlashcardClick)="openAddFlashcardForm()"
+      (onRemoveSelectedFlashcard)="removeSelectedFlashcards()"
     ></app-collections-view-actions>
-  </app-collections-list>
+  </app-collections-view>
   <div class="right-col">
     <router-outlet></router-outlet>
   </div>
 </div>
 
 <ng-template #mainCollections>
-  <app-collections-list
+  <app-collections-view
     class="grid-start"
     [collectionCards]="mainCollectionCards()"
     [columns]="columns"
@@ -42,5 +49,5 @@
       (onAddCollectionClick)="openAddCollectionForm()"
       (onAddFlashcardClick)="openAddFlashcardForm()"
     ></app-collections-view-actions>
-  </app-collections-list>
+  </app-collections-view>
 </ng-template>

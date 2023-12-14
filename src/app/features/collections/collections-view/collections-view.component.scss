@@ -13,6 +13,10 @@
     gap: 30px;
   }
 
+  .flashcards-list {
+    height: calc(100% - 123px);
+  }
+
   .full-width {
     grid-template-columns: repeat(4, minmax(200px, 250px));
   }

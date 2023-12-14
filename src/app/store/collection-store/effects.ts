@@ -24,6 +24,7 @@ import { switchMap, take, catchError, mergeMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { AutocompleteOption } from 'src/app/shared/base-controls/autocomplete-input/autocomplete.models';
 import { ToastrService } from 'ngx-toastr';
+import { loadFlashcardsSuccess } from '../flashcard-store/flashcard-store/actions';
 
 @Injectable({ providedIn: 'root' })
 export class Effects {
@@ -63,6 +64,7 @@ export class Effects {
           mergeMap((collection: CollectionDto) => [
             loadCurrentCollectionSuccess({ collection }),
             loadCollectionSuccess({ collection }),
+            loadFlashcardsSuccess({ flashcards: collection.flashcards ?? [] }),
           ]),
           catchError((error) => of(loadCurrentCollectionFailure({ error }))),
         ),
