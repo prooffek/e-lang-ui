@@ -8,6 +8,9 @@ export enum AttemptActions {
   getAttemptsForCollection = '[Attempt] Get attempts for collection',
   getAttemptsForCollectionSuccess = '[Attempt] Get attempts for collection - Success',
   getAttemptsForCollectionFailure = '[Attempt] Get attempts for collection - Failure',
+  deleteAttempt = '[Attempt] Delete attempt',
+  deleteAttemptSuccess = '[Attempt] Delete attempt - Success',
+  deleteAttemptFailure = '[Attempt] Delete attempt - Failure',
 }
 
 export const addAttempt = createAction(AttemptActions.addAttempt, props<{ addAttempt: AddAttemptDto }>());
@@ -26,3 +29,7 @@ export const getAttemptsForCollectionFailure = createAction(
   AttemptActions.getAttemptsForCollectionFailure,
   props<{ error: any }>(),
 );
+
+export const deleteAttempt = createAction(AttemptActions.deleteAttempt, props<{ attempt: AttemptDto }>());
+export const deleteAttemptSuccess = createAction(AttemptActions.deleteAttemptSuccess, props<{ attempt: AttemptDto }>());
+export const deleteAttemptFailure = createAction(AttemptActions.deleteAttemptFailure, props<{ error: any }>());

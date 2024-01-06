@@ -3,6 +3,8 @@ import { initialAttemptState } from './state';
 import {
   addAttemptFailure,
   addAttemptSuccess,
+  deleteAttemptFailure,
+  deleteAttemptSuccess,
   getAttemptsForCollectionFailure,
   getAttemptsForCollectionSuccess,
 } from './actions';
@@ -22,4 +24,11 @@ export const Reducer = createReducer(
     return { ...state, attempts: newAttempts };
   }),
   on(getAttemptsForCollectionFailure, (state, { error }) => ({ ...state, error })),
+  on(deleteAttemptSuccess, (state, { attempt }) => {
+    let allAttempts = { ...state.attempts };
+    allAttempts[attempt.collectionId] = [...state.attempts[attempt.collectionId].filter((x) => x.id !== attempt.id)];
+
+    return { ...state, attempts: allAttempts };
+  }),
+  on(deleteAttemptFailure, (state, { error }) => ({ ...state, error })),
 );

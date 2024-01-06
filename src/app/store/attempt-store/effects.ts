@@ -6,6 +6,8 @@ import {
   addAttemptFailure,
   addAttemptSuccess,
   AttemptActions,
+  deleteAttemptFailure,
+  deleteAttemptSuccess,
   getAttemptsForCollectionFailure,
   getAttemptsForCollectionSuccess,
 } from './actions';
@@ -36,7 +38,7 @@ export class Effects {
     () =>
       this._actions$.pipe(
         ofType(AttemptActions.addAttemptSuccess),
-        tap((attempt: AttemptDto) => {
+        tap(({ attempt }) => {
           this._toastrService.success(`Attempt '${attempt.name}' created successfully.`);
         }),
       ),
@@ -53,5 +55,29 @@ export class Effects {
         ),
       ),
     ),
+  );
+
+  deleteAttemptEffect$ = createEffect(() =>
+    this._actions$.pipe(
+      ofType(AttemptActions.deleteAttempt),
+      switchMap(({ attempt }) =>
+        this._httpClient.deleteAttempt(attempt.id).pipe(
+          mergeMap(() => [deleteAttemptSuccess({ attempt })]),
+          catchError((error) => of(deleteAttemptFailure({ error }))),
+        ),
+      ),
+    ),
+  );
+
+  deleteAttemptSuccessEffect$ = createEffect(
+    () =>
+      this._actions$.pipe(
+        ofType(AttemptActions.deleteAttemptSuccess),
+        tap(({ attempt }) => {
+          console.log(attempt.name);
+          this._toastrService.success(`Attempt '${attempt.name}' removed successfully.`);
+        }),
+      ),
+    { dispatch: false },
   );
 }
