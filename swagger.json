@@ -678,6 +678,7 @@
         "name",
         "collectionId",
         "collectionName",
+        "createdOn",
         "currentStage",
         "maxFlashcardsPerStage",
         "maxQuizTypesPerFlashcard",
@@ -701,6 +702,10 @@
         },
         "collectionName": {
           "type": "string"
+        },
+        "createdOn": {
+          "type": "string",
+          "format": "date-time"
         },
         "currentStage": {
           "$ref": "#/definitions/AttemptStageDto"

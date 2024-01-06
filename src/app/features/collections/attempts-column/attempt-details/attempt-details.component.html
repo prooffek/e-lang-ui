@@ -1,0 +1,33 @@
+<div *ngIf="attempt && { attempt: attempt() } as data" class="attempt-details-container">
+  <ng-container *ngIf="data.attempt">
+    <div class="details">
+      <h1>Details</h1>
+      <div><span class="header">Name:</span><span class="value">{{data.attempt.name}}</span></div>
+      <div><span class="header">Collection:</span><span class="value">{{data.attempt.collectionName}}</span></div>
+      <div><span class="header">Created on:</span><span class="value">{{data.attempt.createdOn | date }}</span></div>
+      <div><span class="header">Last seen on:</span><span class="value">{{data.attempt.lastSeenOn | date }}</span></div>
+      <div><span class="header">Progress:</span><span class="value">{{ data.attempt.completedFlashcardsCount }} / {{ data.attempt.allFlashcardsCount }}</span></div>
+      <div><span class="header">Flashcards per stage:</span><span class="value">{{data.attempt.maxFlashcardsPerStage}}</span></div>
+      <div><span class="header">Quizzes per flashcard:</span><span class="value">{{data.attempt.maxQuizTypesPerFlashcard}}</span></div>
+      <div><span class="header">Required score:</span><span class="value">{{data.attempt.minCompletedQuizzesPerCent}}</span></div>
+      <div><span class="header">Order by:</span><span class="value">{{orderEnum[data.attempt.order]}}</span></div>
+      <div><span class="header">Learn meanings:</span><span class="value">{{data.attempt.includeMeanings ? 'Yes' : 'No'}}</span></div>
+    </div>
+
+    <div class="actions">
+      <app-button (onClick)="remove(data.attempt)" width="130px">
+        <div custom-label class="btn-label">
+          <app-icon file="delete-black" height="25px"></app-icon>
+          <p>Remove</p>
+        </div>
+      </app-button>
+      <app-button (onClick)="close(data.attempt.collectionId)" width="130px">
+        <div custom-label class="btn-label">
+          <app-icon file="close-black" height="25px"></app-icon>
+          <p>Close</p>
+        </div>
+      </app-button>
+    </div>
+  </ng-container>
+</div>
+

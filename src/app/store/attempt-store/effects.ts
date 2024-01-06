@@ -11,7 +11,7 @@ import {
   getAttemptsForCollectionFailure,
   getAttemptsForCollectionSuccess,
 } from './actions';
-import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
+import { catchError, mergeMap, skipWhile, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { AttemptOdataService } from '../../core/services/odata/attempt-odata.service';
 
@@ -48,6 +48,7 @@ export class Effects {
   getAttemptsForCollectionEffect$ = createEffect(() =>
     this._actions$.pipe(
       ofType(AttemptActions.getAttemptsForCollection),
+      skipWhile((attempts) => !attempts),
       switchMap(({ collectionId }) =>
         this._odataService.getAttemptsByCollectionId(collectionId).pipe(
           mergeMap((attempts: AttemptDto[]) => [getAttemptsForCollectionSuccess({ collectionId, attempts })]),

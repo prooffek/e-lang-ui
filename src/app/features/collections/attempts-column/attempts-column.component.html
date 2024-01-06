@@ -18,7 +18,7 @@
       <p class="last-seen-col">{{ attempt.lastSeenOn | date }}</p>
       <p class="progress-col">{{ attempt.completedFlashcardsCount }}/{{ attempt.allFlashcardsCount }}</p>
       <app-icon-button iconName="delete-white" iconHeight="25px" (onClick)="delete(attempt)"></app-icon-button>
-      <app-button label="Details" width="50px"></app-button>
+      <app-button label="Details" width="50px" (onClick)="showDetails(attempt)"></app-button>
     </div>
     <app-button label="Add new" (onClick)="showForm()"></app-button>
   </ng-container>

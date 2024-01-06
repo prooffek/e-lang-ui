@@ -1,11 +1,11 @@
 import { Component, inject, Input, Signal } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { State } from '../../../../store/root-state';
-import { selectAttemptsByCollectionId } from '../../../../store/attempt-store/selectors';
-import { deleteAttempt, getAttemptsForCollection } from '../../../../store/attempt-store/actions';
-import { AttemptDto } from '../../../../core/services/api-client/api-client';
-import { selectCurrentCollectionName } from '../../../../store/collection-store/selectors';
-import { NavigationService } from '../../../../core/services/router/navigation.service';
+import { State } from '../../../store/root-state';
+import { selectAttemptsByCollectionId } from '../../../store/attempt-store/selectors';
+import { deleteAttempt, getAttemptsForCollection } from '../../../store/attempt-store/actions';
+import { AttemptDto } from '../../../core/services/api-client/api-client';
+import { selectCurrentCollectionName } from '../../../store/collection-store/selectors';
+import { NavigationService } from '../../../core/services/router/navigation.service';
 
 @Component({
   selector: 'app-attempts-column',
@@ -50,5 +50,9 @@ export class AttemptsColumnComponent {
 
   delete(attempt: AttemptDto) {
     this._store.dispatch(deleteAttempt({ attempt }));
+  }
+
+  showDetails(attempt: AttemptDto) {
+    this._navigationService.navigateToAttemptDetails(attempt);
   }
 }

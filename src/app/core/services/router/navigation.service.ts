@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { TabName } from '../../enums/topbar-constants';
 import { NavigationBuilder } from '../../builders/route/navigation-builder';
+import { AttemptDto } from '../api-client/api-client';
 
 export interface Route {
   FirstChild: any;
@@ -112,6 +113,17 @@ export class NavigationService {
       .setDoubleColumnView()
       .setCollectionView(collectionId)
       .setAttemptsColumn()
+      .build();
+
+    this._route.navigate(urlData.commands, { queryParams: urlData.queryParams });
+  }
+
+  navigateToAttemptDetails(attempt: AttemptDto) {
+    const urlData = this._navBuilder
+      .setCollectionTab()
+      .setDoubleColumnView()
+      .setCollectionView(attempt.collectionId)
+      .setAttemptDetails(attempt.id)
       .build();
 
     this._route.navigate(urlData.commands, { queryParams: urlData.queryParams });

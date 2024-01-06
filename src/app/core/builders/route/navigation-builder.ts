@@ -88,7 +88,11 @@ export class NavigationBuilder {
 
   setAttemptsColumn() {
     this._params.rightColumn = [NavigationParams.attempts];
+    return this;
+  }
 
+  setAttemptDetails(attemptId: string) {
+    this._params.rightColumn = [NavigationParams.attempts, attemptId];
     return this;
   }
 

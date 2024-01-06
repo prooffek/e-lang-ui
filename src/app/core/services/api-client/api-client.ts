@@ -856,6 +856,7 @@ export class AttemptDto implements IAttemptDto {
     name!: string;
     collectionId!: string;
     collectionName!: string;
+    createdOn!: Date;
     currentStage!: AttemptStageDto;
     maxFlashcardsPerStage!: number;
     maxQuizTypesPerFlashcard!: number;
@@ -886,6 +887,7 @@ export class AttemptDto implements IAttemptDto {
             this.name = _data["name"];
             this.collectionId = _data["collectionId"];
             this.collectionName = _data["collectionName"];
+            this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
             this.currentStage = _data["currentStage"] ? AttemptStageDto.fromJS(_data["currentStage"]) : new AttemptStageDto();
             this.maxFlashcardsPerStage = _data["maxFlashcardsPerStage"];
             this.maxQuizTypesPerFlashcard = _data["maxQuizTypesPerFlashcard"];
@@ -921,6 +923,7 @@ export class AttemptDto implements IAttemptDto {
         data["name"] = this.name;
         data["collectionId"] = this.collectionId;
         data["collectionName"] = this.collectionName;
+        data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
         data["currentStage"] = this.currentStage ? this.currentStage.toJSON() : <any>undefined;
         data["maxFlashcardsPerStage"] = this.maxFlashcardsPerStage;
         data["maxQuizTypesPerFlashcard"] = this.maxQuizTypesPerFlashcard;
@@ -949,6 +952,7 @@ export interface IAttemptDto {
     name: string;
     collectionId: string;
     collectionName: string;
+    createdOn: Date;
     currentStage: AttemptStageDto;
     maxFlashcardsPerStage: number;
     maxQuizTypesPerFlashcard: number;

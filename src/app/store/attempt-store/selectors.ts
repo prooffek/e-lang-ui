@@ -5,3 +5,10 @@ export const selectAttemptState = createFeatureSelector<AttemptState>(attemptSto
 
 export const selectAttemptsByCollectionId = (collectionId: string) =>
   createSelector(selectAttemptState, (state) => state.attempts[collectionId]);
+
+export const selectAttemptById = (attemptId: string) =>
+  createSelector(selectAttemptState, (state) =>
+    Object.values(state.attempts)
+      .flat()
+      .find((x) => x.id === attemptId),
+  );

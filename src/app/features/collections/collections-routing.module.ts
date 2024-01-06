@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CollectionsComponent } from './collections.component';
 import { RightColumnComponent } from './right-collumn/right-column.component';
-import { AttemptsColumnComponent } from './right-collumn/attempts-column/attempts-column.component';
+import { AttemptsColumnComponent } from './attempts-column/attempts-column.component';
+import { AttemptDetailsComponent } from './attempts-column/attempt-details/attempt-details.component';
 
 const routes: Routes = [
   {
@@ -36,6 +37,10 @@ const routes: Routes = [
       {
         path: 'attempts',
         component: AttemptsColumnComponent,
+      },
+      {
+        path: 'attempts/:attemptId',
+        component: AttemptDetailsComponent,
       },
     ],
   },
