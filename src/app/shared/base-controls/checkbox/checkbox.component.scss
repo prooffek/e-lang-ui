@@ -1,0 +1,11 @@
+.checkbox-container {
+  width: 100%;
+
+  .label {
+    color: var(--light-font-color);
+  }
+}
+
+::ng-deep .mdc-checkbox .mdc-checkbox__native-control:enabled:not(:checked):not(:indeterminate):not([data-indeterminate=true])~.mdc-checkbox__background {
+  border-color: var(--checkbox-border) !important;
+}

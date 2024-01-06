@@ -1,0 +1,52 @@
+<div class="form-container" *ngIf="{ collection: collection | async } as data">
+  <app-form-container *ngIf="form" title="Start learning" [form]="form">
+    <div inputs>
+      <p>Collection: {{ data.collection?.name }}</p>
+      <app-input
+        label="Name"
+        [control]="form.controls[controlNames.name]"
+        [defaultValue]="defaultValues.name"
+      ></app-input>
+      <app-input
+        label="Flashcards per stage"
+        [control]="form.controls[controlNames.maxFlashcardsPerStage]"
+        [defaultValue]="defaultValues.maxFlashcardsPerStage"
+        type="number"
+      ></app-input>
+      <app-input
+        label="Quizzes per flashcard"
+        [control]="form.controls[controlNames.maxQuizzesPerFlashcard]"
+        [defaultValue]="defaultValues.maxQuizzesPerFlashcard"
+        type="number"
+      ></app-input>
+      <app-input
+        label="Required score"
+        [control]="form.controls[controlNames.minCompletedQuizzesPerCent]"
+        [defaultValue]="defaultValues.minCompletedQuizzesPerCent"
+        type="number"
+      ></app-input>
+      <app-dropdown
+        label="Order by"
+        [control]="form.controls[controlNames.flashcardsOrder]"
+        [options]="orderOptions"
+      ></app-dropdown>
+      <app-checkbox label="Learn meanings" [control]="form.controls[controlNames.includeMeanings]"></app-checkbox>
+    </div>
+
+    <div form-actions class="actions-container">
+      <app-button (onClick)="start()" [isDisabled]="!form.dirty || !form.valid">
+        <div custom-label class="btn-label">
+          <app-icon file="start-black" height="25px"></app-icon>
+          <p [ngClass]="{ disabled: !form.dirty || !form.valid }">Start</p>
+        </div>
+      </app-button>
+
+      <app-button (onClick)="closeRightColumn()">
+        <div custom-label class="btn-label">
+          <app-icon file="chevron-right-black" height="25px"></app-icon>
+          <p>Close</p>
+        </div>
+      </app-button>
+    </div>
+  </app-form-container>
+</div>

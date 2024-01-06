@@ -4,6 +4,7 @@ const ADD_ICON = 'add-black';
 const GO_BACK_ICON = 'arrow-left-black';
 const SHOW_SUBCOLLECTIONS = 'collections-black';
 const SHOW_FLASHCARDS = 'cards-black';
+const LEARN_ICON = 'school-black';
 
 @Component({
   selector: 'app-collections-view-actions',
@@ -18,6 +19,7 @@ export class CollectionsViewActionsComponent {
   @Input() areFlashcardsVisible: boolean = false;
   @Input() showToggleButtons: boolean = false;
   @Input() isRowSelected: boolean = false;
+  @Input() hasFlashcards: boolean = false;
 
   @Input() set parentCollectionName(value: string | undefined) {
     if (!value) {
@@ -38,11 +40,13 @@ export class CollectionsViewActionsComponent {
   @Output() onAddFlashcardClick = new EventEmitter();
   @Output() areFlashcardsVisibleChange = new EventEmitter<boolean>();
   @Output() onRemoveSelectedFlashcard = new EventEmitter();
+  @Output() onLearn = new EventEmitter();
 
   addIcon = ADD_ICON;
   goBackIcon = GO_BACK_ICON;
   showSubcollectionsIcon = SHOW_SUBCOLLECTIONS;
   showFlashcardsIcon = SHOW_FLASHCARDS;
+  learnIcon = LEARN_ICON;
 
   navigateBack() {
     this.onNavigateBack.emit(this.parentCollectionId);
@@ -66,5 +70,9 @@ export class CollectionsViewActionsComponent {
 
   removeFlashcard() {
     this.onRemoveSelectedFlashcard.emit();
+  }
+
+  learn() {
+    this.onLearn.emit();
   }
 }

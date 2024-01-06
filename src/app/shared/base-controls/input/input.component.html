@@ -2,9 +2,9 @@
   <app-input-error [control]="control"></app-input-error>
   <mat-form-field>
     <mat-label>{{ label }}</mat-label>
-    <input *ngIf="control" matInput type="text" [formControl]="control" (blur)="blur()" />
+    <input *ngIf="control" matInput [type]="type" [formControl]="control" (blur)="blur()" />
     <button
-      *ngIf="showClearButton && control?.value"
+      *ngIf="showClearButton && control?.value && type !== 'number'"
       matSuffix
       mat-icon-button
       aria-label="Clear"

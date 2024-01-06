@@ -12,6 +12,7 @@ import { EditFlashcardFormComponent } from './flashcard-forms/edit-flashcard-for
 import { WordOrPhraseInputComponent } from './flashcard-forms/word-or-phrase-input/word-or-phrase-input.component';
 import { MeaningInputsComponent } from './flashcard-forms/meaning-inputs/meaning-inputs.component';
 import { SaveFlashcardButtonComponent } from './flashcard-forms/save-button/save-flashcard-button.component';
+import { AttemptFormComponent } from './attempt-form/attempt-form.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { SaveFlashcardButtonComponent } from './flashcard-forms/save-button/save
     WordOrPhraseInputComponent,
     MeaningInputsComponent,
     SaveFlashcardButtonComponent,
+    AttemptFormComponent,
   ],
   imports: [CommonModule, SharedModule, ReactiveFormsModule, MatFormFieldModule],
   exports: [
@@ -31,6 +33,7 @@ import { SaveFlashcardButtonComponent } from './flashcard-forms/save-button/save
     EditCollectionFormComponent,
     AddFlashcardFormComponent,
     EditFlashcardFormComponent,
+    AttemptFormComponent,
   ],
 })
 export class AppFormsModule {}

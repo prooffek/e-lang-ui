@@ -19,6 +19,13 @@
       [iconFile]="showSubcollectionsIcon"
       label="Show Subcollections"
     ></app-button>
+    <app-button
+      *ngIf="hasParent"
+      (onClick)="learn()"
+      [iconFile]="learnIcon"
+      [isDisabled]="!hasFlashcards"
+      label="Learn"
+    ></app-button>
   </div>
   <div class="form-actions">
     <app-button (onClick)="addCollection()" [iconFile]="addIcon" label="Add Collection"> </app-button>

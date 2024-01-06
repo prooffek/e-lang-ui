@@ -9,6 +9,7 @@ import { RightColumnComponent } from './right-collumn/right-column.component';
 import { AppFormsModule } from '../forms/app-forms.module';
 import { CollectionsViewComponent } from './collections-view/collections-view.component';
 import { CollectionCardComponent } from './collections-view/collection-card/collection-card.component';
+import { AttemptsColumnComponent } from './right-collumn/attempts-column/attempts-column.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { CollectionCardComponent } from './collections-view/collection-card/coll
     RightColumnComponent,
     CollectionsViewComponent,
     CollectionCardComponent,
+    AttemptsColumnComponent,
   ],
   imports: [CommonModule, CollectionsRoutingModule, SharedModule, ReactiveFormsModule, AppFormsModule],
 })

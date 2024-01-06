@@ -1,0 +1,33 @@
+<div class="attempts-list" *ngIf="collectionId && attempts && { attempts: attempts() } as data">
+  <ng-container *ngIf="!isAddFormVisible && data.attempts?.length; else addForm">
+    <p *ngIf="collectionName" class="collection">
+      Collection: <span class="collection-name">{{ collectionName() }}</span>
+    </p>
+    <h3>Attempts:</h3>
+    <div class="header">
+      <div class="start-btn-col"></div>
+      <p class="name-col">Name</p>
+      <p class="last-seen-col">Seen On</p>
+      <p class="progress-col">Progress</p>
+    </div>
+    <div *ngFor="let attempt of data.attempts" class="attempt">
+      <div class="start-btn-col">
+        <app-icon-button iconName="start-white" iconHeight="25px"></app-icon-button>
+      </div>
+      <p class="name-col">{{ attempt.name }}</p>
+      <p class="last-seen-col">{{ attempt.lastSeenOn | date }}</p>
+      <p class="progress-col">{{ attempt.completedFlashcardsCount }}/{{ attempt.allFlashcardsCount }}</p>
+      <app-icon-button iconName="delete-white" iconHeight="25px"></app-icon-button>
+      <app-button label="Details" width="50px"></app-button>
+    </div>
+    <app-button label="Add new" (onClick)="showForm()"></app-button>
+  </ng-container>
+
+  <ng-template #addForm>
+    <app-attempt-form
+      [collectionId]="collectionId"
+      [attempts]="data.attempts"
+      (onClose)="hideForm(data.attempts)"
+    ></app-attempt-form>
+  </ng-template>
+</div>

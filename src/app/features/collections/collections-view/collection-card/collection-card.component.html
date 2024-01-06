@@ -1,16 +1,22 @@
 <app-card *ngIf="collectionCard" [cardItem]="collectionCard" (onClick)="clickCard($event)">
   <div card-info class="card-info">
-    <div class="count"><span class="label">Cards:</span> {{collectionCard.flashcardsCount}}</div>
-    <div class="count"><span class="label">Subcollections:</span> {{collectionCard.subcollectionsCount}}</div>
+    <div class="count"><span class="label">Cards:</span> {{ collectionCard.flashcardsCount }}</div>
+    <div class="count"><span class="label">Subcollections:</span> {{ collectionCard.subcollectionsCount }}</div>
   </div>
   <div actions class="buttons">
-    <app-button height="35px" width="100px" (onClick)="edit()">
+    <app-button class="btn learn-btn" height="35px" width="100%" (onClick)="learn(collectionCard.id)">
+      <div custom-label class="button-label">
+        <app-icon file="school-black" height="20px"></app-icon>
+        <p>Learn</p>
+      </div>
+    </app-button>
+    <app-button class="btn" height="35px" width="100%" (onClick)="edit()">
       <div custom-label class="button-label">
         <app-icon file="edit-black" width="20px"></app-icon>
         <p>Edit</p>
       </div>
     </app-button>
-    <app-button height="35px" width="100px" (onClick)="remove(collectionCard.id)">
+    <app-button class="btn" height="35px" width="100p%" (onClick)="remove(collectionCard.id)">
       <div custom-label class="button-label">
         <app-icon file="delete-black" height="20px"></app-icon>
         <p>Remove</p>

@@ -3,15 +3,15 @@
   border-radius: 10px;
   width: 100%;
   min-width: 230px;
-  height: 250px;
+  height: 270px;
   padding: 10px;
   display: grid;
-  grid-template-rows: 1fr 50px;
+  grid-template-rows: 1fr 80px;
 
   .card-info {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: center;
 
     .card-title {
       text-align: center;

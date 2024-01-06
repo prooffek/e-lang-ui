@@ -3,6 +3,7 @@ export enum NavigationParams {
   editCollectionId = 'editCollectionId',
   editFlashcardId = 'editFlashcardId',
   form = 'form',
+  attempts = 'attempts',
 }
 
 export enum ViewParams {

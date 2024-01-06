@@ -88,4 +88,10 @@ export class CollectionsComponent implements OnInit, OnChanges {
     const flashcardIds = this.selectedFlashcards.map((f) => f.id);
     this._store.dispatch(removeSelectedFlashcards({ flashcardIds }));
   }
+
+  learnCollection() {
+    if (this.collectionId) {
+      this._navigationService.navigateToAttempts(this.collectionId);
+    }
+  }
 }

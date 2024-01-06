@@ -89,4 +89,8 @@ export class CollectionsViewComponent {
   selectFlashcards(selectedRows: FlashcardViewModel[]) {
     this.onSelectedFlashcardsChange.emit(selectedRows);
   }
+
+  learnCollection(collectionId: string) {
+    this._navigationService.navigateToAttempts(collectionId);
+  }
 }

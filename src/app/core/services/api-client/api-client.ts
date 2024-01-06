@@ -15,6 +15,134 @@ import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase, HttpContext } 
 
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
+export interface IAttemptClient {
+    addAttempt(attempt: AddAttemptDto): Observable<AttemptDto>;
+    getAll(): Observable<AttemptDto[]>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class AttemptClient implements IAttemptClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    addAttempt(attempt: AddAttemptDto, httpContext?: HttpContext): Observable<AttemptDto> {
+        let url_ = this.baseUrl + "/api/Attempt";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(attempt);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            context: httpContext,
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAddAttempt(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAddAttempt(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<AttemptDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<AttemptDto>;
+        }));
+    }
+
+    protected processAddAttempt(response: HttpResponseBase): Observable<AttemptDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AttemptDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AttemptDto>(null as any);
+    }
+
+    getAll(httpContext?: HttpContext): Observable<AttemptDto[]> {
+        let url_ = this.baseUrl + "/api/Attempt";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            context: httpContext,
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<AttemptDto[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<AttemptDto[]>;
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<AttemptDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(AttemptDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AttemptDto[]>(null as any);
+    }
+}
+
 export interface ICollectionClient {
     getCollectionCards(parentCollectionId: string | null | undefined): Observable<CollectionCardDto[]>;
     getCollection(collectionId: string | null | undefined): Observable<CollectionDto>;
@@ -665,68 +793,32 @@ export class FlashcardClient implements IFlashcardClient {
     }
 }
 
-export class CollectionCardDto implements ICollectionCardDto {
-    id!: string;
-    title!: string;
-    subcollectionsCount!: number;
-    flashcardsCount!: number;
-
-    constructor(data?: ICollectionCardDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.title = _data["title"];
-            this.subcollectionsCount = _data["subcollectionsCount"];
-            this.flashcardsCount = _data["flashcardsCount"];
-        }
-    }
-
-    static fromJS(data: any): CollectionCardDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new CollectionCardDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["title"] = this.title;
-        data["subcollectionsCount"] = this.subcollectionsCount;
-        data["flashcardsCount"] = this.flashcardsCount;
-        return data;
-    }
-}
-
-export interface ICollectionCardDto {
-    id: string;
-    title: string;
-    subcollectionsCount: number;
-    flashcardsCount: number;
-}
-
-export class CollectionDto implements ICollectionDto {
+export class AttemptDto implements IAttemptDto {
     id!: string;
     name!: string;
-    parentId?: string | undefined;
-    parentName?: string | undefined;
-    subcollections?: CollectionCardDto[] | undefined;
-    flashcards?: FlashcardDto[] | undefined;
+    collectionId!: string;
+    collectionName!: string;
+    currentStage!: AttemptStageDto;
+    maxFlashcardsPerStage!: number;
+    maxQuizTypesPerFlashcard!: number;
+    minCompletedQuizzesPerCent!: number;
+    order!: FlashcardOrder;
+    includeMeanings!: boolean;
+    properties?: CustomPropertyDto[] | undefined;
+    quizTypes?: QuizTypeDto[] | undefined;
+    completedFlashcardsCount!: number;
+    allFlashcardsCount!: number;
+    lastSeenOn?: Date | undefined;
 
-    constructor(data?: ICollectionDto) {
+    constructor(data?: IAttemptDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
+        }
+        if (!data) {
+            this.currentStage = new AttemptStageDto();
         }
     }
 
@@ -734,24 +826,33 @@ export class CollectionDto implements ICollectionDto {
         if (_data) {
             this.id = _data["id"];
             this.name = _data["name"];
-            this.parentId = _data["parentId"];
-            this.parentName = _data["parentName"];
-            if (Array.isArray(_data["subcollections"])) {
-                this.subcollections = [] as any;
-                for (let item of _data["subcollections"])
-                    this.subcollections!.push(CollectionCardDto.fromJS(item));
+            this.collectionId = _data["collectionId"];
+            this.collectionName = _data["collectionName"];
+            this.currentStage = _data["currentStage"] ? AttemptStageDto.fromJS(_data["currentStage"]) : new AttemptStageDto();
+            this.maxFlashcardsPerStage = _data["maxFlashcardsPerStage"];
+            this.maxQuizTypesPerFlashcard = _data["maxQuizTypesPerFlashcard"];
+            this.minCompletedQuizzesPerCent = _data["minCompletedQuizzesPerCent"];
+            this.order = _data["order"];
+            this.includeMeanings = _data["includeMeanings"];
+            if (Array.isArray(_data["properties"])) {
+                this.properties = [] as any;
+                for (let item of _data["properties"])
+                    this.properties!.push(CustomPropertyDto.fromJS(item));
             }
-            if (Array.isArray(_data["flashcards"])) {
-                this.flashcards = [] as any;
-                for (let item of _data["flashcards"])
-                    this.flashcards!.push(FlashcardDto.fromJS(item));
+            if (Array.isArray(_data["quizTypes"])) {
+                this.quizTypes = [] as any;
+                for (let item of _data["quizTypes"])
+                    this.quizTypes!.push(QuizTypeDto.fromJS(item));
             }
+            this.completedFlashcardsCount = _data["completedFlashcardsCount"];
+            this.allFlashcardsCount = _data["allFlashcardsCount"];
+            this.lastSeenOn = _data["lastSeenOn"] ? new Date(_data["lastSeenOn"].toString()) : <any>undefined;
         }
     }
 
-    static fromJS(data: any): CollectionDto {
+    static fromJS(data: any): AttemptDto {
         data = typeof data === 'object' ? data : {};
-        let result = new CollectionDto();
+        let result = new AttemptDto();
         result.init(data);
         return result;
     }
@@ -760,13 +861,83 @@ export class CollectionDto implements ICollectionDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["name"] = this.name;
-        data["parentId"] = this.parentId;
-        data["parentName"] = this.parentName;
-        if (Array.isArray(this.subcollections)) {
-            data["subcollections"] = [];
-            for (let item of this.subcollections)
-                data["subcollections"].push(item.toJSON());
+        data["collectionId"] = this.collectionId;
+        data["collectionName"] = this.collectionName;
+        data["currentStage"] = this.currentStage ? this.currentStage.toJSON() : <any>undefined;
+        data["maxFlashcardsPerStage"] = this.maxFlashcardsPerStage;
+        data["maxQuizTypesPerFlashcard"] = this.maxQuizTypesPerFlashcard;
+        data["minCompletedQuizzesPerCent"] = this.minCompletedQuizzesPerCent;
+        data["order"] = this.order;
+        data["includeMeanings"] = this.includeMeanings;
+        if (Array.isArray(this.properties)) {
+            data["properties"] = [];
+            for (let item of this.properties)
+                data["properties"].push(item.toJSON());
         }
+        if (Array.isArray(this.quizTypes)) {
+            data["quizTypes"] = [];
+            for (let item of this.quizTypes)
+                data["quizTypes"].push(item.toJSON());
+        }
+        data["completedFlashcardsCount"] = this.completedFlashcardsCount;
+        data["allFlashcardsCount"] = this.allFlashcardsCount;
+        data["lastSeenOn"] = this.lastSeenOn ? this.lastSeenOn.toISOString() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IAttemptDto {
+    id: string;
+    name: string;
+    collectionId: string;
+    collectionName: string;
+    currentStage: AttemptStageDto;
+    maxFlashcardsPerStage: number;
+    maxQuizTypesPerFlashcard: number;
+    minCompletedQuizzesPerCent: number;
+    order: FlashcardOrder;
+    includeMeanings: boolean;
+    properties?: CustomPropertyDto[] | undefined;
+    quizTypes?: QuizTypeDto[] | undefined;
+    completedFlashcardsCount: number;
+    allFlashcardsCount: number;
+    lastSeenOn?: Date | undefined;
+}
+
+export class AttemptStageDto implements IAttemptStageDto {
+    id!: string;
+    flashcards?: FlashcardStateDto[] | undefined;
+
+    constructor(data?: IAttemptStageDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            if (Array.isArray(_data["flashcards"])) {
+                this.flashcards = [] as any;
+                for (let item of _data["flashcards"])
+                    this.flashcards!.push(FlashcardStateDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): AttemptStageDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new AttemptStageDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
         if (Array.isArray(this.flashcards)) {
             data["flashcards"] = [];
             for (let item of this.flashcards)
@@ -776,13 +947,45 @@ export class CollectionDto implements ICollectionDto {
     }
 }
 
-export interface ICollectionDto {
+export interface IAttemptStageDto {
     id: string;
-    name: string;
-    parentId?: string | undefined;
-    parentName?: string | undefined;
-    subcollections?: CollectionCardDto[] | undefined;
-    flashcards?: FlashcardDto[] | undefined;
+    flashcards?: FlashcardStateDto[] | undefined;
+}
+
+export class FlashcardStateDto implements IFlashcardStateDto {
+    flashcard?: FlashcardDto | undefined;
+
+    constructor(data?: IFlashcardStateDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.flashcard = _data["flashcard"] ? FlashcardDto.fromJS(_data["flashcard"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): FlashcardStateDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new FlashcardStateDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["flashcard"] = this.flashcard ? this.flashcard.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IFlashcardStateDto {
+    flashcard?: FlashcardDto | undefined;
 }
 
 export class FlashcardDto implements IFlashcardDto {
@@ -909,6 +1112,278 @@ export enum FlashcardStatus {
     Seen = 1,
     Learnt = 2,
     Inactive = 3,
+}
+
+export enum FlashcardOrder {
+    AlphabeticalDesc = 0,
+    AlphabeticalAsc = 1,
+    CreationDateDesc = 2,
+    CreationDateAsc = 3,
+    Random = 4,
+}
+
+export class CustomPropertyDto implements ICustomPropertyDto {
+
+    constructor(data?: ICustomPropertyDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+    }
+
+    static fromJS(data: any): CustomPropertyDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CustomPropertyDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        return data;
+    }
+}
+
+export interface ICustomPropertyDto {
+}
+
+export class QuizTypeDto implements IQuizTypeDto {
+
+    constructor(data?: IQuizTypeDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+    }
+
+    static fromJS(data: any): QuizTypeDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new QuizTypeDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        return data;
+    }
+}
+
+export interface IQuizTypeDto {
+}
+
+export class AddAttemptDto implements IAddAttemptDto {
+    name!: string;
+    collectionId!: string;
+    maxFlashcardsPerStage!: number;
+    maxQuizTypesPerFlashcard!: number;
+    minCompletedQuizzesPerCent!: number;
+    order!: FlashcardOrder;
+    includeMeanings!: boolean;
+    properties?: CustomPropertyDto[] | undefined;
+    quizTypes?: QuizTypeDto[] | undefined;
+
+    constructor(data?: IAddAttemptDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.collectionId = _data["collectionId"];
+            this.maxFlashcardsPerStage = _data["maxFlashcardsPerStage"];
+            this.maxQuizTypesPerFlashcard = _data["maxQuizTypesPerFlashcard"];
+            this.minCompletedQuizzesPerCent = _data["minCompletedQuizzesPerCent"];
+            this.order = _data["order"];
+            this.includeMeanings = _data["includeMeanings"];
+            if (Array.isArray(_data["properties"])) {
+                this.properties = [] as any;
+                for (let item of _data["properties"])
+                    this.properties!.push(CustomPropertyDto.fromJS(item));
+            }
+            if (Array.isArray(_data["quizTypes"])) {
+                this.quizTypes = [] as any;
+                for (let item of _data["quizTypes"])
+                    this.quizTypes!.push(QuizTypeDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): AddAttemptDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddAttemptDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["collectionId"] = this.collectionId;
+        data["maxFlashcardsPerStage"] = this.maxFlashcardsPerStage;
+        data["maxQuizTypesPerFlashcard"] = this.maxQuizTypesPerFlashcard;
+        data["minCompletedQuizzesPerCent"] = this.minCompletedQuizzesPerCent;
+        data["order"] = this.order;
+        data["includeMeanings"] = this.includeMeanings;
+        if (Array.isArray(this.properties)) {
+            data["properties"] = [];
+            for (let item of this.properties)
+                data["properties"].push(item.toJSON());
+        }
+        if (Array.isArray(this.quizTypes)) {
+            data["quizTypes"] = [];
+            for (let item of this.quizTypes)
+                data["quizTypes"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IAddAttemptDto {
+    name: string;
+    collectionId: string;
+    maxFlashcardsPerStage: number;
+    maxQuizTypesPerFlashcard: number;
+    minCompletedQuizzesPerCent: number;
+    order: FlashcardOrder;
+    includeMeanings: boolean;
+    properties?: CustomPropertyDto[] | undefined;
+    quizTypes?: QuizTypeDto[] | undefined;
+}
+
+export class CollectionCardDto implements ICollectionCardDto {
+    id!: string;
+    title!: string;
+    subcollectionsCount!: number;
+    flashcardsCount!: number;
+
+    constructor(data?: ICollectionCardDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.title = _data["title"];
+            this.subcollectionsCount = _data["subcollectionsCount"];
+            this.flashcardsCount = _data["flashcardsCount"];
+        }
+    }
+
+    static fromJS(data: any): CollectionCardDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CollectionCardDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["title"] = this.title;
+        data["subcollectionsCount"] = this.subcollectionsCount;
+        data["flashcardsCount"] = this.flashcardsCount;
+        return data;
+    }
+}
+
+export interface ICollectionCardDto {
+    id: string;
+    title: string;
+    subcollectionsCount: number;
+    flashcardsCount: number;
+}
+
+export class CollectionDto implements ICollectionDto {
+    id!: string;
+    name!: string;
+    parentId?: string | undefined;
+    parentName?: string | undefined;
+    subcollections?: CollectionCardDto[] | undefined;
+    flashcards?: FlashcardDto[] | undefined;
+
+    constructor(data?: ICollectionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.parentId = _data["parentId"];
+            this.parentName = _data["parentName"];
+            if (Array.isArray(_data["subcollections"])) {
+                this.subcollections = [] as any;
+                for (let item of _data["subcollections"])
+                    this.subcollections!.push(CollectionCardDto.fromJS(item));
+            }
+            if (Array.isArray(_data["flashcards"])) {
+                this.flashcards = [] as any;
+                for (let item of _data["flashcards"])
+                    this.flashcards!.push(FlashcardDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CollectionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CollectionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["parentId"] = this.parentId;
+        data["parentName"] = this.parentName;
+        if (Array.isArray(this.subcollections)) {
+            data["subcollections"] = [];
+            for (let item of this.subcollections)
+                data["subcollections"].push(item.toJSON());
+        }
+        if (Array.isArray(this.flashcards)) {
+            data["flashcards"] = [];
+            for (let item of this.flashcards)
+                data["flashcards"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface ICollectionDto {
+    id: string;
+    name: string;
+    parentId?: string | undefined;
+    parentName?: string | undefined;
+    subcollections?: CollectionCardDto[] | undefined;
+    flashcards?: FlashcardDto[] | undefined;
 }
 
 export class CreateCollectionDto implements ICreateCollectionDto {

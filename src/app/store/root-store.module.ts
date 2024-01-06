@@ -6,6 +6,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from 'src/environments/environment';
 import { CollectionStoreModule } from './collection-store/collection-store.module';
 import { FlashcardStoreModule } from './flashcard-store/flashcard-store/flashcard-store.module';
+import { AttemptStoreModule } from './attempt-store/attempt-store.module';
 
 @NgModule({
   declarations: [],
@@ -19,6 +20,7 @@ import { FlashcardStoreModule } from './flashcard-store/flashcard-store/flashcar
     }),
     CollectionStoreModule,
     FlashcardStoreModule,
+    AttemptStoreModule,
   ],
 })
 export class RootStoreModule {}

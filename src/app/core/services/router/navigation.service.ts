@@ -94,4 +94,26 @@ export class NavigationService {
 
     this._route.navigate(urlData.commands, { queryParams: urlData.queryParams });
   }
+
+  navigateToAttemptAddForm(collectionId: string) {
+    const urlData = this._navBuilder
+      .setCollectionTab()
+      .setDoubleColumnView()
+      .setCollectionView(collectionId)
+      .setAttemptAddForm()
+      .build();
+
+    this._route.navigate(urlData.commands, { queryParams: urlData.queryParams });
+  }
+
+  navigateToAttempts(collectionId: string) {
+    const urlData = this._navBuilder
+      .setCollectionTab()
+      .setDoubleColumnView()
+      .setCollectionView(collectionId)
+      .setAttemptsColumn()
+      .build();
+
+    this._route.navigate(urlData.commands, { queryParams: urlData.queryParams });
+  }
 }

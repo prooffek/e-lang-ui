@@ -11,6 +11,7 @@ export class InputComponent {
   @Input() control: FormControl | undefined;
   @Input() showClearButton = true;
   @Input() defaultValue: any = undefined;
+  @Input() type: 'text' | 'number' = 'text';
 
   @Output() onBlur = new EventEmitter();
 

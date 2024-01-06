@@ -23,11 +23,13 @@
       [parentCollectionId]="data.collection?.parentId"
       [showToggleButtons]="!!data.collection?.subcollections?.length"
       [isRowSelected]="!!selectedFlashcards.length"
+      [hasFlashcards]="!!data.collection?.flashcards?.length"
       [(areFlashcardsVisible)]="areFlashcardsVisible"
       (onNavigateBack)="navigateBack($event)"
       (onAddCollectionClick)="openAddCollectionForm()"
       (onAddFlashcardClick)="openAddFlashcardForm()"
       (onRemoveSelectedFlashcard)="removeSelectedFlashcards()"
+      (onLearn)="learnCollection()"
     ></app-collections-view-actions>
   </app-collections-view>
   <div class="right-col">

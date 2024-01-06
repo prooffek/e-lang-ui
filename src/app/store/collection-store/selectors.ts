@@ -31,3 +31,5 @@ export const selectCurrentCollectionFlashcardModels = createSelector(
       return { ...flashcard, meanings, status: FlashcardStatus[flashcard.status] } as FlashcardViewModel;
     }),
 );
+
+export const selectCurrentCollectionName = createSelector(selectCurrentCollection, (collection) => collection?.name);

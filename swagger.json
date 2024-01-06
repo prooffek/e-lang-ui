@@ -6,6 +6,106 @@
     "version": "1.0.0"
   },
   "paths": {
+    "/api/Attempt": {
+      "post": {
+        "tags": [
+          "Attempt"
+        ],
+        "operationId": "Attempt_AddAttempt",
+        "consumes": [
+          "application/json;odata.metadata=minimal;odata.streaming=true",
+          "application/json;odata.metadata=minimal;odata.streaming=false",
+          "application/json;odata.metadata=minimal",
+          "application/json;odata.metadata=full;odata.streaming=true",
+          "application/json;odata.metadata=full;odata.streaming=false",
+          "application/json;odata.metadata=full",
+          "application/json;odata.metadata=none;odata.streaming=true",
+          "application/json;odata.metadata=none;odata.streaming=false",
+          "application/json;odata.metadata=none",
+          "application/json;odata.streaming=true",
+          "application/json;odata.streaming=false",
+          "application/json",
+          "application/xml",
+          "text/plain",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "application/json;odata.metadata=minimal;odata.streaming=true",
+          "application/json;odata.metadata=minimal;odata.streaming=false",
+          "application/json;odata.metadata=minimal",
+          "application/json;odata.metadata=full;odata.streaming=true",
+          "application/json;odata.metadata=full;odata.streaming=false",
+          "application/json;odata.metadata=full",
+          "application/json;odata.metadata=none;odata.streaming=true",
+          "application/json;odata.metadata=none;odata.streaming=false",
+          "application/json;odata.metadata=none",
+          "application/json;odata.streaming=true",
+          "application/json;odata.streaming=false",
+          "application/json",
+          "application/xml",
+          "text/plain",
+          "application/octet-stream",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "attempt",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AddAttemptDto"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/AttemptDto"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Attempt"
+        ],
+        "operationId": "Attempt_GetAll",
+        "produces": [
+          "application/json;odata.metadata=minimal;odata.streaming=true",
+          "application/json;odata.metadata=minimal;odata.streaming=false",
+          "application/json;odata.metadata=minimal",
+          "application/json;odata.metadata=full;odata.streaming=true",
+          "application/json;odata.metadata=full;odata.streaming=false",
+          "application/json;odata.metadata=full",
+          "application/json;odata.metadata=none;odata.streaming=true",
+          "application/json;odata.metadata=none;odata.streaming=false",
+          "application/json;odata.metadata=none",
+          "application/json;odata.streaming=true",
+          "application/json;odata.streaming=false",
+          "application/json",
+          "application/xml",
+          "text/plain",
+          "application/octet-stream",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/AttemptDto"
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Collection/collection-cards": {
       "get": {
         "tags": [
@@ -526,37 +626,21 @@
     }
   },
   "definitions": {
-    "CollectionCardDto": {
+    "AttemptDto": {
       "type": "object",
       "required": [
         "id",
-        "title",
-        "subcollectionsCount",
-        "flashcardsCount"
-      ],
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "guid"
-        },
-        "title": {
-          "type": "string"
-        },
-        "subcollectionsCount": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "flashcardsCount": {
-          "type": "integer",
-          "format": "int32"
-        }
-      }
-    },
-    "CollectionDto": {
-      "type": "object",
-      "required": [
-        "id",
-        "name"
+        "name",
+        "collectionId",
+        "collectionName",
+        "currentStage",
+        "maxFlashcardsPerStage",
+        "maxQuizTypesPerFlashcard",
+        "minCompletedQuizzesPerCent",
+        "order",
+        "includeMeanings",
+        "completedFlashcardsCount",
+        "allFlashcardsCount"
       ],
       "properties": {
         "id": {
@@ -566,24 +650,83 @@
         "name": {
           "type": "string"
         },
-        "parentId": {
+        "collectionId": {
           "type": "string",
           "format": "guid"
         },
-        "parentName": {
+        "collectionName": {
           "type": "string"
         },
-        "subcollections": {
+        "currentStage": {
+          "$ref": "#/definitions/AttemptStageDto"
+        },
+        "maxFlashcardsPerStage": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "maxQuizTypesPerFlashcard": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "minCompletedQuizzesPerCent": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "order": {
+          "$ref": "#/definitions/FlashcardOrder"
+        },
+        "includeMeanings": {
+          "type": "boolean"
+        },
+        "properties": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CollectionCardDto"
+            "$ref": "#/definitions/CustomPropertyDto"
           }
+        },
+        "quizTypes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/QuizTypeDto"
+          }
+        },
+        "completedFlashcardsCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "allFlashcardsCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "lastSeenOn": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "AttemptStageDto": {
+      "type": "object",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "guid"
         },
         "flashcards": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/FlashcardDto"
+            "$ref": "#/definitions/FlashcardStateDto"
           }
+        }
+      }
+    },
+    "FlashcardStateDto": {
+      "type": "object",
+      "properties": {
+        "flashcard": {
+          "$ref": "#/definitions/FlashcardDto"
         }
       }
     },
@@ -668,6 +811,142 @@
         2,
         3
       ]
+    },
+    "FlashcardOrder": {
+      "type": "integer",
+      "description": "",
+      "x-enumNames": [
+        "AlphabeticalDesc",
+        "AlphabeticalAsc",
+        "CreationDateDesc",
+        "CreationDateAsc",
+        "Random"
+      ],
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    "CustomPropertyDto": {
+      "type": "object"
+    },
+    "QuizTypeDto": {
+      "type": "object"
+    },
+    "AddAttemptDto": {
+      "type": "object",
+      "required": [
+        "name",
+        "collectionId",
+        "maxFlashcardsPerStage",
+        "maxQuizTypesPerFlashcard",
+        "minCompletedQuizzesPerCent",
+        "order",
+        "includeMeanings"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "collectionId": {
+          "type": "string",
+          "format": "guid"
+        },
+        "maxFlashcardsPerStage": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "maxQuizTypesPerFlashcard": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "minCompletedQuizzesPerCent": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "order": {
+          "$ref": "#/definitions/FlashcardOrder"
+        },
+        "includeMeanings": {
+          "type": "boolean"
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CustomPropertyDto"
+          }
+        },
+        "quizTypes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/QuizTypeDto"
+          }
+        }
+      }
+    },
+    "CollectionCardDto": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "subcollectionsCount",
+        "flashcardsCount"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "guid"
+        },
+        "title": {
+          "type": "string"
+        },
+        "subcollectionsCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "flashcardsCount": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "CollectionDto": {
+      "type": "object",
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "guid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "parentId": {
+          "type": "string",
+          "format": "guid"
+        },
+        "parentName": {
+          "type": "string"
+        },
+        "subcollections": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CollectionCardDto"
+          }
+        },
+        "flashcards": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FlashcardDto"
+          }
+        }
+      }
     },
     "CreateCollectionDto": {
       "type": "object",

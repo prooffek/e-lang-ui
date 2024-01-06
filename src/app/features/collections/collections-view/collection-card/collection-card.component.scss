@@ -33,4 +33,12 @@
       font-weight: bold;
     }
   }
+
+  .learn-btn {
+    grid-column: span 2;
+  }
+
+  .btn {
+    width: 100%
+  }
 }

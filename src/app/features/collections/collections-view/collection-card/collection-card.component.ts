@@ -16,6 +16,7 @@ export class CollectionCardComponent {
 
   @Output() onClick = new EventEmitter<string>();
   @Output() onRemove = new EventEmitter<string>();
+  @Output() onLearn = new EventEmitter<string>();
 
   size = SizeNames;
 
@@ -30,5 +31,9 @@ export class CollectionCardComponent {
 
   remove(collectionId: string) {
     this.onRemove.emit(collectionId);
+  }
+
+  learn(collectionId: string) {
+    this.onLearn.emit(collectionId);
   }
 }

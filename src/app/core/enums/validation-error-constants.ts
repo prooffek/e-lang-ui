@@ -6,6 +6,8 @@ export enum ValidationErrorConstants {
   recordNotFound = 'recordNotFound',
   recordExists = 'recordExists',
   duplicatedMeanings = 'duplicatedMeanings',
+  max = 'max',
+  min = 'min',
 }
 
 export enum ValidationErrorAttribute {
@@ -13,4 +15,6 @@ export enum ValidationErrorAttribute {
   attribute = 'attribute',
   value = 'value',
   id = 'id',
+  max = 'max',
+  min = 'min',
 }

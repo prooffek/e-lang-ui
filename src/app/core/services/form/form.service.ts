@@ -1,7 +1,9 @@
 import { inject, Injectable, Signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
+  AttemptFormControlNames,
   CollectionFormControlNames,
+  DefaultAttemptFormValues,
   DefaultCollectionFormValues,
   DefaultFlashcardFormValues,
   FlashcardFormControlNames,
@@ -135,5 +137,29 @@ export class FormService {
     const formGroups = meanings.map((m) => this.getMeaningFormGroup(m));
     form.setControl(FlashcardFormControlNames.meanings, this._fb.array(formGroups, [Validators.required]));
     form.get(FlashcardFormControlNames.meanings)?.markAllAsTouched();
+  }
+
+  getAttemptAddFormGroup() {
+    return this._fb.group({
+      [AttemptFormControlNames.name]: [
+        DefaultAttemptFormValues.name,
+        [Validators.required, Validators.minLength(1), Validators.maxLength(250)],
+      ],
+      [AttemptFormControlNames.collectionId]: [DefaultAttemptFormValues.collectionId, Validators.required],
+      [AttemptFormControlNames.maxFlashcardsPerStage]: [
+        DefaultAttemptFormValues.maxFlashcardsPerStage,
+        [Validators.required, Validators.min(1)],
+      ],
+      [AttemptFormControlNames.maxQuizzesPerFlashcard]: [
+        DefaultAttemptFormValues.maxQuizzesPerFlashcard,
+        [Validators.required, Validators.min(1), Validators.max(10)],
+      ],
+      [AttemptFormControlNames.minCompletedQuizzesPerCent]: [
+        DefaultAttemptFormValues.minCompletedQuizzesPerCent,
+        [Validators.required, Validators.min(1), Validators.max(100)],
+      ],
+      [AttemptFormControlNames.flashcardsOrder]: [DefaultAttemptFormValues.flashcardsOrder, Validators.required],
+      [AttemptFormControlNames.includeMeanings]: [DefaultAttemptFormValues.includeMeanings, Validators.required],
+    });
   }
 }

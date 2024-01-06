@@ -21,6 +21,10 @@ import { AgGridModule } from 'ag-grid-angular';
 import { TableButtonComponent } from './components/table/table-button/table-button.component';
 import { DialogComponent } from './base-controls/dialog/dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { DropdownComponent } from './base-controls/dropdown/dropdown.component';
+import { MatSelectModule } from '@angular/material/select';
+import { CheckboxComponent } from './base-controls/checkbox/checkbox.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -37,6 +41,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     TableComponent,
     TableButtonComponent,
     DialogComponent,
+    DropdownComponent,
+    CheckboxComponent,
   ],
   imports: [
     CommonModule,
@@ -49,6 +55,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatAutocompleteModule,
     AgGridModule,
     MatDialogModule,
+    MatSelectModule,
+    MatCheckboxModule,
   ],
   exports: [
     IconComponent,
@@ -63,6 +71,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     TableButtonComponent,
     DialogComponent,
     DividerComponent,
+    DropdownComponent,
+    CheckboxComponent,
   ],
 })
 export class SharedModule {}

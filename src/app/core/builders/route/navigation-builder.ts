@@ -7,7 +7,7 @@ export interface UrlParams {
   tabName: TabName;
   columnsNumber: string;
   view: string[];
-  formType: string[] | undefined;
+  rightColumn: string[] | undefined;
   queryParams: { [key: string]: any } | undefined;
 }
 
@@ -15,7 +15,7 @@ export const initUrlParams: UrlParams = {
   tabName: TabName.collections,
   columnsNumber: Columns.singleColumn,
   view: [],
-  formType: undefined,
+  rightColumn: undefined,
   queryParams: undefined,
 };
 
@@ -81,13 +81,24 @@ export class NavigationBuilder {
     return this;
   }
 
+  setAttemptAddForm() {
+    this.setForm(FormType.addAttempt);
+    return this;
+  }
+
+  setAttemptsColumn() {
+    this._params.rightColumn = [NavigationParams.attempts];
+
+    return this;
+  }
+
   build() {
     const navData = {
       commands: [
         this._params.tabName,
         this._params.columnsNumber,
         ...this._params.view,
-        ...(this._params.formType ?? ''),
+        ...(this._params.rightColumn ?? ''),
       ],
       queryParams: this._params.queryParams,
     };
@@ -121,7 +132,7 @@ export class NavigationBuilder {
   }
 
   private setForm(formType: FormType, queryParams?: { [key: string]: any }) {
-    this._params.formType = [NavigationParams.form, formType];
+    this._params.rightColumn = [NavigationParams.form, formType];
 
     if (queryParams) {
       this._params.queryParams = queryParams;

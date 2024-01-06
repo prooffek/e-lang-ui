@@ -1,0 +1,6 @@
+<div *ngIf="control" class="checkbox-container">
+  <app-input-error [control]="control"></app-input-error>
+  <mat-checkbox [formControl]="control" [value]="control.value" [color]="color">
+    <span class="label">{{ label }}</span>
+  </mat-checkbox>
+</div>

@@ -9,9 +9,16 @@
     {{ control!.errors![ValidationError.minlength][ValidationErrorAttribute.requiredLength] }} characters long.
   </mat-error>
   <mat-error *ngIf="control?.hasError(ValidationError.valueInUse)">
-    {{ control!.errors![ValidationError.valueInUse][ValidationErrorAttribute.attribute] | titlecase }} with value
-    {{ control!.errors![ValidationError.valueInUse][ValidationErrorAttribute.value] }} already exists.
+    {{ control!.errors![ValidationError.valueInUse][ValidationErrorAttribute.attribute] | titlecase }} with value '{{
+      control!.errors![ValidationError.valueInUse][ValidationErrorAttribute.value]
+    }}' already exists.
   </mat-error>
   <mat-error *ngIf="control?.hasError(ValidationError.recordExists)"> Record already exists. </mat-error>
   <mat-error *ngIf="control?.hasError(ValidationError.recordNotFound)"> Record not found. </mat-error>
+  <mat-error *ngIf="control?.hasError(ValidationError.max)">
+    The maximal accepted value is {{ control!.errors![ValidationError.max][ValidationErrorAttribute.max] }}.
+  </mat-error>
+  <mat-error *ngIf="control?.hasError(ValidationError.min)">
+    The minimal accepted value is {{ control!.errors![ValidationError.min][ValidationErrorAttribute.min] }}.
+  </mat-error>
 </div>
