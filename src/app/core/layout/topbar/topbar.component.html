@@ -1,4 +1,4 @@
-<nav class="topbar-container" *ngIf="{ activeTab: activeTab()} as data">
+<nav class="topbar-container" *ngIf="{ activeTab: activeTab() } as data">
   <div class="upper-bar">
     <div class="breadcrums-container">
       <app-breadcrumb></app-breadcrumb>
@@ -18,6 +18,14 @@
       [label]="tabNames.flashcards"
       [isActive]="data.activeTab === tabNames.flashcards"
       imgFilePrefix="cards"
+      imgSize="28px"
+      (onClick)="tabClick($event)"
+    ></app-tab>
+    <app-tab
+      *ngIf="data.activeTab === tabNames.attempts"
+      [label]="tabNames.attempts"
+      [isActive]="data.activeTab === tabNames.attempts"
+      imgFilePrefix="attempt"
       imgSize="28px"
       (onClick)="tabClick($event)"
     ></app-tab>

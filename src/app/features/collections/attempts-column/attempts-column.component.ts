@@ -55,4 +55,8 @@ export class AttemptsColumnComponent {
   showDetails(attempt: AttemptDto) {
     this._navigationService.navigateToAttemptDetails(attempt);
   }
+
+  start(attemptId: string) {
+    this._navigationService.navigateToAttemptView(attemptId);
+  }
 }

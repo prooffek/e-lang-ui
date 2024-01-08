@@ -5,6 +5,8 @@ import {
   addAttemptSuccess,
   deleteAttemptFailure,
   deleteAttemptSuccess,
+  getAttemptByIdFailure,
+  getAttemptByIdSuccess,
   getAttemptsForCollectionFailure,
   getAttemptsForCollectionSuccess,
 } from './actions';
@@ -17,6 +19,8 @@ export const Reducer = createReducer(
     return { ...state, attempts };
   }),
   on(addAttemptFailure, (state, { error }) => ({ ...state, error })),
+  on(getAttemptByIdSuccess, (state, { attempt }) => ({ ...state, currentAttempt: attempt })),
+  on(getAttemptByIdFailure, (state, { error }) => ({ ...state, error })),
   on(getAttemptsForCollectionSuccess, (state, { collectionId, attempts }) => {
     const newAttempts = { ...state.attempts };
     newAttempts[collectionId] = attempts;

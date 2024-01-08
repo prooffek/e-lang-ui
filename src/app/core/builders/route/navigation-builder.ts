@@ -33,6 +33,11 @@ export class NavigationBuilder {
     return this;
   }
 
+  setAttemptsTab() {
+    this.setTabName(TabName.attempts);
+    return this;
+  }
+
   setSingleColumnView() {
     this.setColumns(Columns.singleColumn);
     return this;
@@ -93,6 +98,11 @@ export class NavigationBuilder {
 
   setAttemptDetails(attemptId: string) {
     this._params.rightColumn = [NavigationParams.attempts, attemptId];
+    return this;
+  }
+
+  setAttemptView(attemptId: string) {
+    this._params.view = [NavigationParams.attempt, attemptId];
     return this;
   }
 

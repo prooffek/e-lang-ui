@@ -4,6 +4,7 @@ export enum NavigationParams {
   editFlashcardId = 'editFlashcardId',
   form = 'form',
   attempts = 'attempts',
+  attempt = 'attempt',
 }
 
 export enum ViewParams {

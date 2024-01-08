@@ -1,0 +1,11 @@
+<div class="attempt-container" *ngIf="attempt && { attempt: attempt | async } as data">
+  <app-selected-flashcards-list
+    *ngIf="showList && data.attempt?.currentStage; else quizzes"
+    [flashcards]="flashcards"
+    [collectionId]="data.attempt?.collectionId"
+  ></app-selected-flashcards-list>
+
+  <ng-template #quizzes>
+    <router-outlet></router-outlet>
+  </ng-template>
+</div>

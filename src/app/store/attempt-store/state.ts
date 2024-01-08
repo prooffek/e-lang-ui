@@ -4,6 +4,7 @@ export const attemptStoreName = 'attemptStore';
 
 export type AttemptState = {
   attempts: { [collectionId: string]: AttemptDto[] };
+  currentAttempt?: AttemptDto;
 };
 
 export const initialAttemptState: AttemptState = {

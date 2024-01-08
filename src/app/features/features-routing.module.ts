@@ -16,6 +16,10 @@ const routes: Routes = [
     path: TabName.flashcards,
     loadChildren: () => import('./flashcards/flashcards.module').then((m) => m.FlashcardsModule),
   },
+  {
+    path: TabName.attempts,
+    loadChildren: () => import('./attempts/attempts.module').then((m) => m.AttemptsModule),
+  },
 ];
 
 @NgModule({

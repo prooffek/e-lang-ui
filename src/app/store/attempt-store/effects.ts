@@ -8,12 +8,15 @@ import {
   AttemptActions,
   deleteAttemptFailure,
   deleteAttemptSuccess,
+  getAttemptByIdFailure,
+  getAttemptByIdSuccess,
   getAttemptsForCollectionFailure,
   getAttemptsForCollectionSuccess,
 } from './actions';
 import { catchError, mergeMap, skipWhile, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { AttemptOdataService } from '../../core/services/odata/attempt-odata.service';
+import { NavigationService } from '../../core/services/router/navigation.service';
 
 @Injectable({ providedIn: 'root' })
 export class Effects {
@@ -21,6 +24,7 @@ export class Effects {
   private readonly _httpClient = inject(AttemptClient);
   private readonly _toastrService = inject(ToastrService);
   private readonly _odataService = inject(AttemptOdataService);
+  private readonly _navigationService = inject(NavigationService);
 
   addAttemptEffect$ = createEffect(() =>
     this._actions$.pipe(
@@ -40,9 +44,23 @@ export class Effects {
         ofType(AttemptActions.addAttemptSuccess),
         tap(({ attempt }) => {
           this._toastrService.success(`Attempt '${attempt.name}' created successfully.`);
+          this._navigationService.navigateToAttemptView(attempt.id);
         }),
       ),
     { dispatch: false },
+  );
+
+  getAttemptByIdEffect$ = createEffect(() =>
+    this._actions$.pipe(
+      ofType(AttemptActions.getAttemptById),
+      switchMap(({ attemptId }) =>
+        this._odataService.getAttemptById(attemptId).pipe(
+          skipWhile((attempt) => !attempt),
+          mergeMap((attempt) => [getAttemptByIdSuccess({ attempt: attempt! })]),
+          catchError((error) => of(getAttemptByIdFailure({ error }))),
+        ),
+      ),
+    ),
   );
 
   getAttemptsForCollectionEffect$ = createEffect(() =>

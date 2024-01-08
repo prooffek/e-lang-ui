@@ -12,3 +12,5 @@ export const selectAttemptById = (attemptId: string) =>
       .flat()
       .find((x) => x.id === attemptId),
   );
+
+export const selectCurrentAttempt = createSelector(selectAttemptState, (state) => state.currentAttempt);

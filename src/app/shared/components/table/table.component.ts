@@ -12,6 +12,7 @@ export class TableComponent {
   @Input() colDef: ColDef[] | undefined;
   @Input() rowData: any[] | undefined;
   @Input() rowSelection: 'single' | 'multiple' = 'single';
+  @Input() suppressRowTransform = false;
 
   @Output() onSelectedChange = new EventEmitter<any[]>();
 

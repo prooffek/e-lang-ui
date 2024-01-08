@@ -54,7 +54,6 @@ export class AttemptFormComponent extends SubscribedContainer implements OnInit 
 
   start() {
     this._store.dispatch(addAttempt({ addAttempt: this.form?.value as AddAttemptDto }));
-    this.closeRightColumn();
   }
 
   private initForm(collection: CollectionDto) {

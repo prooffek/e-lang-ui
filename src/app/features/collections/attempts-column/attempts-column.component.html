@@ -12,7 +12,7 @@
     </div>
     <div *ngFor="let attempt of data.attempts" class="attempt">
       <div class="start-btn-col">
-        <app-icon-button iconName="start-white" iconHeight="25px"></app-icon-button>
+        <app-icon-button iconName="start-white" iconHeight="25px" (onClick)="start(attempt.id)"></app-icon-button>
       </div>
       <p class="name-col">{{ attempt.name }}</p>
       <p class="last-seen-col">{{ attempt.lastSeenOn | date }}</p>

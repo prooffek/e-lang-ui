@@ -5,6 +5,7 @@ import { OdataBuilder } from './odata-builder';
 import { AttemptDto } from '../api-client/api-client';
 import { environment } from '../../../../environments/environment';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -23,5 +24,12 @@ export class AttemptOdataService implements OdataBase {
 
   getAttemptsByCollectionId(collectionId: string): Observable<AttemptDto[]> {
     return this.query().filter(`collectionId eq ${collectionId}`).exec();
+  }
+
+  getAttemptById(attemptId: string): Observable<AttemptDto | undefined> {
+    return this.query()
+      .filter(`id eq ${attemptId}`)
+      .exec()
+      .pipe(map((attempts) => (attempts.length > 0 ? attempts[0] : undefined)));
   }
 }

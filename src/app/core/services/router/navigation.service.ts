@@ -128,4 +128,10 @@ export class NavigationService {
 
     this._route.navigate(urlData.commands, { queryParams: urlData.queryParams });
   }
+
+  navigateToAttemptView(attemptId: string) {
+    const urlData = this._navBuilder.setAttemptsTab().setSingleColumnView().setAttemptView(attemptId).build();
+
+    this._route.navigate(urlData.commands, { queryParams: urlData.queryParams });
+  }
 }
