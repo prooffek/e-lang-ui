@@ -19,6 +19,7 @@ export interface IAttemptClient {
     addAttempt(attempt: AddAttemptDto): Observable<AttemptDto>;
     deleteAttempt(attemptId: string): Observable<FileResponse | null>;
     getAll(): Observable<AttemptDto[]>;
+    getExercise(attemptId: string, flashcardStateId: string | null | undefined, isAnswerCorrect: boolean | null | undefined): Observable<ExerciseDto>;
 }
 
 @Injectable({
@@ -198,6 +199,63 @@ export class AttemptClient implements IAttemptClient {
             }));
         }
         return _observableOf<AttemptDto[]>(null as any);
+    }
+
+    getExercise(attemptId: string, flashcardStateId: string | null | undefined, isAnswerCorrect: boolean | null | undefined, httpContext?: HttpContext): Observable<ExerciseDto> {
+        let url_ = this.baseUrl + "/api/Attempt/get-exercise?";
+        if (flashcardStateId !== undefined && flashcardStateId !== null)
+            url_ += "flashcardStateId=" + encodeURIComponent("" + flashcardStateId) + "&";
+        if (isAnswerCorrect !== undefined && isAnswerCorrect !== null)
+            url_ += "isAnswerCorrect=" + encodeURIComponent("" + isAnswerCorrect) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(attemptId);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            context: httpContext,
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetExercise(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetExercise(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ExerciseDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ExerciseDto>;
+        }));
+    }
+
+    protected processGetExercise(response: HttpResponseBase): Observable<ExerciseDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ExerciseDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ExerciseDto>(null as any);
     }
 }
 
@@ -1015,6 +1073,7 @@ export interface IAttemptStageDto {
 }
 
 export class FlashcardStateDto implements IFlashcardStateDto {
+    id!: string;
     flashcard?: FlashcardDto | undefined;
 
     constructor(data?: IFlashcardStateDto) {
@@ -1028,6 +1087,7 @@ export class FlashcardStateDto implements IFlashcardStateDto {
 
     init(_data?: any) {
         if (_data) {
+            this.id = _data["id"];
             this.flashcard = _data["flashcard"] ? FlashcardDto.fromJS(_data["flashcard"]) : <any>undefined;
         }
     }
@@ -1041,12 +1101,14 @@ export class FlashcardStateDto implements IFlashcardStateDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
         data["flashcard"] = this.flashcard ? this.flashcard.toJSON() : <any>undefined;
         return data;
     }
 }
 
 export interface IFlashcardStateDto {
+    id: string;
     flashcard?: FlashcardDto | undefined;
 }
 
@@ -1058,7 +1120,6 @@ export class FlashcardDto implements IFlashcardDto {
     meanings!: MeaningDto[];
     createdOn!: Date;
     lastSeenOn?: Date | undefined;
-    status!: FlashcardStatus;
     flashcardBaseId!: string;
 
     constructor(data?: IFlashcardDto) {
@@ -1086,7 +1147,6 @@ export class FlashcardDto implements IFlashcardDto {
             }
             this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
             this.lastSeenOn = _data["lastSeenOn"] ? new Date(_data["lastSeenOn"].toString()) : <any>undefined;
-            this.status = _data["status"];
             this.flashcardBaseId = _data["flashcardBaseId"];
         }
     }
@@ -1111,7 +1171,6 @@ export class FlashcardDto implements IFlashcardDto {
         }
         data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
         data["lastSeenOn"] = this.lastSeenOn ? this.lastSeenOn.toISOString() : <any>undefined;
-        data["status"] = this.status;
         data["flashcardBaseId"] = this.flashcardBaseId;
         return data;
     }
@@ -1125,7 +1184,6 @@ export interface IFlashcardDto {
     meanings: MeaningDto[];
     createdOn: Date;
     lastSeenOn?: Date | undefined;
-    status: FlashcardStatus;
     flashcardBaseId: string;
 }
 
@@ -1169,13 +1227,6 @@ export interface IMeaningDto {
     value: string;
 }
 
-export enum FlashcardStatus {
-    Active = 0,
-    Seen = 1,
-    Learnt = 2,
-    Inactive = 3,
-}
-
 export enum FlashcardOrder {
     AlphabeticalDesc = 0,
     AlphabeticalAsc = 1,
@@ -1215,6 +1266,16 @@ export interface ICustomPropertyDto {
 }
 
 export class QuizTypeDto implements IQuizTypeDto {
+    name!: string;
+    instruction!: string;
+    isSelect!: boolean;
+    isMultiselect!: boolean;
+    isSelectCorrect!: boolean;
+    isSelectMissing!: boolean;
+    isMatch!: boolean;
+    isArrange!: boolean;
+    isInput!: boolean;
+    isFillInBlank!: boolean;
 
     constructor(data?: IQuizTypeDto) {
         if (data) {
@@ -1226,6 +1287,18 @@ export class QuizTypeDto implements IQuizTypeDto {
     }
 
     init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.instruction = _data["instruction"];
+            this.isSelect = _data["isSelect"];
+            this.isMultiselect = _data["isMultiselect"];
+            this.isSelectCorrect = _data["isSelectCorrect"];
+            this.isSelectMissing = _data["isSelectMissing"];
+            this.isMatch = _data["isMatch"];
+            this.isArrange = _data["isArrange"];
+            this.isInput = _data["isInput"];
+            this.isFillInBlank = _data["isFillInBlank"];
+        }
     }
 
     static fromJS(data: any): QuizTypeDto {
@@ -1237,11 +1310,31 @@ export class QuizTypeDto implements IQuizTypeDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["instruction"] = this.instruction;
+        data["isSelect"] = this.isSelect;
+        data["isMultiselect"] = this.isMultiselect;
+        data["isSelectCorrect"] = this.isSelectCorrect;
+        data["isSelectMissing"] = this.isSelectMissing;
+        data["isMatch"] = this.isMatch;
+        data["isArrange"] = this.isArrange;
+        data["isInput"] = this.isInput;
+        data["isFillInBlank"] = this.isFillInBlank;
         return data;
     }
 }
 
 export interface IQuizTypeDto {
+    name: string;
+    instruction: string;
+    isSelect: boolean;
+    isMultiselect: boolean;
+    isSelectCorrect: boolean;
+    isSelectMissing: boolean;
+    isMatch: boolean;
+    isArrange: boolean;
+    isInput: boolean;
+    isFillInBlank: boolean;
 }
 
 export class AddAttemptDto implements IAddAttemptDto {
@@ -1326,6 +1419,146 @@ export interface IAddAttemptDto {
     includeMeanings: boolean;
     properties?: CustomPropertyDto[] | undefined;
     quizTypes?: QuizTypeDto[] | undefined;
+}
+
+export class ExerciseDto implements IExerciseDto {
+    attemptId!: string;
+    flashcardStateId!: string;
+    instruction!: string;
+    wordOrPhrase!: string;
+    correctAnswers!: AnswerDto[];
+    incorrectAnswers!: AnswerDto[];
+    isSelect!: boolean;
+    isMultiSelect!: boolean;
+    isSelectMissing!: boolean;
+    isMatch!: boolean;
+    isArrange!: boolean;
+    isInput!: boolean;
+    isFillInBlank!: boolean;
+
+    constructor(data?: IExerciseDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.correctAnswers = [];
+            this.incorrectAnswers = [];
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.attemptId = _data["attemptId"];
+            this.flashcardStateId = _data["flashcardStateId"];
+            this.instruction = _data["instruction"];
+            this.wordOrPhrase = _data["wordOrPhrase"];
+            if (Array.isArray(_data["correctAnswers"])) {
+                this.correctAnswers = [] as any;
+                for (let item of _data["correctAnswers"])
+                    this.correctAnswers!.push(AnswerDto.fromJS(item));
+            }
+            if (Array.isArray(_data["incorrectAnswers"])) {
+                this.incorrectAnswers = [] as any;
+                for (let item of _data["incorrectAnswers"])
+                    this.incorrectAnswers!.push(AnswerDto.fromJS(item));
+            }
+            this.isSelect = _data["isSelect"];
+            this.isMultiSelect = _data["isMultiSelect"];
+            this.isSelectMissing = _data["isSelectMissing"];
+            this.isMatch = _data["isMatch"];
+            this.isArrange = _data["isArrange"];
+            this.isInput = _data["isInput"];
+            this.isFillInBlank = _data["isFillInBlank"];
+        }
+    }
+
+    static fromJS(data: any): ExerciseDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ExerciseDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["attemptId"] = this.attemptId;
+        data["flashcardStateId"] = this.flashcardStateId;
+        data["instruction"] = this.instruction;
+        data["wordOrPhrase"] = this.wordOrPhrase;
+        if (Array.isArray(this.correctAnswers)) {
+            data["correctAnswers"] = [];
+            for (let item of this.correctAnswers)
+                data["correctAnswers"].push(item.toJSON());
+        }
+        if (Array.isArray(this.incorrectAnswers)) {
+            data["incorrectAnswers"] = [];
+            for (let item of this.incorrectAnswers)
+                data["incorrectAnswers"].push(item.toJSON());
+        }
+        data["isSelect"] = this.isSelect;
+        data["isMultiSelect"] = this.isMultiSelect;
+        data["isSelectMissing"] = this.isSelectMissing;
+        data["isMatch"] = this.isMatch;
+        data["isArrange"] = this.isArrange;
+        data["isInput"] = this.isInput;
+        data["isFillInBlank"] = this.isFillInBlank;
+        return data;
+    }
+}
+
+export interface IExerciseDto {
+    attemptId: string;
+    flashcardStateId: string;
+    instruction: string;
+    wordOrPhrase: string;
+    correctAnswers: AnswerDto[];
+    incorrectAnswers: AnswerDto[];
+    isSelect: boolean;
+    isMultiSelect: boolean;
+    isSelectMissing: boolean;
+    isMatch: boolean;
+    isArrange: boolean;
+    isInput: boolean;
+    isFillInBlank: boolean;
+}
+
+export class AnswerDto implements IAnswerDto {
+    value!: string;
+
+    constructor(data?: IAnswerDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.value = _data["value"];
+        }
+    }
+
+    static fromJS(data: any): AnswerDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new AnswerDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["value"] = this.value;
+        return data;
+    }
+}
+
+export interface IAnswerDto {
+    value: string;
 }
 
 export class CollectionCardDto implements ICollectionCardDto {

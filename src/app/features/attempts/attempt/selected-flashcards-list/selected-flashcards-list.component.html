@@ -1,6 +1,6 @@
 <div class="list-container">
   <div class="actions-container">
-    <app-button label="Continue" iconFile="continue-black"></app-button>
+    <app-button label="Continue" iconFile="continue-black" (onClick)="continue()"></app-button>
     <app-button label="Cancel" iconFile="cancel-black" (onClick)="cancel()"></app-button>
   </div>
   <app-table *ngIf="rowData" [rowData]="rowData" [colDef]="colDef" [suppressRowTransform]="true"></app-table>

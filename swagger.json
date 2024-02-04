@@ -151,6 +151,84 @@
         }
       }
     },
+    "/api/Attempt/get-exercise": {
+      "post": {
+        "tags": [
+          "Attempt"
+        ],
+        "operationId": "Attempt_GetExercise",
+        "consumes": [
+          "application/json;odata.metadata=minimal;odata.streaming=true",
+          "application/json;odata.metadata=minimal;odata.streaming=false",
+          "application/json;odata.metadata=minimal",
+          "application/json;odata.metadata=full;odata.streaming=true",
+          "application/json;odata.metadata=full;odata.streaming=false",
+          "application/json;odata.metadata=full",
+          "application/json;odata.metadata=none;odata.streaming=true",
+          "application/json;odata.metadata=none;odata.streaming=false",
+          "application/json;odata.metadata=none",
+          "application/json;odata.streaming=true",
+          "application/json;odata.streaming=false",
+          "application/json",
+          "application/xml",
+          "text/plain",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "application/json;odata.metadata=minimal;odata.streaming=true",
+          "application/json;odata.metadata=minimal;odata.streaming=false",
+          "application/json;odata.metadata=minimal",
+          "application/json;odata.metadata=full;odata.streaming=true",
+          "application/json;odata.metadata=full;odata.streaming=false",
+          "application/json;odata.metadata=full",
+          "application/json;odata.metadata=none;odata.streaming=true",
+          "application/json;odata.metadata=none;odata.streaming=false",
+          "application/json;odata.metadata=none",
+          "application/json;odata.streaming=true",
+          "application/json;odata.streaming=false",
+          "application/json",
+          "application/xml",
+          "text/plain",
+          "application/octet-stream",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "attemptId",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-nullable": false
+          },
+          {
+            "type": "string",
+            "name": "flashcardStateId",
+            "in": "query",
+            "format": "guid",
+            "x-nullable": true
+          },
+          {
+            "type": "boolean",
+            "name": "isAnswerCorrect",
+            "in": "query",
+            "x-nullable": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ExerciseDto"
+            }
+          }
+        }
+      }
+    },
     "/api/Collection/collection-cards": {
       "get": {
         "tags": [
@@ -774,7 +852,14 @@
     },
     "FlashcardStateDto": {
       "type": "object",
+      "required": [
+        "id"
+      ],
       "properties": {
+        "id": {
+          "type": "string",
+          "format": "guid"
+        },
         "flashcard": {
           "$ref": "#/definitions/FlashcardDto"
         }
@@ -789,7 +874,6 @@
         "wordOrPhrase",
         "meanings",
         "createdOn",
-        "status",
         "flashcardBaseId"
       ],
       "properties": {
@@ -821,9 +905,6 @@
           "type": "string",
           "format": "date-time"
         },
-        "status": {
-          "$ref": "#/definitions/FlashcardStatus"
-        },
         "flashcardBaseId": {
           "type": "string",
           "format": "guid"
@@ -845,22 +926,6 @@
           "type": "string"
         }
       }
-    },
-    "FlashcardStatus": {
-      "type": "integer",
-      "description": "",
-      "x-enumNames": [
-        "Active",
-        "Seen",
-        "Learnt",
-        "Inactive"
-      ],
-      "enum": [
-        0,
-        1,
-        2,
-        3
-      ]
     },
     "FlashcardOrder": {
       "type": "integer",
@@ -884,7 +949,51 @@
       "type": "object"
     },
     "QuizTypeDto": {
-      "type": "object"
+      "type": "object",
+      "required": [
+        "name",
+        "instruction",
+        "isSelect",
+        "isMultiselect",
+        "isSelectCorrect",
+        "isSelectMissing",
+        "isMatch",
+        "isArrange",
+        "isInput",
+        "isFillInBlank"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "instruction": {
+          "type": "string"
+        },
+        "isSelect": {
+          "type": "boolean"
+        },
+        "isMultiselect": {
+          "type": "boolean"
+        },
+        "isSelectCorrect": {
+          "type": "boolean"
+        },
+        "isSelectMissing": {
+          "type": "boolean"
+        },
+        "isMatch": {
+          "type": "boolean"
+        },
+        "isArrange": {
+          "type": "boolean"
+        },
+        "isInput": {
+          "type": "boolean"
+        },
+        "isFillInBlank": {
+          "type": "boolean"
+        }
+      }
     },
     "AddAttemptDto": {
       "type": "object",
@@ -934,6 +1043,84 @@
           "items": {
             "$ref": "#/definitions/QuizTypeDto"
           }
+        }
+      }
+    },
+    "ExerciseDto": {
+      "type": "object",
+      "required": [
+        "attemptId",
+        "flashcardStateId",
+        "instruction",
+        "wordOrPhrase",
+        "correctAnswers",
+        "incorrectAnswers",
+        "isSelect",
+        "isMultiSelect",
+        "isSelectMissing",
+        "isMatch",
+        "isArrange",
+        "isInput",
+        "isFillInBlank"
+      ],
+      "properties": {
+        "attemptId": {
+          "type": "string",
+          "format": "guid"
+        },
+        "flashcardStateId": {
+          "type": "string",
+          "format": "guid"
+        },
+        "instruction": {
+          "type": "string"
+        },
+        "wordOrPhrase": {
+          "type": "string"
+        },
+        "correctAnswers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AnswerDto"
+          }
+        },
+        "incorrectAnswers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AnswerDto"
+          }
+        },
+        "isSelect": {
+          "type": "boolean"
+        },
+        "isMultiSelect": {
+          "type": "boolean"
+        },
+        "isSelectMissing": {
+          "type": "boolean"
+        },
+        "isMatch": {
+          "type": "boolean"
+        },
+        "isArrange": {
+          "type": "boolean"
+        },
+        "isInput": {
+          "type": "boolean"
+        },
+        "isFillInBlank": {
+          "type": "boolean"
+        }
+      }
+    },
+    "AnswerDto": {
+      "type": "object",
+      "required": [
+        "value"
+      ],
+      "properties": {
+        "value": {
+          "type": "string"
         }
       }
     },

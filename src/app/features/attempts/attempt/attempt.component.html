@@ -1,11 +1,18 @@
-<div class="attempt-container" *ngIf="attempt && { attempt: attempt | async } as data">
+<div
+  class="attempt-container"
+  *ngIf="attempt$ && { attempt: attempt$ | async, exercise: exercise(), meanings: meanings() } as data"
+>
   <app-selected-flashcards-list
-    *ngIf="showList && data.attempt?.currentStage; else quizzes"
+    *ngIf="showList && data.attempt?.currentStage"
     [flashcards]="flashcards"
     [collectionId]="data.attempt?.collectionId"
+    (onContinue)="continue({ attemptId: attemptId! })"
   ></app-selected-flashcards-list>
 
-  <ng-template #quizzes>
-    <router-outlet></router-outlet>
-  </ng-template>
+  <app-single-select
+    *ngIf="!showList && data.exercise"
+    [exercise]="data.exercise"
+    [meanings]="data.meanings"
+    (onSelectNext)="continue($event)"
+  ></app-single-select>
 </div>
