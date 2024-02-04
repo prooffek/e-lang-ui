@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { AddAttemptDto, AttemptDto } from '../../core/services/api-client/api-client';
+import { AddAttemptDto, AttemptDto, ExerciseDto } from '../../core/services/api-client/api-client';
 
 export enum AttemptActions {
   addAttempt = '[Attempt] Add Attempt',
@@ -14,6 +14,9 @@ export enum AttemptActions {
   deleteAttempt = '[Attempt] Delete attempt',
   deleteAttemptSuccess = '[Attempt] Delete attempt - Success',
   deleteAttemptFailure = '[Attempt] Delete attempt - Failure',
+  getNextExercise = '[Attempt] Get next exercise',
+  getNextExerciseSuccess = '[Attempt] Get next exercise - Success',
+  getNextExerciseFailure = '[Attempt] Get next exercise - Failure',
 }
 
 export const addAttempt = createAction(AttemptActions.addAttempt, props<{ addAttempt: AddAttemptDto }>());
@@ -43,3 +46,15 @@ export const getAttemptsForCollectionFailure = createAction(
 export const deleteAttempt = createAction(AttemptActions.deleteAttempt, props<{ attempt: AttemptDto }>());
 export const deleteAttemptSuccess = createAction(AttemptActions.deleteAttemptSuccess, props<{ attempt: AttemptDto }>());
 export const deleteAttemptFailure = createAction(AttemptActions.deleteAttemptFailure, props<{ error: any }>());
+
+export const getNextExercise = createAction(
+  AttemptActions.getNextExercise,
+  props<{ attemptId: string; flashcardStateId?: string; isAnswerCorrect?: boolean }>(),
+);
+
+export const getNextExerciseSuccess = createAction(
+  AttemptActions.getNextExerciseSuccess,
+  props<{ exercise: ExerciseDto }>(),
+);
+
+export const getNextExerciseFailure = createAction(AttemptActions.getNextExerciseFailure, props<{ error: any }>());

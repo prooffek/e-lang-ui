@@ -69,6 +69,10 @@ export class SelectedFlashcardsListComponent {
     return params.data ? params.data.span : 1;
   }
 
+  continue() {
+    this.onContinue.emit();
+  }
+
   cancel() {
     if (this.collectionId) {
       this._navigationService.navigateToSelectedCollectionView(this.collectionId);

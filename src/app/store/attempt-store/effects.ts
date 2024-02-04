@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { AttemptClient, AttemptDto } from '../../core/services/api-client/api-client';
+import { AttemptClient, AttemptDto, ExerciseDto } from '../../core/services/api-client/api-client';
 import { ToastrService } from 'ngx-toastr';
 import {
   addAttemptFailure,
@@ -12,6 +12,8 @@ import {
   getAttemptByIdSuccess,
   getAttemptsForCollectionFailure,
   getAttemptsForCollectionSuccess,
+  getNextExerciseFailure,
+  getNextExerciseSuccess,
 } from './actions';
 import { catchError, mergeMap, skipWhile, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -92,11 +94,20 @@ export class Effects {
     () =>
       this._actions$.pipe(
         ofType(AttemptActions.deleteAttemptSuccess),
-        tap(({ attempt }) => {
-          console.log(attempt.name);
-          this._toastrService.success(`Attempt '${attempt.name}' removed successfully.`);
-        }),
+        tap(({ attempt }) => this._toastrService.success(`Attempt '${attempt.name}' removed successfully.`)),
       ),
     { dispatch: false },
+  );
+
+  getNextExercise = createEffect(() =>
+    this._actions$.pipe(
+      ofType(AttemptActions.getNextExercise),
+      switchMap(({ attemptId, flashcardStateId, isAnswerCorrect }) =>
+        this._httpClient.getExercise(attemptId, flashcardStateId, isAnswerCorrect).pipe(
+          mergeMap((exercise: ExerciseDto) => [getNextExerciseSuccess({ exercise })]),
+          catchError((error) => of(getNextExerciseFailure({ error }))),
+        ),
+      ),
+    ),
   );
 }

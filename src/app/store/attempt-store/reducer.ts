@@ -9,6 +9,8 @@ import {
   getAttemptByIdSuccess,
   getAttemptsForCollectionFailure,
   getAttemptsForCollectionSuccess,
+  getNextExerciseFailure,
+  getNextExerciseSuccess,
 } from './actions';
 
 export const Reducer = createReducer(
@@ -35,4 +37,9 @@ export const Reducer = createReducer(
     return { ...state, attempts: allAttempts };
   }),
   on(deleteAttemptFailure, (state, { error }) => ({ ...state, error })),
+  on(getNextExerciseSuccess, (state, { exercise }) => ({
+    ...state,
+    currentExercise: exercise,
+  })),
+  on(getNextExerciseFailure, (state, { error }) => ({ ...state, error })),
 );

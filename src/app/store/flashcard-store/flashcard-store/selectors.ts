@@ -1,6 +1,6 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { FlashcardState, flashcardStoreName } from './state';
-import { FlashcardDto, FlashcardStatus } from 'src/app/core/services/api-client/api-client';
+import { FlashcardDto } from 'src/app/core/services/api-client/api-client';
 import { FlashcardViewModel } from 'src/app/features/flashcards/flashcard-view/flashcard-view.model';
 import { getMeaningsString } from '../../../core/helpers/store/flashcardHelper';
 
@@ -11,7 +11,7 @@ export const selectAllFlashcards = createSelector(selectFlashcards, (state) => O
 export const selectAllFlashcardModels = createSelector(selectAllFlashcards, (flashcards) =>
   flashcards.map((flashcard: FlashcardDto) => {
     const meanings = getMeaningsString(flashcard.meanings);
-    return { ...flashcard, meanings, status: FlashcardStatus[flashcard.status] } as FlashcardViewModel;
+    return { ...flashcard, meanings } as FlashcardViewModel;
   }),
 );
 
