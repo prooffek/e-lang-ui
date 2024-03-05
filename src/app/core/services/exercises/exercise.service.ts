@@ -10,12 +10,15 @@ export class ExerciseService {
       const correctValues = exercise.correctAnswers.map((x) => x.value);
       const answerValues = selected.map((x) => x.value);
 
-      return (
-        exercise.correctAnswers.length === selected.length &&
-        new Set([...correctValues, ...answerValues]).size === exercise.correctAnswers.length
-      );
+      // return (
+      //   exercise.correctAnswers.length === selected.length &&
+      //   new Set([...correctValues, ...answerValues]).size === exercise.correctAnswers.length
+      // );
+
+      // temporary
+      return correctValues.includes(answerValues[0]);
     }
 
-    return false;
+    return true;
   }
 }

@@ -3,6 +3,7 @@ import { initialAttemptState } from './state';
 import {
   addAttemptFailure,
   addAttemptSuccess,
+  completeCurrentStage,
   deleteAttemptFailure,
   deleteAttemptSuccess,
   getAttemptByIdFailure,
@@ -12,6 +13,7 @@ import {
   getNextExerciseFailure,
   getNextExerciseSuccess,
 } from './actions';
+import { AttemptDto, AttemptStageDto, AttemptStageType } from '../../core/services/api-client/api-client';
 
 export const Reducer = createReducer(
   initialAttemptState,
@@ -42,4 +44,17 @@ export const Reducer = createReducer(
     currentExercise: exercise,
   })),
   on(getNextExerciseFailure, (state, { error }) => ({ ...state, error })),
+  on(completeCurrentStage, (state) => {
+    let currentStage = { ...state.currentAttempt!.currentStage } as AttemptStageDto;
+    currentStage.stage = AttemptStageType.Complete;
+    const attempt = { ...state.currentAttempt } as AttemptDto;
+    attempt.completedFlashcardsCount += currentStage.flashcards?.length ?? 0;
+    attempt.currentStage = currentStage;
+
+    return {
+      ...state,
+      currentAttempt: attempt,
+      currentExercise: undefined,
+    };
+  }),
 );

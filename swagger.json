@@ -223,7 +223,7 @@
             "x-nullable": false,
             "description": "",
             "schema": {
-              "$ref": "#/definitions/ExerciseDto"
+              "$ref": "#/definitions/NextExerciseDto"
             }
           }
         }
@@ -757,7 +757,6 @@
         "collectionId",
         "collectionName",
         "createdOn",
-        "currentStage",
         "maxFlashcardsPerStage",
         "maxQuizTypesPerFlashcard",
         "minCompletedQuizzesPerCent",
@@ -835,12 +834,16 @@
     "AttemptStageDto": {
       "type": "object",
       "required": [
-        "id"
+        "id",
+        "stage"
       ],
       "properties": {
         "id": {
           "type": "string",
           "format": "guid"
+        },
+        "stage": {
+          "$ref": "#/definitions/AttemptStageType"
         },
         "flashcards": {
           "type": "array",
@@ -849,6 +852,20 @@
           }
         }
       }
+    },
+    "AttemptStageType": {
+      "type": "integer",
+      "description": "",
+      "x-enumNames": [
+        "Init",
+        "InProgress",
+        "Complete"
+      ],
+      "enum": [
+        0,
+        1,
+        2
+      ]
     },
     "FlashcardStateDto": {
       "type": "object",
@@ -1043,6 +1060,17 @@
           "items": {
             "$ref": "#/definitions/QuizTypeDto"
           }
+        }
+      }
+    },
+    "NextExerciseDto": {
+      "type": "object",
+      "properties": {
+        "isStageComplete": {
+          "type": "boolean"
+        },
+        "exerciseDto": {
+          "$ref": "#/definitions/ExerciseDto"
         }
       }
     },

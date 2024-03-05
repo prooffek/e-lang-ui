@@ -22,7 +22,7 @@ export const selectCurrentExercise = createSelector(selectAttemptState, (state) 
 export const selectMeaningsByFlashcardStateId = (flashcardStateId: string) => {
   return createSelector(selectCurrentAttempt, (attempt?: AttemptDto) => {
     const meanings =
-      attempt?.currentStage.flashcards?.find((x) => x.id === flashcardStateId)?.flashcard?.meanings ?? [];
+      attempt?.currentStage?.flashcards?.find((x) => x.id === flashcardStateId)?.flashcard?.meanings ?? [];
 
     return getMeaningsString(meanings);
   });

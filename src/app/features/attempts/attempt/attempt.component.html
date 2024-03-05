@@ -3,7 +3,7 @@
   *ngIf="attempt$ && { attempt: attempt$ | async, exercise: exercise(), meanings: meanings() } as data"
 >
   <app-selected-flashcards-list
-    *ngIf="showList && data.attempt?.currentStage"
+    *ngIf="showList && data.attempt?.currentStage && data.attempt?.currentStage?.stage !== attemptStage.Complete"
     [flashcards]="flashcards"
     [collectionId]="data.attempt?.collectionId"
     (onContinue)="continue({ attemptId: attemptId! })"
@@ -15,4 +15,9 @@
     [meanings]="data.meanings"
     (onSelectNext)="continue($event)"
   ></app-single-select>
+
+  <div *ngIf="data.attempt?.currentStage?.stage === attemptStage.Complete">
+    <h1>Stage complete!</h1>
+    <h2>You have completed {{ data.attempt?.completedFlashcardsCount }} flashcards.</h2>
+  </div>
 </div>

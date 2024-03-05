@@ -19,7 +19,7 @@ export interface IAttemptClient {
     addAttempt(attempt: AddAttemptDto): Observable<AttemptDto>;
     deleteAttempt(attemptId: string): Observable<FileResponse | null>;
     getAll(): Observable<AttemptDto[]>;
-    getExercise(attemptId: string, flashcardStateId: string | null | undefined, isAnswerCorrect: boolean | null | undefined): Observable<ExerciseDto>;
+    getExercise(attemptId: string, flashcardStateId: string | null | undefined, isAnswerCorrect: boolean | null | undefined): Observable<NextExerciseDto>;
 }
 
 @Injectable({
@@ -201,7 +201,7 @@ export class AttemptClient implements IAttemptClient {
         return _observableOf<AttemptDto[]>(null as any);
     }
 
-    getExercise(attemptId: string, flashcardStateId: string | null | undefined, isAnswerCorrect: boolean | null | undefined, httpContext?: HttpContext): Observable<ExerciseDto> {
+    getExercise(attemptId: string, flashcardStateId: string | null | undefined, isAnswerCorrect: boolean | null | undefined, httpContext?: HttpContext): Observable<NextExerciseDto> {
         let url_ = this.baseUrl + "/api/Attempt/get-exercise?";
         if (flashcardStateId !== undefined && flashcardStateId !== null)
             url_ += "flashcardStateId=" + encodeURIComponent("" + flashcardStateId) + "&";
@@ -229,14 +229,14 @@ export class AttemptClient implements IAttemptClient {
                 try {
                     return this.processGetExercise(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ExerciseDto>;
+                    return _observableThrow(e) as any as Observable<NextExerciseDto>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ExerciseDto>;
+                return _observableThrow(response_) as any as Observable<NextExerciseDto>;
         }));
     }
 
-    protected processGetExercise(response: HttpResponseBase): Observable<ExerciseDto> {
+    protected processGetExercise(response: HttpResponseBase): Observable<NextExerciseDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -247,7 +247,7 @@ export class AttemptClient implements IAttemptClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ExerciseDto.fromJS(resultData200);
+            result200 = NextExerciseDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -255,7 +255,7 @@ export class AttemptClient implements IAttemptClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<ExerciseDto>(null as any);
+        return _observableOf<NextExerciseDto>(null as any);
     }
 }
 
@@ -915,7 +915,7 @@ export class AttemptDto implements IAttemptDto {
     collectionId!: string;
     collectionName!: string;
     createdOn!: Date;
-    currentStage!: AttemptStageDto;
+    currentStage?: AttemptStageDto | undefined;
     maxFlashcardsPerStage!: number;
     maxQuizTypesPerFlashcard!: number;
     minCompletedQuizzesPerCent!: number;
@@ -934,9 +934,6 @@ export class AttemptDto implements IAttemptDto {
                     (<any>this)[property] = (<any>data)[property];
             }
         }
-        if (!data) {
-            this.currentStage = new AttemptStageDto();
-        }
     }
 
     init(_data?: any) {
@@ -946,7 +943,7 @@ export class AttemptDto implements IAttemptDto {
             this.collectionId = _data["collectionId"];
             this.collectionName = _data["collectionName"];
             this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
-            this.currentStage = _data["currentStage"] ? AttemptStageDto.fromJS(_data["currentStage"]) : new AttemptStageDto();
+            this.currentStage = _data["currentStage"] ? AttemptStageDto.fromJS(_data["currentStage"]) : <any>undefined;
             this.maxFlashcardsPerStage = _data["maxFlashcardsPerStage"];
             this.maxQuizTypesPerFlashcard = _data["maxQuizTypesPerFlashcard"];
             this.minCompletedQuizzesPerCent = _data["minCompletedQuizzesPerCent"];
@@ -1011,7 +1008,7 @@ export interface IAttemptDto {
     collectionId: string;
     collectionName: string;
     createdOn: Date;
-    currentStage: AttemptStageDto;
+    currentStage?: AttemptStageDto | undefined;
     maxFlashcardsPerStage: number;
     maxQuizTypesPerFlashcard: number;
     minCompletedQuizzesPerCent: number;
@@ -1026,6 +1023,7 @@ export interface IAttemptDto {
 
 export class AttemptStageDto implements IAttemptStageDto {
     id!: string;
+    stage!: AttemptStageType;
     flashcards?: FlashcardStateDto[] | undefined;
 
     constructor(data?: IAttemptStageDto) {
@@ -1040,6 +1038,7 @@ export class AttemptStageDto implements IAttemptStageDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.stage = _data["stage"];
             if (Array.isArray(_data["flashcards"])) {
                 this.flashcards = [] as any;
                 for (let item of _data["flashcards"])
@@ -1058,6 +1057,7 @@ export class AttemptStageDto implements IAttemptStageDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["stage"] = this.stage;
         if (Array.isArray(this.flashcards)) {
             data["flashcards"] = [];
             for (let item of this.flashcards)
@@ -1069,7 +1069,14 @@ export class AttemptStageDto implements IAttemptStageDto {
 
 export interface IAttemptStageDto {
     id: string;
+    stage: AttemptStageType;
     flashcards?: FlashcardStateDto[] | undefined;
+}
+
+export enum AttemptStageType {
+    Init = 0,
+    InProgress = 1,
+    Complete = 2,
 }
 
 export class FlashcardStateDto implements IFlashcardStateDto {
@@ -1419,6 +1426,46 @@ export interface IAddAttemptDto {
     includeMeanings: boolean;
     properties?: CustomPropertyDto[] | undefined;
     quizTypes?: QuizTypeDto[] | undefined;
+}
+
+export class NextExerciseDto implements INextExerciseDto {
+    isStageComplete?: boolean | undefined;
+    exerciseDto?: ExerciseDto | undefined;
+
+    constructor(data?: INextExerciseDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.isStageComplete = _data["isStageComplete"];
+            this.exerciseDto = _data["exerciseDto"] ? ExerciseDto.fromJS(_data["exerciseDto"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): NextExerciseDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new NextExerciseDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isStageComplete"] = this.isStageComplete;
+        data["exerciseDto"] = this.exerciseDto ? this.exerciseDto.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface INextExerciseDto {
+    isStageComplete?: boolean | undefined;
+    exerciseDto?: ExerciseDto | undefined;
 }
 
 export class ExerciseDto implements IExerciseDto {

@@ -17,6 +17,7 @@ export enum AttemptActions {
   getNextExercise = '[Attempt] Get next exercise',
   getNextExerciseSuccess = '[Attempt] Get next exercise - Success',
   getNextExerciseFailure = '[Attempt] Get next exercise - Failure',
+  completeCurrentStage = '[Attempt] Complete current stage',
 }
 
 export const addAttempt = createAction(AttemptActions.addAttempt, props<{ addAttempt: AddAttemptDto }>());
@@ -54,7 +55,9 @@ export const getNextExercise = createAction(
 
 export const getNextExerciseSuccess = createAction(
   AttemptActions.getNextExerciseSuccess,
-  props<{ exercise: ExerciseDto }>(),
+  props<{ exercise?: ExerciseDto }>(),
 );
 
 export const getNextExerciseFailure = createAction(AttemptActions.getNextExerciseFailure, props<{ error: any }>());
+
+export const completeCurrentStage = createAction(AttemptActions.completeCurrentStage);

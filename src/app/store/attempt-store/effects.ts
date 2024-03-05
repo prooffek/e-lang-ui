@@ -1,11 +1,12 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { AttemptClient, AttemptDto, ExerciseDto } from '../../core/services/api-client/api-client';
+import { AttemptClient, AttemptDto, NextExerciseDto } from '../../core/services/api-client/api-client';
 import { ToastrService } from 'ngx-toastr';
 import {
   addAttemptFailure,
   addAttemptSuccess,
   AttemptActions,
+  completeCurrentStage,
   deleteAttemptFailure,
   deleteAttemptSuccess,
   getAttemptByIdFailure,
@@ -99,12 +100,16 @@ export class Effects {
     { dispatch: false },
   );
 
-  getNextExercise = createEffect(() =>
+  getNextExerciseEffect$ = createEffect(() =>
     this._actions$.pipe(
       ofType(AttemptActions.getNextExercise),
       switchMap(({ attemptId, flashcardStateId, isAnswerCorrect }) =>
         this._httpClient.getExercise(attemptId, flashcardStateId, isAnswerCorrect).pipe(
-          mergeMap((exercise: ExerciseDto) => [getNextExerciseSuccess({ exercise })]),
+          mergeMap((exercise: NextExerciseDto) => {
+            return !exercise.isStageComplete
+              ? [getNextExerciseSuccess({ exercise: exercise.exerciseDto })]
+              : [getNextExerciseSuccess({ exercise: exercise.exerciseDto }), completeCurrentStage()];
+          }),
           catchError((error) => of(getNextExerciseFailure({ error }))),
         ),
       ),
