@@ -1475,7 +1475,7 @@ export class ExerciseDto implements IExerciseDto {
     wordOrPhrase!: string;
     correctAnswers!: AnswerDto[];
     incorrectAnswers!: AnswerDto[];
-    isSelect!: boolean;
+    isSingleSelect!: boolean;
     isMultiSelect!: boolean;
     isSelectMissing!: boolean;
     isMatch!: boolean;
@@ -1512,7 +1512,7 @@ export class ExerciseDto implements IExerciseDto {
                 for (let item of _data["incorrectAnswers"])
                     this.incorrectAnswers!.push(AnswerDto.fromJS(item));
             }
-            this.isSelect = _data["isSelect"];
+            this.isSingleSelect = _data["isSingleSelect"];
             this.isMultiSelect = _data["isMultiSelect"];
             this.isSelectMissing = _data["isSelectMissing"];
             this.isMatch = _data["isMatch"];
@@ -1545,7 +1545,7 @@ export class ExerciseDto implements IExerciseDto {
             for (let item of this.incorrectAnswers)
                 data["incorrectAnswers"].push(item.toJSON());
         }
-        data["isSelect"] = this.isSelect;
+        data["isSingleSelect"] = this.isSingleSelect;
         data["isMultiSelect"] = this.isMultiSelect;
         data["isSelectMissing"] = this.isSelectMissing;
         data["isMatch"] = this.isMatch;
@@ -1563,7 +1563,7 @@ export interface IExerciseDto {
     wordOrPhrase: string;
     correctAnswers: AnswerDto[];
     incorrectAnswers: AnswerDto[];
-    isSelect: boolean;
+    isSingleSelect: boolean;
     isMultiSelect: boolean;
     isSelectMissing: boolean;
     isMatch: boolean;

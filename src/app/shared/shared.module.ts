@@ -26,6 +26,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { CheckboxComponent } from './base-controls/checkbox/checkbox.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ExerciseComponent } from './components/exercise/exercise.component';
+import { SelectExerciseComponent } from './components/select-exercise/select-exercise.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { ExerciseComponent } from './components/exercise/exercise.component';
     DropdownComponent,
     CheckboxComponent,
     ExerciseComponent,
+    SelectExerciseComponent,
   ],
   imports: [
     CommonModule,
@@ -76,6 +78,7 @@ import { ExerciseComponent } from './components/exercise/exercise.component';
     DropdownComponent,
     CheckboxComponent,
     ExerciseComponent,
+    SelectExerciseComponent,
   ],
 })
 export class SharedModule {}

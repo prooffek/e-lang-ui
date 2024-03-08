@@ -3,11 +3,11 @@ import { ExerciseService } from '../../../../../core/services/exercises/exercise
 import { AnswerDto, ExerciseDto } from '../../../../../core/services/api-client/api-client';
 
 @Component({
-  selector: 'app-single-select',
-  templateUrl: './single-select.component.html',
-  styleUrls: ['./single-select.component.scss'],
+  selector: 'app-multiselect-exercise',
+  templateUrl: './multiselect-exercise.component.html',
+  styleUrls: ['./multiselect-exercise.component.scss'],
 })
-export class SingleSelectComponent {
+export class MultiselectExerciseComponent {
   private readonly _exerciseService = inject(ExerciseService);
 
   @Input() exercise: ExerciseDto | undefined;
@@ -20,20 +20,17 @@ export class SingleSelectComponent {
   }>();
 
   selected: AnswerDto[] = [];
+  showAnswer: boolean = false;
   isAnswerCorrect: boolean | undefined;
 
-  get showAnswer() {
-    const showAnswer = !!this.selected.length;
-
-    if (showAnswer) {
-      this.isAnswerCorrect = this._exerciseService.checkAnswer(this.exercise!, this.selected);
-    }
-
-    return showAnswer;
+  checkAnswer() {
+    this.showAnswer = true;
+    this.isAnswerCorrect = this._exerciseService.checkAnswer(this.exercise!, this.selected);
   }
 
   next() {
     if (!this.exercise) return;
+
     const { attemptId, flashcardStateId } = this.exercise!;
 
     this.onSelectNext.emit({
@@ -45,7 +42,8 @@ export class SingleSelectComponent {
     this.resetValues();
   }
 
-  resetValues() {
+  private resetValues() {
+    this.showAnswer = false;
     this.selected = [];
     this.isAnswerCorrect = undefined;
   }

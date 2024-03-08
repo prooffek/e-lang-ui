@@ -10,11 +10,18 @@
   ></app-selected-flashcards-list>
 
   <app-single-select
-    *ngIf="!showList && data.exercise"
+    *ngIf="!showList && data.exercise?.isSingleSelect"
     [exercise]="data.exercise"
     [meanings]="data.meanings"
     (onSelectNext)="continue($event)"
   ></app-single-select>
+
+  <app-multiselect-exercise
+    *ngIf="!showList && data.exercise?.isMultiSelect"
+    [exercise]="data.exercise"
+    [meanings]="data.meanings"
+    (onSelectNext)="continue($event)"
+  ></app-multiselect-exercise>
 
   <div *ngIf="data.attempt?.currentStage?.stage === attemptStage.Complete">
     <h1>Stage complete!</h1>

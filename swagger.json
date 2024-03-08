@@ -1083,7 +1083,7 @@
         "wordOrPhrase",
         "correctAnswers",
         "incorrectAnswers",
-        "isSelect",
+        "isSingleSelect",
         "isMultiSelect",
         "isSelectMissing",
         "isMatch",
@@ -1118,7 +1118,7 @@
             "$ref": "#/definitions/AnswerDto"
           }
         },
-        "isSelect": {
+        "isSingleSelect": {
           "type": "boolean"
         },
         "isMultiSelect": {

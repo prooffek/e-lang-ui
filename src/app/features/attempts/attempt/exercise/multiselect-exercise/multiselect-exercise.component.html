@@ -6,7 +6,16 @@
   [isCorrect]="isAnswerCorrect"
 >
   <app-button
-    class="next-btn"
+    class="btn"
+    width="250px"
+    height="60px"
+    label="Show Answer"
+    *ngIf="!showAnswer"
+    (onClick)="checkAnswer()"
+    actions
+  ></app-button>
+  <app-button
+    class="btn"
     width="250px"
     height="60px"
     label="Next"
