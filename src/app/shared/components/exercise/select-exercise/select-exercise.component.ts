@@ -1,6 +1,6 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
-import { ArrayService } from '../../../core/services/arrays/array.service';
-import { AnswerDto, ExerciseDto } from '../../../core/services/api-client/api-client';
+import { ArrayService } from '../../../../core/services/arrays/array.service';
+import { AnswerDto, ExerciseDto } from '../../../../core/services/api-client/api-client';
 import { SelectAnswerModel } from './selectAnswerModel';
 
 @Component({
@@ -48,10 +48,10 @@ export class SelectExerciseComponent {
       this.answers = [];
     }
 
-    const correctAnswers = exercise!.correctAnswers.map(
+    const correctAnswers = exercise!.correctAnswers!.map(
       (x) => ({ value: x.value, isCorrect: true }) as SelectAnswerModel,
     );
-    const incorrectAnswers = exercise!.incorrectAnswers.map(
+    const incorrectAnswers = exercise!.incorrectAnswers!.map(
       (x) => ({ value: x.value, isCorrect: false }) as SelectAnswerModel,
     );
     const answers = [...correctAnswers, ...incorrectAnswers];

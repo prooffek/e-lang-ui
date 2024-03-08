@@ -1,0 +1,5 @@
+<div class="flashcards-container" *ngIf="mainLine && correctAnswer">
+  <h2 class="word-or-phrase">{{ mainLine }}</h2>
+  <h3 class="meanings" *ngIf="showAnswer">{{ correctAnswer }}</h3>
+  <ng-content select="[actions]" />
+</div>

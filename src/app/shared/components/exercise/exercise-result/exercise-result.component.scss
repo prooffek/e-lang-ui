@@ -1,0 +1,19 @@
+.result-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  .result {
+    font-weight: bold;
+    font-size: 2em;
+    text-align: center;
+  }
+
+  .correct {
+    color: var(--correct-label);
+  }
+
+  .incorrect {
+    color: var(--incorrect-label);
+  }
+}

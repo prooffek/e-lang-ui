@@ -1,0 +1,13 @@
+.input-container {
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0 20%;
+
+  .input {
+    width: 100%;
+    min-width: 300px;
+  }
+}

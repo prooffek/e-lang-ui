@@ -1473,8 +1473,8 @@ export class ExerciseDto implements IExerciseDto {
     flashcardStateId!: string;
     instruction!: string;
     wordOrPhrase!: string;
-    correctAnswers!: AnswerDto[];
-    incorrectAnswers!: AnswerDto[];
+    correctAnswers?: AnswerDto[] | undefined;
+    incorrectAnswers?: AnswerDto[] | undefined;
     isSingleSelect!: boolean;
     isMultiSelect!: boolean;
     isSelectMissing!: boolean;
@@ -1489,10 +1489,6 @@ export class ExerciseDto implements IExerciseDto {
                 if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
-        }
-        if (!data) {
-            this.correctAnswers = [];
-            this.incorrectAnswers = [];
         }
     }
 
@@ -1561,8 +1557,8 @@ export interface IExerciseDto {
     flashcardStateId: string;
     instruction: string;
     wordOrPhrase: string;
-    correctAnswers: AnswerDto[];
-    incorrectAnswers: AnswerDto[];
+    correctAnswers?: AnswerDto[] | undefined;
+    incorrectAnswers?: AnswerDto[] | undefined;
     isSingleSelect: boolean;
     isMultiSelect: boolean;
     isSelectMissing: boolean;

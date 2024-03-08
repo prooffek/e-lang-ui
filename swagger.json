@@ -1081,8 +1081,6 @@
         "flashcardStateId",
         "instruction",
         "wordOrPhrase",
-        "correctAnswers",
-        "incorrectAnswers",
         "isSingleSelect",
         "isMultiSelect",
         "isSelectMissing",

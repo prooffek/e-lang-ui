@@ -1,0 +1,6 @@
+<div class="result-container">
+  <p *ngIf="showAnswer" [ngClass]="{ correct: isCorrect, incorrect: !isCorrect }" class="result">
+    <span *ngIf="isCorrect">Correct!</span>
+    <span *ngIf="!isCorrect">Incorrect!</span>
+  </p>
+</div>

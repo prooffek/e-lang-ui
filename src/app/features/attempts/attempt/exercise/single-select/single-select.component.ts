@@ -26,7 +26,7 @@ export class SingleSelectComponent {
     const showAnswer = !!this.selected.length;
 
     if (showAnswer) {
-      this.isAnswerCorrect = this._exerciseService.checkAnswer(this.exercise!, this.selected);
+      this.isAnswerCorrect = this._exerciseService.checkSelectExerciseAnswer(this.exercise!, this.selected);
     }
 
     return showAnswer;

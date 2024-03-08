@@ -1,0 +1,23 @@
+<div class="container" *ngIf="exercise">
+  <app-exercise [instruction]="exercise.instruction">
+    <div class="content" content>
+      <app-exercise-result [showAnswer]="showAnswer" [isCorrect]="isCorrect" />
+
+      <app-exercise-flashcard-content
+        [mainLine]="meanings"
+        [correctAnswer]="exercise.wordOrPhrase"
+        [showAnswer]="showAnswer"
+      />
+
+      <div class="input-container">
+        <div class="input">
+          <app-input label="Answer" [control]="form.controls[controlName]" [showClearButton]="true" type="text" />
+        </div>
+        <div class="input-btn">
+          <app-button *ngIf="!showAnswer" label="Check" (onClick)="checkAnswer()"></app-button>
+          <app-button *ngIf="showAnswer" label="Next" (onClick)="selectNext()"></app-button>
+        </div>
+      </div>
+    </div>
+  </app-exercise>
+</div>

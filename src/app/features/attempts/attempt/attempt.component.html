@@ -23,6 +23,13 @@
     (onSelectNext)="continue($event)"
   ></app-multiselect-exercise>
 
+  <app-input-exercise
+    *ngIf="!showList && data.exercise?.isInput"
+    [exercise]="data.exercise"
+    [meanings]="data.meanings"
+    (onSelectNext)="continue($event)"
+  />
+
   <div *ngIf="data.attempt?.currentStage?.stage === attemptStage.Complete">
     <h1>Stage complete!</h1>
     <h2>You have completed {{ data.attempt?.completedFlashcardsCount }} flashcards.</h2>

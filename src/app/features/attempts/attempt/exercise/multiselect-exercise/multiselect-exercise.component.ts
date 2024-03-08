@@ -25,7 +25,7 @@ export class MultiselectExerciseComponent {
 
   checkAnswer() {
     this.showAnswer = true;
-    this.isAnswerCorrect = this._exerciseService.checkAnswer(this.exercise!, this.selected);
+    this.isAnswerCorrect = this._exerciseService.checkSelectExerciseAnswer(this.exercise!, this.selected);
   }
 
   next() {

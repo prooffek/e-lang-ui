@@ -26,7 +26,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { CheckboxComponent } from './base-controls/checkbox/checkbox.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ExerciseComponent } from './components/exercise/exercise.component';
-import { SelectExerciseComponent } from './components/select-exercise/select-exercise.component';
+import { SelectExerciseComponent } from './components/exercise/select-exercise/select-exercise.component';
+import { ExerciseResultComponent } from './components/exercise/exercise-result/exercise-result.component';
+import { ExerciseFlashcardContentComponent } from './components/exercise/exercise-flashcard-content/exercise-flashcard-content.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +49,8 @@ import { SelectExerciseComponent } from './components/select-exercise/select-exe
     CheckboxComponent,
     ExerciseComponent,
     SelectExerciseComponent,
+    ExerciseResultComponent,
+    ExerciseFlashcardContentComponent,
   ],
   imports: [
     CommonModule,
@@ -79,6 +83,8 @@ import { SelectExerciseComponent } from './components/select-exercise/select-exe
     CheckboxComponent,
     ExerciseComponent,
     SelectExerciseComponent,
+    ExerciseResultComponent,
+    ExerciseFlashcardContentComponent,
   ],
 })
 export class SharedModule {}
