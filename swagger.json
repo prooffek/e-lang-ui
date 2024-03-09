@@ -968,6 +968,7 @@
     "QuizTypeDto": {
       "type": "object",
       "required": [
+        "id",
         "name",
         "instruction",
         "isSelect",
@@ -980,6 +981,10 @@
         "isFillInBlank"
       ],
       "properties": {
+        "id": {
+          "type": "string",
+          "format": "guid"
+        },
         "name": {
           "type": "string"
         },

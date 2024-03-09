@@ -1273,6 +1273,7 @@ export interface ICustomPropertyDto {
 }
 
 export class QuizTypeDto implements IQuizTypeDto {
+    id!: string;
     name!: string;
     instruction!: string;
     isSelect!: boolean;
@@ -1295,6 +1296,7 @@ export class QuizTypeDto implements IQuizTypeDto {
 
     init(_data?: any) {
         if (_data) {
+            this.id = _data["id"];
             this.name = _data["name"];
             this.instruction = _data["instruction"];
             this.isSelect = _data["isSelect"];
@@ -1317,6 +1319,7 @@ export class QuizTypeDto implements IQuizTypeDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
         data["name"] = this.name;
         data["instruction"] = this.instruction;
         data["isSelect"] = this.isSelect;
@@ -1332,6 +1335,7 @@ export class QuizTypeDto implements IQuizTypeDto {
 }
 
 export interface IQuizTypeDto {
+    id: string;
     name: string;
     instruction: string;
     isSelect: boolean;
